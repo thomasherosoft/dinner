@@ -9,11 +9,11 @@ namespace :csv do
 
     CSV.foreach(csv_file_path, "r:ISO-8859-1" ) do |row|
   Post.create({
-                  :name => row[0].to_s.scrub,
-                  :address => row[1].to_s.scrub,
-                  :city => row[2].to_s.scrub,
+                  :name => row[0],
+                  :address => row[1],
+                  :city => row[2],
                   :michelin_status => row[3],
-                  :website => row[4].to_s.scrub,
+                  :website => row[4],
                   :phone => row[5],
                   :longitude => row[6],
                   :latitude => row[7],
