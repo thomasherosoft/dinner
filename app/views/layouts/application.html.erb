@@ -64,7 +64,7 @@ infoWindow.setContent(browserHasGeolocation ?
   </script>
     <form class="navbar-form navbar-left" role="search" style="width: 100%">
         <%= form_tag(posts_path, :method => "get", class: "form-control", id: "search-form") do %>
-            <%= text_field_tag :search, params[:search], class: "form-control", style: "width: 350px", placeholder: "Search City, Restaurant Name" %>
+            <%= text_field_tag :search, params[:search], class: "form-control", style: "width: 320px", placeholder: "Search City, Restaurant Name" %>
             <% end %>
         <%= yield %></body>
     </form>
