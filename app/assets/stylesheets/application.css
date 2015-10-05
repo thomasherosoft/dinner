@@ -13,3 +13,30 @@
  *= require_tree .
  *= require_self
  */
+.navbar-form{
+  background-color:#ff00b1;
+  margin:0px !important;
+  padding:15px;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  z-index: 999;
+
+}
+
+.main-wrap{
+  margin-top: 60px;
+}
+
+#notice{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width:100%;
+}
+
+.home-map{
+  position: fixed;
+  height: 100%;
+  right: 0px;
+}
