@@ -24,6 +24,24 @@
 
 }
 
+body{
+  font-family: 'BoosterNextFY-Medium';
+}
+
+@font-face {
+    font-family: 'BoosterNextFY-Medium';
+
+    src: asset-url('BoosterNextFY-Medium.eot')
+    src: url('../fonts/BoosterNextFY-Medium.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/BoosterNextFY-Medium.woff') format('woff'),
+         url('../fonts/BoosterNextFY-Medium.ttf') format('truetype'),
+         url('../fonts/BoosterNextFY-Medium.svg#journalregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
 .main-wrap{
   margin-top: 60px;
 }
