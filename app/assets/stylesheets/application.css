@@ -223,6 +223,19 @@ body{
   left: 0px;
 }
 
+.search-result figure .chart-icon{
+  position: absolute;
+  right: 10px;
+  bottom: -30px;
+  background: url(chart.png) no-repeat #FFF center center;
+  border: 2px solid #acacac;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  z-index: 500;
+}
+
 .search-result figcaption a:hover{
   background: transparent;
 }
