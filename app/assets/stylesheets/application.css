@@ -30,8 +30,9 @@
 
 a.logo{
   font-size: 28px;
-  font-weight: bold;
   color: #FFF;
+  font-style: normal;
+  font-weight: normal !important;
   vertical-align: middle;
   display: inline-block;
   margin-right: 20px;
@@ -110,6 +111,11 @@ body{
   left: 0px;
   top: 0px;
   width:100%;
+}
+
+.form-control{
+  width:40vw !important;
+  display: inline-block !important;
 }
 
 .home-map{
