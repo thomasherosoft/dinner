@@ -47,6 +47,7 @@ a.logo:hover,
 .header-right .social-icons{
   margin: 0px;
   padding: 0px;
+  vertical-align: middle;
   list-style: none;
   display: inline-block;
 }
@@ -55,21 +56,31 @@ a.logo:hover,
   color: #ff00b1;
   display: inline-block;
   font-size: 14px;
-  padding: 10px 20px;
+  padding: 7px 20px;
   background: #FFF;
   border-radius: 5px;
+  margin-right: 10px;
   text-transform: uppercase;
 }
 
 .header-right .social-icons li{
   display: inline-block;
-  padding: 0px 10px;
+  padding: 0px 5px;
 }
 
 .header-right .social-icons li a{
   display: block;
-  padding: 8px 5px;
+  width: 31px;
+  height: 32px;
   color: #FFF;
+}
+
+.header-right .social-icons li a.fb-icon{
+  background: url(facebook-icon.png) no-repeat;
+}
+
+.header-right .social-icons li a.tw-icon{
+  background: url(twitter.icon.png) no-repeat;
 }
 
 body{
