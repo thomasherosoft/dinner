@@ -91,11 +91,11 @@ body{
 @font-face {
     font-family: 'BoosterNextFY-Regular';
 
-      src: font-url('/assets/BoosterNextFY-Regular.eot');
-      src: font-url('/assets/BoosterNextFY-Regular.eot?#iefix') format('embedded-opentype'),
-         font-url('/assets/BoosterNextFY-Regular.woff') format('woff'),
-         font-url('/assets/BoosterNextFY-Regular.ttf') format('truetype'),
-         font-url('/assets/BoosterNextFY-Regular.svg#journalregular') format('svg');
+      src: url('BoosterNextFY-Regular.eot');
+      src: url('BoosterNextFY-Regular.eot?#iefix') format('embedded-opentype'),
+         url('BoosterNextFY-Regular.woff') format('woff'),
+         url('BoosterNextFY-Regular.ttf') format('truetype'),
+         url('BoosterNextFY-Regular.svg#journalregular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
