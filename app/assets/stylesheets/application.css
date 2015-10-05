@@ -116,4 +116,10 @@ body{
   position: fixed;
   height: 100%;
   right: 0px;
+  width: 50%;
+}
+
+.map-side-bar{
+  float: left;
+  width: 50%;
 }
