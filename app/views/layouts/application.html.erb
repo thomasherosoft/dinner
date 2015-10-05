@@ -63,10 +63,19 @@ infoWindow.setContent(browserHasGeolocation ?
 
   </script>
     <form class="navbar-form navbar-left" role="search" style="width: 100%">
-        <%= form_tag(posts_path, :method => "get", class: "form-control", id: "search-form") do %>
-            <%= text_field_tag :search, params[:search], class: "form-control", style: "width: 320px", placeholder: "Search City, Restaurant Name" %>
-            <% end %>
-        <%= yield %></body>
+      <a class="logo" href="">YoYo</a>
+      <div class="header-right">
+        <a class="blog" href="blog">Blog</a>
+        <ul class="social-icons">
+              <li><a href="www.facebook.com" target="_blank">Facebok</a></li>
+              <li><a href="www.twitter.com" target="_blank">Twitter</a></li>
+        </ul>
+      </div>
+      <%= form_tag(posts_path, :method => "get", class: "form-control", id: "search-form") do %>
+        <%= text_field_tag :search, params[:search], class: "form-control", style: "width: 320px", placeholder: "Search City, Restaurant Name" %>
+        <% end %>
+      <%= yield %>
+    </body>
     </form>
   </div><!-- /.container-fluid -->
 </html>
