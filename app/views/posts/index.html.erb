@@ -1,22 +1,70 @@
 <p id="notice"><%= notice %></p>
 <div class="main-wrap">
     <div class="map-side-bar">
-      <table class="table">
-      <thead>
-        <tr>
-              <th colspan="3"></th>
-        </tr>
-      </thead>
+      <div class="search-filter">
+        <form>
+          <span>Accolades</span>
+          <div class="accolades-panel">
+            <label>
+              Michelin Star(s) <dd>1,2,3 and bibs</dd> <input type="checkbox" name="entireHome" value="">
+            </label>
+            <label>
+              Zagat<dd>rated</dd><input type="checkbox" name="privateRoom" value="">
+            </label>
+            <label>
+              Yelp<dd>top10% by rating</dd><input type="checkbox" name="sharedRoom" value="">
+            </label>
+            <label>
+              TimeOut<dd>top10% or listed</dd><input type="checkbox" name="sharedRoom" value="">
+            </label>
+            <label>
+               TripAdvisor<dd>top10% by rating</dd><input type="checkbox" name="sharedRoom" value="">
+             </label>
+             <label>
+              NYC Health Grade<dd>A only</dd><input type="checkbox" name="sharedRoom" value="">
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="consistency-score">
+        <span>Consistency Stars</span>
+      </div>
+      <div class="search-result">
+        <div class="more-filter">
+            <input type="submit" value="More filters" name="moreFilter">
+          <span>300+ Restaurants · New York City</span>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <figure>
+              <%= image_tag("item-1.jpg", :alt => "item image") %>
+              <span>7%</span>
+            </figure>
+            <figcaption>
+              <a href="#">
+                <strong>Halal Bros</strong>
+                <span>W 53rd St & 6th Ave - Halal</span><br>
+                <span>Midtown West - 76 reviews - $</span>
+              </a>
+            <figcaption>
+          </div>
 
-      <tbody>
-        <% @posts.each do |post| %>
-          <tr>
-            <td><%= post.name %></td>
-              <td><%= post.address %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+          <div class="col-md-6">
+            <figure>
+              <%= image_tag("item-2.jpg", :alt => "item image") %>
+              <span>7%</span>
+            </figure>
+            <figcaption>
+              <a href="#">
+                <strong>Sushi Samba</strong>
+                <span>87th 7th Ave - Sushi</span><br>
+                <span>West Village - 160 reviews - $$$</span>
+              </a>
+            <figcaption>
+          </div>
+
+        </div>
+      </div>
     </div>
       <div class="home-map">
           <div id="map">

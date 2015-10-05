@@ -128,4 +128,115 @@ body{
 .map-side-bar{
   float: left;
   width: 50%;
+  padding: 10px;
+}
+
+.map-side-bar h2{
+  margin: 0px 0px 10px;
+  padding: 0px 0px 10px;
+  border-bottom: 1px solid #F2F2F2;
+}
+
+.search-filter{
+  padding: 20px 0px;
+  border-bottom: 1px solid #F2F2F2;
+}
+
+.search-filter span{
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.accolades-panel{
+  display: inline-block;
+  max-width: 520px;
+  vertical-align: middle;
+}
+
+.search-filter label{
+  display: inline-block;
+  margin-left: 10px;
+  padding: 8px;
+  background: #edefed;
+  border:1px solid #CCC;
+  vertical-align: middle;
+  width: 161px;
+  font-size: 11px;
+  position: relative;
+  cursor: pointer;
+  color: #565a5c;
+}
+
+.search-filter label dd{
+  font-size: 8px;
+}
+
+.search-filter label input{
+  position: absolute;
+  right: 5px;
+  top: 30%;
+}
+
+.consistency-score{
+  padding: 20px 0px;
+}
+
+.search-result{
+  background: #f5f5f5;
+  margin: 0px -10px;
+  padding: 12px;
+}
+
+.more-filter{
+  padding: 20px 0px;
+}
+
+.more-filter span{
+  float: right;
+  font-size: 16px;
+  margin-top:12px;
+}
+
+.more-filter input{
+  padding: 10px 20px;
+  background:#FFF;
+  border: 1px solid #CCC;
+  font-size: 18px;
+}
+
+.search-result figure img{
+  max-width: 100%;
+}
+
+.search-result figure{
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.search-result figure span{
+  position: absolute;
+  bottom: 30px;
+  padding: 10px;
+  background: #888;
+  color: #FFF;
+  font-size: 18px;
+  left: 0px;
+}
+
+.search-result figcaption a:hover{
+  background: transparent;
+}
+
+.search-result figcaption strong{
+  display: block;
+  color: #565a5c;
+}
+
+.search-result figcaption span{
+  color: #82888a;
+}
+
+.search-result figcaption dd{
+  display: inline-block;
+  color: #ffb400;
 }
