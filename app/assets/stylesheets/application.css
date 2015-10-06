@@ -13,6 +13,9 @@
  *= require_tree .
  *= require_self
  */
+
+*= require bootstrap-slider
+
 .navbar-form{
   background-color:#ff00b1;
   margin:0px !important;

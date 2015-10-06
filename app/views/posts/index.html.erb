@@ -28,6 +28,14 @@
       </div>
       <div class="consistency-score">
         <span>Consistency Score</span>
+<input id="ex1" data-slider-id='ex1Sl' type="text" data-slider-min="50" data-slider-max="100" data-slider-step="10" data-slider-value="65"/>
+<script type='text/javascript'>
+$('#ex1').slider({
+	formatter: function(value) {
+		return value + '%';
+	}
+});
+</script>
       </div>
       <div class="search-result">
         <div class="more-filter">
