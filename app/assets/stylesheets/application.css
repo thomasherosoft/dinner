@@ -226,15 +226,15 @@ body{
 }
 
 .search-result figure .chart-icon{
+  background: rgba(255, 255, 255, 0.6) url("chart.png") no-repeat scroll center center;
+  background-size: 90%;
+  border: 1px solid #acacac;
+  top: 0px;
+  height: 120px;
   position: absolute;
-  right: 10px;
-  bottom: -30px;
-  background: url(chart.png) no-repeat #FFF center center;
-  border: 2px solid #acacac;
+  right: 0px;
   text-align: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 120px;
   z-index: 500;
 }
 
