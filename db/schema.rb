@@ -15,13 +15,13 @@ ActiveRecord::Schema.define(version: 20150923222844) do
 
   create_table "posts", force: :cascade do |t|
     t.string   "name"
-    t.string   "inthenews"
     t.string   "michelin_status"
-    t.string   "google_reviews"
+    t.string   "zagat_status"
     t.string   "address"
     t.string   "city"
-    t.string   "website"
-    t.string   "phone"
+    t.string   "cuisine"
+    t.string   "neighborhood"
+    t.string   "price_range"
     t.decimal  "longitude"
     t.decimal  "latitude"
     t.datetime "created_at",      null: false
