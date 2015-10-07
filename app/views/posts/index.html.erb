@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+  <p id="notice"><%= notice %></p>
 <div class="main-wrap">
     <div class="map-side-bar">
       <div class="search-filter">
@@ -43,20 +43,22 @@ $('#ex1').slider({
           <span>300+ Restaurants · New York City</span>
         </div>
         <div class="row">
-          <div class="col-md-6">
-            <figure>
-              <%= image_tag("item-1.jpg", :alt => "item image") %>
-              <span>67%</span>
-              <a herf="#" class="chart-icon"></a>
-            </figure>
+          <% @posts.each do |post| %>
+          <div class="col-md-6 item-widget">
             <figcaption>
               <a href="#">
-                <strong>Halal Bros</strong>
-                <span>W 53rd St & 6th Ave - Halal</span><br>
-                <span>Midtown West - 76 reviews - $</span>
+                 <figure>
+                   <%= image_tag("item-1.jpg", :alt => "item image") %>
+                   <span>67%</span>
+                   <a herf="#" class="chart-icon"></a>
+                 </figure>
+                <strong><%= post.name %></strong>
+                <span><%= post.address %> - <%= post.cuisine %></span><br>
+                <span><%= post.neighborhood %> - <%= post.price_range %></span>
               </a>
             <figcaption>
           </div>
+          <% end %>
 
 
 
