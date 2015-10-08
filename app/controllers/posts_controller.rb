@@ -7,8 +7,6 @@ class PostsController < ApplicationController
     @posts = Post.all
     if params[:search]
       @posts = Post.search(params[:search]).order("created_at DESC")
-    if params[:category]
-      @posts = Post.where(:category => params[:category])
     else
       @posts = Post.order("created_at DESC")
     end
