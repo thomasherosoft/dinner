@@ -7,6 +7,8 @@ class PostsController < ApplicationController
     @posts = Post.all
     if params[:search]
       @posts = Post.search(params[:search]).order("created_at DESC")
+    if params[:category]
+      @posts = Post.where(:category => params[:category])
     else
       @posts = Post.order("created_at DESC")
     end
@@ -74,16 +76,6 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(
-        :name,
-        :michelin_status,
-        :zagat_status,
-        :address,
-        :city,
-        :cuisine,
-        :neighborhood,
-        :price_range,
-        :longitude,
-        :latitude)
+      params.require(:post).permit(:name, :michelin_status, :zagat_status, :address, :city, :cuisine, :neighborhood, :price_range, :longitude, :latitude)
     end
 end
