@@ -8,17 +8,8 @@
             <label>
               Michelin Star(s) <dd>1,2,3 and bibs</dd> <input type="checkbox" name="michelin_status" value="">
             </label>
-            <script type="javascript">
-            $('#zagat_status').change(function(){
-    var isChecked = ($(this).is(':checked'))
-     $.post( "index",{'zagat_status': isChecked })
-.done(function(data) {
-   alert('Success!');
-});
-})
 
-                </script>
-                        <label>  Zagat<dd>rated</dd><input type="checkbox" id="zagat_status" name="zagat_status" value="Yes">
+                        <label>  Zagat<dd>rated</dd><input type="checkbox" name="zagat_status" value="Yes">
                         </label>
             <label>
               Yelp<dd>top10% by rating</dd><input type="checkbox" name="" value="">
