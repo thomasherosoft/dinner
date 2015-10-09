@@ -49,7 +49,7 @@ $('#ex1').slider({
       <div class="search-result">
         <div class="more-filter">
             <input type="submit" value="More filters" name="moreFilter">
-          <span><%= Post.count %> Restaurants · New York City</span>
+          <span><%= @posts.count %> Restaurants · New York City</span>
         </div>
         <div class="row">
           <% @posts.each do |post| %>
