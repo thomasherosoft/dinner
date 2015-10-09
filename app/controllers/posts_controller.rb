@@ -6,9 +6,10 @@ class PostsController < ApplicationController
   def index
     @posts = Post.all
     if params[:search]
-      @posts = Post.search(params[:search]).order("created_at DESC")
-    else
-      @posts = Post.order("created_at DESC")
+      @posts = @posts.search(params[:search]).order("created_at DESC")
+    end
+    if params[:zagat_status].present?
+      @posts = @posts.zagat_status(params[:zagat_status]).order("created_at DESC")
     end
   end
 
