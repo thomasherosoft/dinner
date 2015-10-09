@@ -5,11 +5,21 @@ class PostsController < ApplicationController
   # GET /posts.json
   def index
     @posts = Post.all
+
     if params[:search]
       @posts = @posts.search(params[:search]).order("created_at DESC")
     end
+
     if params[:zagat_status].present?
-      @posts = @posts.zagat_status(params[:zagat_status]).order("created_at DESC")
+      @posts = @posts.zagat_status(params[:zagat_status])
+    end
+
+    if params[:michelin_status].present?
+      @posts = @posts.michelin_status(params[:michelin_status])
+    end
+
+    if params[:price_range].present?
+      @posts = @posts.price_range(params[:price_range])
     end
   end
 
