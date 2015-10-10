@@ -64,12 +64,11 @@
 
       <div class="search-result">
         <div class="more-filter">
-            <input type="submit" value="More filters" name="moreFilter">
-          <span><%= @posts.count %> Restaurants · London</span>
+          <span><%= @posts.count %> Restaurants · London</span><br><hr>
         </div>
         <div class="row">
           <% @posts.each do |post| %>
-          <div class="col-md-6 item-widget" data-longitude="<%= post.longitude %>" data-latitude="<%= post.latitude %>">
+          <div class="col-md-12 item-widget" data-longitude="<%= post.longitude %>" data-latitude="<%= post.latitude %>">
             <figcaption>
               <a href="#">
                  <figure>

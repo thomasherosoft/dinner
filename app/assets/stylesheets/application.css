@@ -124,12 +124,12 @@ body{
   position: fixed;
   height: 100%;
   right: 0px;
-  width: 50%;
+  width: 65%;
 }
 
 .map-side-bar{
   float: left;
-  width: 50%;
+  width: 35%;
   padding: 10px;
 }
 
