@@ -44,6 +44,16 @@
               </select>
             </label>
 
+            <label for="cuisine">
+              Cuisine<br>
+              <select id="cuisine" class="filter-status" name="cuisine">
+                <option value="">Don't Care</option>
+                <option value="French" <%= 'selected' if params[:cuisine] == "French" %>>French</option>
+                <option value="Italian" <%= 'selected' if params[:cuisine] == "Italian" %>>Italian</option>
+                <option value="British" <%= 'selected' if params[:cuisine] == "British" %>>British</option>
+              </select>
+            </label>
+
             <div class="consistency-score">
               <span style="margin-right: 40px;">Price Range</span>
               <input id="price_range" class="filter-status" data-slider-id='ex1Sl' type="text" name="price_range" data-slider-min="1" data-slider-max="4" data-slider-step="1" data-slider-value="<%= params[:price_range] %>"/>

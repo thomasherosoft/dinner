@@ -21,6 +21,10 @@ class PostsController < ApplicationController
     if params[:price_range].present?
       @posts = @posts.price_range(params[:price_range])
     end
+
+    if params[:cuisine].present?
+      @posts = @posts.cuisine(params[:cuisine])
+    end
   end
 
   # GET /posts/1

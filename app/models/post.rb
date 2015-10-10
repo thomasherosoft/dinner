@@ -3,6 +3,7 @@ class Post < ActiveRecord::Base
    scope :zagat_status,    -> (zagat_status) { where zagat_status: zagat_status }
    scope :michelin_status, -> (michelin_status) { where michelin_status: michelin_status }
    scope :price_range, -> (price_range) { where(price_range: price_ranges(price_range)) }
+   scope :cuisine, -> (cuisine) { where cuisine: cuisine }
 
 
    validates :name, presence: true
