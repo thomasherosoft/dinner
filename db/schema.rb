@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923222844) do
+ActiveRecord::Schema.define(version: 20151011084928) do
 
   create_table "posts", force: :cascade do |t|
     t.string   "name"
@@ -24,8 +24,10 @@ ActiveRecord::Schema.define(version: 20150923222844) do
     t.string   "price_range"
     t.decimal  "longitude"
     t.decimal  "latitude"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.text     "imageurl"
+    t.float    "rating",          default: 0.0
   end
 
 end

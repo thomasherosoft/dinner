@@ -10,7 +10,7 @@ class Post < ActiveRecord::Base
    validates :city, presence: true
    validates :address, presence: true
 
-   default_scope { order(created_at: :desc) }
+   default_scope ->{ order(created_at: :desc) }
 
    def self.price_ranges(price_range)
      res = []

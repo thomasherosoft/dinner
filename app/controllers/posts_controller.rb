@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: [:show, :edit, :update, :destroy, :image, :rating]
 
   # GET /posts
   # GET /posts.json
@@ -7,7 +7,7 @@ class PostsController < ApplicationController
     @posts = Post.all
 
     if params[:search]
-      @posts = @posts.search(params[:search]).order("created_at DESC")
+      @posts = @posts.search(params[:search]).order(created_at: :desc)
     end
 
     if params[:zagat_status].present?
@@ -24,6 +24,11 @@ class PostsController < ApplicationController
 
     if params[:cuisine].present?
       @posts = @posts.cuisine(params[:cuisine])
+    end
+
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
 
@@ -81,6 +86,24 @@ class PostsController < ApplicationController
     end
   end
 
+  def image
+    if request.post?
+      @post.update(imageurl: params[:data])
+      head :ok
+    else
+      render json: {data: @post.imageurl}
+    end
+  end
+
+  def rating
+    if request.post?
+      @post.update(rating: params[:data])
+      head :ok
+    else
+      render json: {data: @post.rating}
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
@@ -89,6 +112,8 @@ class PostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def post_params
-      params.require(:post).permit(:name, :michelin_status, :zagat_status, :address, :city, :cuisine, :neighborhood, :price_range, :longitude, :latitude)
+      params.require(:post).permit(:name, :michelin_status, :zagat_status,
+      :address, :city, :cuisine, :neighborhood, :price_range, :longitude,
+      :latitude)
     end
 end

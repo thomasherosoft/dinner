@@ -1,15 +1,15 @@
-$(document).on('change', '.filter-status', function (e) {
-    var data = $(this).closest('form').serialize();
-
-    $('.search-result').load(
-      '/?' + data + ' .search-result > *'
-    );
-
-    history.pushState(null, null, '/?' + data);
-
-
-    e.preventDefault();
-});
+// $(document).on('change', '.filter-status', function (e) {
+//     var data = $(this).closest('form').serialize();
+//
+//     $('.search-result').load(
+//       '/?' + data + ' .search-result > *'
+//     );
+//
+//     history.pushState(null, null, '/?' + data);
+//
+//
+//     e.preventDefault();
+// });
 
 $(function  () {
   $('#price_range').slider({
