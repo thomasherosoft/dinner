@@ -146,7 +146,7 @@ $.getJSON(location.toString(), function(data){
       });
       clear.forEach(function(id){
         markers[id].setMap(null);
-      })      
+      })
     });
 
     history.pushState(null, null, '/?' + data);
@@ -187,6 +187,7 @@ infoWindow.setContent(browserHasGeolocation ?
       <a class="logo" href="/">YoYo</a>
       <div class="header-right">
         <a class="blog" href="blog">Blog</a>
+        <a class="blog" href="blog">I Want An App!</a>
         <ul class="social-icons">
               <li><a href="www.facebook.com" class="fb-icon" target="_blank"></a></li>
               <li><a href="www.twitter.com" class="tw-icon" target="_blank">  </a></li>
