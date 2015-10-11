@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20151011084928) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.text     "imageurl"
-    t.float    "rating",          default: 0.0
+    t.float    "rating",          default: N/A
   end
 
 end

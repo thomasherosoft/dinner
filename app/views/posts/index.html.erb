@@ -5,24 +5,6 @@
         <form>
           <span>Filters</span>
           <div class="accolades-panel">
-            <!-- <label>
-              Michelin Star(s) <dd>1,2,3 and bibs</dd> <input type="checkbox" name="michelin_status" value="">
-            </label>
-
-                        <label>  Zagat<dd>rated</dd><input type="checkbox" name="zagat_status" value="Yes">
-                        </label>
-            <label>
-              Yelp<dd>top10% by rating</dd><input type="checkbox" name="" value="">
-            </label>
-            <label>
-              TimeOut<dd>top10% or listed</dd><input type="checkbox" name="" value="">
-            </label>
-            <label>
-               TripAdvisor<dd>top10 % by rating</dd><input type="checkbox" name="" value="">
-             </label>
-             <label>
-              NYC Health Grade<dd>A only</dd><input type="checkbox" name="" value="">
-            </label> -->
             <label for="zagat_status">
               Zagat Status
               <select id="zagat_status" class="filter-status" name="zagat_status">
@@ -73,7 +55,7 @@
               <a href="javascript:;" class="js-show-location">
                  <figure>
                    <%= image_tag post.imageurl.presence || "item-1.jpg", alt: "item image", class: 'item-image' %>
-                   <span class="item-rating"><%= post.rating %></span>
+                   <span class="item-rating" style="color: white"><%= post.rating %></span>
                  </figure>
                 <strong><%= post.name %></strong>
                 <span><%= post.address %> - <%= post.cuisine %></span><br>
