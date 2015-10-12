@@ -107,7 +107,9 @@ var showInfo = function(point) {
     html += point.name + '<br>';
     html += point.address + '<br>';
     html += point.phone + '<br>';
-    html += '<%= image_tag("uber.jpg", style: "max-height: 13px") %> £' + cost;
+    if (cost) {
+      html += '<%= image_tag("uber.jpg", style: "max-height: 13px") %> £' + cost;
+    }
     html += '</td></tr></table>';
     infoWindow.setContent(html);
     infoWindow.open(map, markers[+point.id]);
