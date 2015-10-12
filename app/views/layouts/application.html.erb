@@ -59,7 +59,6 @@ function getPlaceInfo(place, callback) {
     callback(url);
   }
 
-  console.debug('searching for', place.name, ++reqCounter);
   if (place.placeid) {
     places.getDetails({placeId: place.placeid}, function(data, status) {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
@@ -126,7 +125,6 @@ var showInfo = function(point) {
       var miles = dist.distance.value / 1609;
       if (miles <= 50) {
         var time = miles / 9 * 60;
-        console.debug(dist, 'miles', miles, 'minutes', time);
         cost = Math.round(2.5 + 1.25*miles + 0.25*time);
         if (cost < 5) cost = 5;
       }
