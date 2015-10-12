@@ -1,7 +1,7 @@
 require 'open-uri'
 
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy, :image, :rating]
+  before_action :set_post, only: [:show, :edit, :update, :destroy, :info]
 
   # GET /posts
   # GET /posts.json
@@ -88,24 +88,33 @@ class PostsController < ApplicationController
     end
   end
 
-  def image
+  def info
     if request.post?
-      open("public/post_images/#{@post.id}.jpg", 'wb') do |f|
-        f.write open(params[:data]).read
+      if params[:photo].present?
+        open("public/post_images/#{@post.id}.jpg", 'wb') do |f|
+          f.write open(params[:photo]).read
+        end
+        @post.update image_present: File.exists?(Rails.root.join("public/post_images/#{@post.id}.jpg"))
       end
-      @post.update image_present: true
-      head :ok
-    else
-      render json: {data: (@post.image_present ? "/post_images/#{@post.id}.jpg" : nil)}
-    end
-  end
 
-  def rating
-    if request.post?
-      @post.update(rating: params[:data])
+      if params[:rating].present?
+        @post.update(rating: params[:rating])
+      end
+
+      if params[:placeid].present?
+        @post.update(placeid: params[:placeid])
+      end
+
+      if params[:phone].present?
+        @post.update(phone: params[:phone])
+      end
       head :ok
     else
-      render json: {data: @post.rating}
+      render json: {
+        photo: (@post.image_present ? "/post_images/#{@post.id}.jpg" : nil),
+        placeid: @post.placeid,
+        rating: @post.rating
+      }
     end
   end
 

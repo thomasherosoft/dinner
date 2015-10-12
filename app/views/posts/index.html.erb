@@ -5,17 +5,17 @@
       <%= render 'search_form' %>
       <div class="search-result">
         <div class="more-filter">
-          <span><%= @posts.count %> Restaurants · London</span><br><hr>
+          <span><div id="results-count"><%= @posts.count %></div> Restaurants · London</span><br><hr>
         </div>
         <div class="row">
 <% end %>
           <% @posts.each do |post| %>
-          <div class="col-md-12 item-widget <%= post.image_present ? 'js-place-updated' : '' %>" data-id="<%= post.id %>" data-name="<%= post.name %>" data-address="<%= post.address %>" data-longitude="<%= post.longitude %>" data-latitude="<%= post.latitude %>">
+          <div class="col-md-12 item-widget <%= post.image_present ? 'js-place-updated' : '' %>" data-id="<%= post.id %>" data-name="<%= post.name %>" data-address="<%= post.address %>" data-longitude="<%= post.longitude %>" data-latitude="<%= post.latitude %>" data-placeid="<%= post.placeid %>" data-phone="<%= post.phone %>">
             <figcaption>
               <a href="javascript:;" class="js-show-location">
                  <figure>
                    <%= image_tag (post.image_present ? "/post_images/#{post.id}.jpg" : "item-1.jpg"), alt: "item image", class: 'item-image' %>
-                   <span class="item-rating" style="color: white"><%= post.rating %></span>
+                   <span class="item-rating" style="color: white"><%= post.rating > 1 ? "#{post.rating.to_i}%" : 'N/A' %></span>
                  </figure>
                 <strong><%= post.name %></strong>
                 <span><%= post.address %> - <%= post.cuisine %></span><br>

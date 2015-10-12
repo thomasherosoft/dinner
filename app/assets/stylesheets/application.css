@@ -260,3 +260,7 @@ body{
   min-height: 300px !important;
   margin-bottom: 10px;
 }
+
+#results-count {
+  display: inline;
+}

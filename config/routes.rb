@@ -1,10 +1,8 @@
 Rails.application.routes.draw do
   resources :posts do
     member do
-      get :image
-      post :image
-      get :rating
-      post :rating
+      get :info
+      post :info
     end
   end
   # The priority is based upon order of creation: first created -> highest priority.
