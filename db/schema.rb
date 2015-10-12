@@ -24,10 +24,10 @@ ActiveRecord::Schema.define(version: 20151011084928) do
     t.string   "price_range"
     t.decimal  "longitude"
     t.decimal  "latitude"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.text     "imageurl"
-    t.float    "rating",          default: N/A
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "image_present",   default: false, null: false
+    t.float    "rating",          default: 0.0
   end
 
 end

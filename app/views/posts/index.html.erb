@@ -1,60 +1,20 @@
-  <p id="notice"><%= notice %></p>
+<% unless request.xhr? %>
+<p id="notice"><%= notice %></p>
 <div class="main-wrap">
-    <div class="map-side-bar">
-      <div class="search-filter">
-        <form>
-          <span>Filters</span>
-          <div class="accolades-panel">
-            <label for="zagat_status">
-              Zagat Status
-              <select id="zagat_status" class="filter-status" name="zagat_status">
-                <option value="">Don't Care</option>
-                <option value="Yes" <%= 'selected' if params[:zagat_status] == "Yes" %>>Yes</option>
-                <option value="No" <%= 'selected' if params[:zagat_status] == "No" %>>No</option>
-              </select>
-            </label>
-
-            <label for="michelin_status">
-              Michelin Status
-              <select id="michelin_status" class="filter-status" name="michelin_status">
-                <option value="">Don't Care</option>
-                <option value="1" <%= 'selected' if params[:michelin_status] == "1" %>>1</option>
-                <option value="2" <%= 'selected' if params[:michelin_status] == "2" %>>2</option>
-                <option value="3" <%= 'selected' if params[:michelin_status] == "3" %>>3</option>
-                <option value="4" <%= 'selected' if params[:michelin_status] == "4" %>>4</option>
-                <option value="5" <%= 'selected' if params[:michelin_status] == "5" %>>5</option>
-              </select>
-            </label>
-
-            <label for="cuisine">
-              Cuisine<br>
-              <select id="cuisine" class="filter-status" name="cuisine">
-                <option value="">Don't Care</option>
-                <option value="French" <%= 'selected' if params[:cuisine] == "French" %>>French</option>
-                <option value="Italian" <%= 'selected' if params[:cuisine] == "Italian" %>>Italian</option>
-                <option value="British" <%= 'selected' if params[:cuisine] == "British" %>>British</option>
-              </select>
-            </label>
-
-            <div class="consistency-score">
-              <span style="margin-right: 40px;">Price Range</span>
-              <input id="price_range" class="filter-status" data-slider-id='ex1Sl' type="text" name="price_range" data-slider-min="1" data-slider-max="4" data-slider-step="1" data-slider-value="<%= params[:price_range] %>"/>
-            </div>
-          </div>
-        </form>
-      </div>
-
+  <div class="map-side-bar">
+      <%= render 'search_form' %>
       <div class="search-result">
         <div class="more-filter">
           <span><%= @posts.count %> Restaurants · London</span><br><hr>
         </div>
         <div class="row">
+<% end %>
           <% @posts.each do |post| %>
-          <div class="col-md-12 item-widget" data-id="<%= post.id %>" data-name="<%= post.name %>" data-address="<%= post.address %>" data-longitude="<%= post.longitude %>" data-latitude="<%= post.latitude %>">
+          <div class="col-md-12 item-widget <%= post.image_present ? 'js-place-updated' : '' %>" data-id="<%= post.id %>" data-name="<%= post.name %>" data-address="<%= post.address %>" data-longitude="<%= post.longitude %>" data-latitude="<%= post.latitude %>">
             <figcaption>
               <a href="javascript:;" class="js-show-location">
                  <figure>
-                   <%= image_tag post.imageurl.presence || "item-1.jpg", alt: "item image", class: 'item-image' %>
+                   <%= image_tag (post.image_present ? "/post_images/#{post.id}.jpg" : "item-1.jpg"), alt: "item image", class: 'item-image' %>
                    <span class="item-rating" style="color: white"><%= post.rating %></span>
                  </figure>
                 <strong><%= post.name %></strong>
@@ -64,16 +24,18 @@
             <figcaption>
           </div>
           <% end %>
-
-
-
+<% unless request.xhr? %>
         </div>
       </div>
-    </div>
-      <div class="home-map">
-          <div id="map">
-          </div>
+      <div class="text-center">
+        <a href="javascript:;" class="js-show-more">Show more...</a>
       </div>
+    </div>
+    <div class="home-map">
+      <div id="map">
+      </div>
+    </div>
 </div>
 
 <br>
+<% end %>

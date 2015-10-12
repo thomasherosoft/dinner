@@ -1,10 +1,12 @@
+require 'open-uri'
+
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy, :image, :rating]
 
   # GET /posts
   # GET /posts.json
   def index
-    @posts = Post.all
+    @posts = Post.all.paginate(page: params[:page], per_page: 20)
 
     if params[:search]
       @posts = @posts.search(params[:search]).order(created_at: :desc)
@@ -27,7 +29,7 @@ class PostsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
+      format.html { render layout: !request.xhr? }
       format.json
     end
   end
@@ -88,10 +90,13 @@ class PostsController < ApplicationController
 
   def image
     if request.post?
-      @post.update(imageurl: params[:data])
+      open("public/post_images/#{@post.id}.jpg", 'wb') do |f|
+        f.write open(params[:data]).read
+      end
+      @post.update image_present: true
       head :ok
     else
-      render json: {data: @post.imageurl}
+      render json: {data: (@post.image_present ? "/post_images/#{@post.id}.jpg" : nil)}
     end
   end
 

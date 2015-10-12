@@ -38,34 +38,23 @@ var map = new google.maps.Map(document.getElementById('map'), {
 var infoWindow = new google.maps.InfoWindow({map: map});
 var places = new google.maps.places.PlacesService(map);
 
+var reqCounter = 0;
 function getPlaceInfo(place, callback) {
-  console.debug('searching for', place.name + ' ' + place.address, place);
+  console.debug('searching for', place.name, ++reqCounter);
   places.textSearch({query: place.name + ' ' + place.address, location: {lat: parseFloat(place.longitude), lng: parseFloat(place.latitude)}, radius: 100, types: ['restaurant']}, function(ary, status){
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       if (ary.length) {
         var data = ary[0];
         var rating = data.rating || 0;
-        console.debug("rating for", name, data.rating);
         rating = Math.floor(10000 * rating / 5.0) / 100;
         $.post('/posts/' + place.id + '/rating', {data: rating});
         $('.item-widget[data-id="' + place.id + '"] .item-rating').text(rating + '%');
         if (!data.photos) { return callback(null) }
         var photo = data.photos[0];
         if (!photo) { return callback(null) }
-        var img = new Image()
-        img.crossOrigin = 'Anonymous';
-        img.onload = function () {
-          var canvas = document.createElement('canvas');
-          var ctx = canvas.getContext('2d');
-          ctx.height = this.height;
-          ctx.width = this.width;
-          ctx.drawImage(this, 0, 0);
-          var uri = canvas.toDataURL('image/png');
-          $.post('/posts/' + place.id + '/image', {data: uri});
-          callback(uri);
-          canvas = null;
-        }
-        img.src = photo.getUrl({maxWidth: 800});
+        var url = photo.getUrl({maxWidth: 800})
+        $.post('/posts/' + place.id + '/image', {data: url});
+        callback(url);
       } else {
         callback(null);
       }
@@ -75,22 +64,44 @@ function getPlaceInfo(place, callback) {
   })
 }
 
-$('.item-widget[data-id]').each(function(){
-  var $this = $(this)
-  getPlaceInfo($this.data(), function(uri){
-    if (uri) {
-      console.debug('loaded image for', $this.data('name'));
-      $this.find('.item-image').attr('src', uri);
-    } else {
-      console.debug('no image for ', $this.data('name'))
-    }
-
+function updateWidgets() {
+  $('.item-widget[data-id]:not(.js-place-updated)').each(function(){
+    var $this = $(this);
+    $this.addClass('js-place-updated');
+    getPlaceInfo($this.data(), function(uri){
+      if (uri) {
+        $this.find('.item-image').attr('src', uri);
+      }
+    })
   })
-})
+}
+
+updateWidgets();
+
+var showInfo = function(point) {
+  if (point.target) {
+    point = $(this).parents('.item-widget').data();
+  }
+  var show = function(imageurl) {
+    var img = imageurl ? '<img src="' + imageurl + '" style="float:left;margin-right:5px;max-height:60px">' : ''
+    infoWindow.setContent(img + '<div>' + point.name + '<br>' + point.address);
+    infoWindow.open(map, markers[+point.id]);
+  }
+
+  $.getJSON('/posts/' + point.id + '/image')
+    .done(function(x){
+      show(x.data)
+    })
+    .fail(function(x){
+      getPlaceInfo(point, show)
+    })
+}
+
+$(document).on('click', '.item-widget[data-id] .js-show-location', showInfo);
 
 var markers = {}
 $.getJSON(location.toString(), function(data){
-  data.forEach(function(point){
+  data.forEach(function(point, idx){
     var position = {lat: parseFloat(point.longitude), lng: parseFloat(point.latitude)};
     var marker = markers[point.id] = new google.maps.Marker({
       position: position,
@@ -98,58 +109,67 @@ $.getJSON(location.toString(), function(data){
       title: point.name
     });
 
-    var showInfo = function() {
-      var show = function(imageurl) {
-        var img = imageurl ? '<img src="' + imageurl + '" style="float:left;margin-right:5px;max-height:60px">' : ''
-        infoWindow.setContent(img + '<div>' + point.name + '<br>' + point.address);
-        infoWindow.open(map, marker);
-      }
-
-      if (point.imageurl) {
-        show(point.imageurl)
-      } else {
-        $.getJSON('/posts/' + point.id + '/image')
-          .done(function(x){
-            show(x.data)
-          })
-          .fail(function(x){
-            getPlaceInfo(point, show)
-          })
-      }
-    }
-
-    $('.item-widget[data-id="' + point.id + '"]').on('click', '.js-show-location', showInfo);
-
-    marker.addListener('mouseover', showInfo);
+    marker.addListener('mouseover', function() {
+      showInfo(point)
+    });
     marker.addListener('mouseout', function(){
       infoWindow.close()
     })
   });
 
+  var updateData = function() {
+    var clear = Object.keys(markers);
+    $('.item-widget[data-id]').each(function(){
+      var $w = $(this), id = +$w.data('id'), x = clear.indexOf(id);
+      if (x > -1) {
+        markers[id].setMap(map);
+        clear.splice(x, 1)
+      } else {
+        var position = {lat: parseFloat($w.data('longitude')), lng: parseFloat($w.data('latitude'))};
+        markers[id] = new google.maps.Marker({
+          position: position,
+          map: map,
+          title: $w.data('name')
+        });
+      }
+    });
+    clear.forEach(function(id){
+      markers[id].setMap(null);
+    })
+  }
+
   $(document).on('change', '.filter-status', function (e) {
     var data = $(this).closest('form').serialize();
-    $('.search-result').load('/?' + data + ' .search-result > *', function(){
-      var clear = Object.keys(markers);
-      $('.item-widget[data-id]').each(function(){
-        var $w = $(this), id = +$w.data('id'), x = clear.indexOf(id);
-        if (x > -1) {
-          markers[id].setMap(map);
-          clear.splice(x, 1)
-        } else {
-          var position = {lat: parseFloat($w.data('longitude')), lng: parseFloat($w.data('latitude'))};
-          markers[id] = new google.maps.Marker({
-            position: position,
-            map: map,
-            title: $w.data('name')
-          });
-        }
-      });
-      clear.forEach(function(id){
-        markers[id].setMap(null);
-      })
-    });
-
+    $('.search-result').load('/?' + data, updateData);
     history.pushState(null, null, '/?' + data);
+    $('.js-show-more').show();
+  });
+
+  $('.js-show-more').on('click', function(){
+    var link = $(this);
+    var title = link.text();
+    var items = $('.item-widget').length;
+    var page = Math.floor(items/20);
+    if ((items % 20) > 0) {
+      link.hide()
+    } else {
+      link.text('Loading...');
+      var url = location.toString();
+      url += url.indexOf('?') > -1 ? '&' : '?'
+      url += '&page=' + (page+1)
+      $.ajax({
+        dataType: 'html',
+        url: url
+      }).done(function(html){
+        $('.search-result').append(html);
+        updateData();
+        updateWidgets();
+        link.text(title);
+        if (($('.item-widget').length % 20) > 0) {
+          link.hide();
+        }
+      })
+    }
   });
 });
 
