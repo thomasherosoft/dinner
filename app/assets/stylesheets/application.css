@@ -10,10 +10,24 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+ *= require bootstrap
+ *= require rangeslider
+ *= require bootstrap-slider
+ *= require bootstrap-theme
  *= require_tree .
  *= require_self
- *= require_bootstrap-slider
  */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#map {
+  height: 720px;
+  width: 910px;
+  background-color: rgb(229, 227, 223);
+}
 
 .navbar-form{
   background-color:#ff00b1;

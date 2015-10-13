@@ -18,3 +18,7 @@
 //= require bootstrap-slider
 //= require rangeslider
 //= require index
+//= require mithril
+//= require init
+//= require map
+//= require main

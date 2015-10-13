@@ -67,6 +67,13 @@ class PostsController < ApplicationController
   # PATCH/PUT /posts/1
   # PATCH/PUT /posts/1.json
   def update
+    if params[:photo].present?
+      open("public/post_images/#{@post.id}.jpg", 'wb') do |f|
+        f.write open(params[:photo]).read
+      end
+      @post.image_present = File.exists?(Rails.root.join("public/post_images/#{@post.id}.jpg"))
+    end
+
     respond_to do |format|
       if @post.update(post_params)
         format.html { redirect_to @post, notice: 'Post was successfully updated.' }
@@ -128,6 +135,6 @@ class PostsController < ApplicationController
     def post_params
       params.require(:post).permit(:name, :michelin_status, :zagat_status,
       :address, :city, :cuisine, :neighborhood, :price_range, :longitude,
-      :latitude)
+      :latitude, :rating, :phone)
     end
 end
