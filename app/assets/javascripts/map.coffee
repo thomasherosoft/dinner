@@ -27,11 +27,11 @@ App.initMap = ->
         map: map
         radius: 3*1609
         strokeColor: '#800080'
-        strokeOpacity: 0.5
-        strokeWeight: 1
+        strokeOpacity: 0.9
+        strokeWeight: 3
       circle.addListener 'mouseover', ->
         infoWindow.setPosition(myPosition)
-        infoWindow.setContent('Uber £12+')
+        infoWindow.setContent('Inside the purple circle, Uber costs < £12.<br> (Zoom out to see)')
         infoWindow.open(map)
       circle.addListener 'mouseout', -> infoWindow.close()
     , -> infoWindow.setContent 'Error: The Geolocation service failed.'
