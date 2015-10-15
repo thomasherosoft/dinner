@@ -1,9 +1,10 @@
 json.array!(@restaurants) do |restaurant|
-  json.extract! post, :id, :name, :zagat_status, :michelin_status, :cuisine, :address, :city, :price_range, :image_present, :placeid, :rating
-  json.url post_url(post, format: :json)
-  json.latitude post.latitude.to_f
-  json.longitude post.longitude.to_f
-  json.photo image_url(post.image_present ? "/post_images/#{post.id}.jpg" : 'item-1.jpg')
-  json.page @posts.current_page
-  json.pages @posts.total_pages
+  json.extract! restaurant, :id, :name, :zagat_status, :michelin_status, :address, :city, :price_range, :price_range_currency, :rating, :phone
+  json.url post_url(restaurant, format: :json)
+  json.latitude restaurant.latitude.to_f
+  json.longitude restaurant.longitude.to_f
+  json.photo restaurant.photo_url.presence || image_url('item-1.jpg')
+  json.page @restaurants.current_page
+  json.pages @restaurants.total_pages
+  json.cuisines restaurant.cuisines_names
 end

@@ -11,28 +11,18 @@ infoHTML = (data) ->
 queue = []
 
 drain = ->
-  post = queue.shift()
-  if post && post.placeid
+  item = queue.shift()
+  if item
     App
-      .getPlace post.placeid
-      .then (data) ->
-        App.x
-          .put data: data, url: "/posts/#{post.id}"
-          .then ->
-            $.extend(post, data)
-            setTimeout drain, 50
-            App
-              .uberCost lat: post.latitude, lng: post.longitude
-              .then (x) ->
-                m.startComputation()
-                post.cost = x
-                m.endComputation()
-      , ->
-        queue.push post
-        console.error 'getPlace', arguments
-        setTimeout drain, 100
+      .uberCost lat: item.latitude, lng: item.longitude
+      .then (x) ->
+        m.startComputation()
+        item.cost = x
+        console.debug 'uber', item.name, x
+        m.endComputation()
+        setTimeout drain, 50
   else
-    setTimeout drain, 100
+    setTimeout drain, 200
 drain()
 
 
@@ -40,32 +30,21 @@ sync = (data) -> queue.push data
 
 
 restaurant =
-  controller: (post) ->
+  controller: (item) ->
     console.debug 'init restaurant'
 
-    sync(post)
+    sync(item)
 
     marker = App.newMarker
       position:
-        lat: post.latitude
-        lng: post.longitude
-      title: post.name
+        lat: item.latitude
+        lng: item.longitude
+      title: item.name
 
     showInfo = (center=false) ->
       if center
-        App.centerMap lat: post.latitude, lng: post.longitude
-      fn = -> App.showInfo infoHTML(post), marker
-      if post.cost
-        fn()
-      else
-        App
-          .uberCost lat: post.latitude, lng: post.longitude
-          .then (x) ->
-            m.startComputation()
-            post.cost = x
-            m.endComputation()
-            fn()
-          , fn
+        App.centerMap lat: item.latitude, lng: item.longitude
+      App.showInfo infoHTML(item), marker
 
     marker.addListener 'mouseout', -> App.closeInfo()
     marker.addListener 'mouseover', -> showInfo()
@@ -78,18 +57,17 @@ restaurant =
     fallbackImageUrl: (e) ->
       e.target.src = '/assets/item-1.jpg'
 
+    price_range: ->
+      (item.price_range_currency for i in [1..item.price_range]).join('')
 
-  view: (ctrl, post)->
-    imageUrl = if post.image_present
-                 "/post_images/#{post.id}.jpg"
-               else
-                 '/assets/item-1.jpg'
-    uber = if post.cost
+
+  view: (ctrl, item)->
+    uber = if item.cost
              [
                ' - '
                m 'span', [
                  m 'img', src: '/assets/uber.jpg', style: {maxHeight: '13px'}
-                 " £#{post.cost}"
+                 " £#{item.cost}"
                ]
              ]
            else
@@ -99,15 +77,16 @@ restaurant =
       m 'figcaption', [
         m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
           m 'figure', [
-            m 'img.item-image', src: imageUrl, onerror: ctrl.fallbackImageUrl
-            m 'span.item-rating', style: {color: 'white'}, (if post.rating > 1 then "#{Math.floor post.rating}%" else 'N/A')
+            m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: ctrl.fallbackImageUrl
+            m 'span.item-rating', style: {color: 'white'}, (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
           ]
-          m 'strong', post.name
-          m 'span', post.address
+          m 'strong', item.name
+          m 'span', item.address
           m 'span', [
-            post.neighborhood
-            post.price_range
-            post.michelin_status + ' star' + (if +post.michelin_status > 1 then 's' else '')
+            item.neighborhood
+            item.cuisines.join(', ')
+            ctrl.price_range()
+            item.michelin_status
           ].join(' - ')
           uber
         ]
@@ -115,11 +94,44 @@ restaurant =
     ]
 
 
+store = []
 
 filters =
-  view: ->
-    m '.search-filter'
+  controller: ->
+    active: (name) ->
+      m.route.parseQueryString(location.search).filter == name
 
+    url: (name) ->
+      args = m.route.parseQueryString(location.search)
+      args.filter = name
+      delete args[""]
+      delete args.page
+      "/?#{m.route.buildQueryString(args)}"
+
+
+  view: (ctrl) ->
+    m '.search-filter', [
+      m 'form', [
+        m 'h3', 'Explore Your City'
+        m 'ul.filters-icons', [
+          m 'li', className: (if ctrl.active('zagat') then 'active' else ''), [
+            m 'a', href: ctrl.url('zagat'), 'Zagat'
+          ]
+          m 'li', className: (if ctrl.active('michelin') then 'active' else ''), [
+            m 'a', href: ctrl.url('michelin'), 'Michelin'
+          ]
+          m 'li', className: (if ctrl.active('timeout') then 'active' else ''), [
+            m 'a', href: ctrl.url('timeout'), 'TimeOut'
+          ]
+          m 'li', className: (if ctrl.active('foodtrack') then 'active' else ''), [
+            m 'a', href: ctrl.url('foodtrack'), 'F.Truck'
+          ]
+          m 'li', className: (if ctrl.active('faisal') then 'active' else ''), [
+            m 'a', href: ctrl.url('faisal'), 'Faisal'
+          ]
+        ]
+      ]
+    ]
 
 
 app =
@@ -137,27 +149,27 @@ app =
           data: App.x.extend(m.route.parseQueryString(location.search), page: page)
           url: location.pathname
         .then (response) -> data = data.concat(response)
-    posts: -> data
+    items: -> data
 
 
   view: (ctrl) ->
-    posts = ctrl.posts()
-    hasMore = posts.length && posts[posts.length-1].page < posts[posts.length-1].pages
+    items = ctrl.items()
+    hasMore = items.length && items[items.length-1].page < items[items.length-1].pages
 
     [
       m.component filters
 
       m '.search-result', [
         m '.more-filter', [
-          m 'span', "#{ctrl.posts().length} Restaurants · London"
+          m 'span', "#{ctrl.items().length} Restaurants · London"
           m 'br'
           m 'hr'
         ]
 
         m '.row', [
-          ctrl.posts().map (post) ->
-            post.key = post.id
-            m.component restaurant, post
+          ctrl.items().map (item) ->
+            item.key = item.id
+            m.component restaurant, item
         ]
       ]
 

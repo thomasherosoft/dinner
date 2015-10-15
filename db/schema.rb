@@ -11,7 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151012091113) do
+ActiveRecord::Schema.define(version: 20151014091458) do
+
+  create_table "cuisines", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cuisines_restaurants", id: false, force: :cascade do |t|
+    t.integer "cuisine_id",    null: false
+    t.integer "restaurant_id", null: false
+  end
 
   create_table "posts", force: :cascade do |t|
     t.string   "name"
@@ -30,6 +41,30 @@ ActiveRecord::Schema.define(version: 20151012091113) do
     t.float    "rating",          default: 0.0
     t.string   "placeid"
     t.string   "phone"
+  end
+
+  create_table "restaurants", force: :cascade do |t|
+    t.string   "name"
+    t.string   "address"
+    t.string   "phone"
+    t.string   "city"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.string   "zipcode"
+    t.integer  "price_range"
+    t.string   "price_range_currency"
+    t.string   "photo_url"
+    t.string   "thumb_url"
+    t.integer  "rating"
+    t.string   "zomato_id"
+    t.datetime "zomato_fetched_at"
+    t.string   "zagat_status"
+    t.string   "michelin_status"
+    t.string   "timeout_status"
+    t.string   "foodtruck_status"
+    t.string   "faisal_status"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
 end
