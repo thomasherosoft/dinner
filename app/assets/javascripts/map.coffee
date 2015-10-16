@@ -1,6 +1,7 @@
 map = infoWindow = places = distance = myPosition = null
 
 App.initMap = ->
+  deferred = m.deferred()
   map = new google.maps.Map document.getElementById('map'),
     center:
       lat: 51.5084509
@@ -9,6 +10,9 @@ App.initMap = ->
     zoomControlOptions:
       position: google.maps.ControlPosition.LEFT_CENTER
     zoom: 15
+
+  map.addListener 'idle', ->
+    deferred.resolve()
 
   infoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true
   places = new google.maps.places.PlacesService map
@@ -40,7 +44,7 @@ App.initMap = ->
       App.drawCircle
         fillColor: 'blue'
         fillOpacity: 0.9
-        radius: 10
+        radius: 25
         strokeColor: 'blue'
         strokeOpacity: 0.9
         strokeWeight: 3
@@ -48,7 +52,8 @@ App.initMap = ->
   else
     infoWindow.setContent "Error: Your browser doesn't support geolocation."
 
-  null
+  deferred.promise
+
 
 App.drawCircle = (args) ->
   new google.maps.Circle App.x.extend(args, map: map, center: myPosition)

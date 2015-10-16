@@ -5,6 +5,9 @@ infoHTML = (data) ->
   html += data.address + '<br>'
   html += data.phone + '<br>' if data.phone
   html += "<img src='/assets/uber.jpg' style='max-height:13px'> £#{data.cost}" if data.cost
+  if data.michelin_status && data.michelin_status != 'yes'
+    html += data.michelin_status + '<br>'
+  html += data.rating + '% rated' if data.rating
   html + '</td></tr></table>'
 
 
@@ -33,8 +36,6 @@ sync = (data) -> queue.push data
 
 restaurant =
   controller: (item) ->
-    console.debug 'init restaurant'
-
     marker = App.newMarker
       position:
         lat: item.latitude
@@ -86,6 +87,7 @@ restaurant =
             item.neighborhood
             item.cuisines.join(', ')
             ctrl.price_range()
+            (if item.michelin_status == 'yes' then '' else item.michelin_status)
           ].join(' - ')
           uber
         ]
@@ -153,11 +155,11 @@ app =
       load page: page
 
     filtered: ->
-      if activeFilter == 'deliveroo'
-        store.filter (item) ->
+      store.filter (item) ->
+        if activeFilter == 'deliveroo'
           item.miles && item.miles <= 2
-      else
-        store
+        else
+          item.miles
 
 
   view: (ctrl) ->
@@ -234,8 +236,7 @@ search =
 
 
 top.initApp = ->
-  App.initMap()
-
-  load().then ->
-    m.mount document.querySelector('.map-side-bar'), app
-    m.mount document.querySelector('#search-form'), search
+  App.initMap().then ->
+    load().then ->
+      m.mount document.querySelector('.map-side-bar'), app
+      m.mount document.querySelector('#search-form'), search
