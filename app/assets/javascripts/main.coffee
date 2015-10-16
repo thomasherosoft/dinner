@@ -95,40 +95,51 @@ restaurant =
 
 
 store = []
+activeFilter = 'michelin'
+activeSearch = null
+
+load = (args={}) ->
+  args.filter && activeFilter = args.filter
+  activeSearch = args.search if args.search != null
+  App.x
+    .get
+      data:
+        filter: activeFilter
+        search: activeSearch
+        page: args.page
+      url: location.toString()
+    .then (response) ->
+      if args.page
+        store = store.concat(response)
+      else
+        store = response
+        if store.length
+          App.centerMap
+            lat: store[0].latitude
+            lng: store[0].longitude
+
+
+filterNames =
+  michelin: 'Michelin'
+  zagat: 'Zagat'
+  timeout: 'TimeOut'
+  foodtruck: 'F.Truck'
+  faisal: 'Faisal'
 
 filters =
   controller: ->
-    active: (name) ->
-      m.route.parseQueryString(location.search).filter == name
-
-    url: (name) ->
-      args = m.route.parseQueryString(location.search)
-      args.filter = name
-      delete args[""]
-      delete args.page
-      "/?#{m.route.buildQueryString(args)}"
-
+    filter: (name) ->
+      load filter: name
 
   view: (ctrl) ->
     m '.search-filter', [
       m 'form', [
         m 'h3', 'Explore Your City'
         m 'ul.filters-icons', [
-          m 'li', className: (if ctrl.active('zagat') then 'active' else ''), [
-            m 'a', href: ctrl.url('zagat'), 'Zagat'
-          ]
-          m 'li', className: (if ctrl.active('michelin') then 'active' else ''), [
-            m 'a', href: ctrl.url('michelin'), 'Michelin'
-          ]
-          m 'li', className: (if ctrl.active('timeout') then 'active' else ''), [
-            m 'a', href: ctrl.url('timeout'), 'TimeOut'
-          ]
-          m 'li', className: (if ctrl.active('foodtrack') then 'active' else ''), [
-            m 'a', href: ctrl.url('foodtrack'), 'F.Truck'
-          ]
-          m 'li', className: (if ctrl.active('faisal') then 'active' else ''), [
-            m 'a', href: ctrl.url('faisal'), 'Faisal'
-          ]
+          Object.keys(filterNames).map (name) ->
+            m 'li', className: (if activeFilter == name then 'active' else ''), [
+              m 'a', href: 'javascript:;', onclick: ctrl.filter.bind(null, name), filterNames[name]
+            ]
         ]
       ]
     ]
@@ -136,38 +147,34 @@ filters =
 
 app =
   controller: ->
-    data = []
-    App.x
-      .get(url: location.toString())
-      .then (response) -> data = response
-
     loadMore: ->
-      page = if data.length then data[data.length-1].page else 0
+      page = if store.length then store[store.length-1].page else 0
       page += 1
-      App.x
-        .get
-          data: App.x.extend(m.route.parseQueryString(location.search), page: page)
-          url: location.pathname
-        .then (response) -> data = data.concat(response)
-    items: -> data
+      load page: page
 
 
   view: (ctrl) ->
-    items = ctrl.items()
-    hasMore = items.length && items[items.length-1].page < items[items.length-1].pages
+    hasMore = store.length && store[store.length-1].page < store[store.length-1].pages
+    total = store[0]?.totals
+    total && total = " of #{total}"
+
+    if activeSearch
+      head = "results matching \"#{activeSearch}\""
+    else
+      head = "#{filterNames[activeFilter]} restaurants"
 
     [
       m.component filters
 
       m '.search-result', [
         m '.more-filter', [
-          m 'span', "#{ctrl.items().length} Restaurants · London"
+          m 'span', "Showing #{store.length}#{total} #{head} in London"
           m 'br'
           m 'hr'
         ]
 
         m '.row', [
-          ctrl.items().map (item) ->
+          store.map (item) ->
             item.key = item.id
             m.component restaurant, item
         ]
@@ -179,6 +186,21 @@ app =
     ]
 
 
+search =
+  controller: ->
+    search: (v) ->
+      load search: v
+
+  view: (ctrl) ->
+    m 'input.form-control',
+      onkeyup: m.withAttr('value', ctrl.search)
+      placeholder: 'Search Restaurant Name'
+      value: (activeSearch || '')
+
+
 top.initApp = ->
   App.initMap()
-  m.mount document.querySelector('.map-side-bar'), app
+
+  load().then ->
+    m.mount document.querySelector('.map-side-bar'), app
+    m.mount document.querySelector('#search-form'), search

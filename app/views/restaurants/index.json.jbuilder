@@ -6,5 +6,6 @@ json.array!(@restaurants) do |restaurant|
   json.photo restaurant.photo_url.presence || image_url('item-1.jpg')
   json.page @restaurants.current_page
   json.pages @restaurants.total_pages
+  json.totals @restaurants.total_entries
   json.cuisines restaurant.cuisines_names
 end

@@ -82,13 +82,13 @@ App.uberCost = (to) ->
     if dist && dist.elements[0]
       dist = dist.elements[0]
       miles = dist.distance.value / 1609
-      # if miles <= 50
-      time = miles / 9 * 60
-      cost = Math.round(2.5 + 1.25*miles + 0.25*time)
-      cost = 5 if cost < 5
-      deferred.resolve(cost)
-      # else
-      #   deferred.resolve(0)
+      if miles <= 50
+        time = miles / 9 * 60
+        cost = Math.round(2.5 + 1.25*miles + 0.25*time)
+        cost = 5 if cost < 5
+        deferred.resolve(cost)
+      else
+        deferred.resolve(0)
     else
       deferred.reject(status)
 

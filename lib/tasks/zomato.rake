@@ -55,22 +55,22 @@ namespace :zomato do
     require 'cvs' unless defined?(CSV)
     offset = ENV['OFFSET'].to_i
     limit = ENV['LIMIT'].to_i
+    limit = 100 if limit.zero?
     file_name = ENV['FILE'].presence or raise 'no file in env'
     zomato = Zomato.new
 
     CSV.read(file_name).select{|r| r[14].to_s.start_with?('020') }.drop(offset).take(limit).each do |row|
       search(zomato, row[3], row[5]) do |record|
         status = row[6].to_s.downcase
-        value = michelin.scan(/\d+/).first
-        # puts "save #{record.inspect} #{row[14].inspect} #{michelin.inspect}"
+        value = status.scan(/\d+/).first.to_i
+        value = nil if value.zero?
         michelin = if status['bib']
-                     [value, (value > 1 ? 'Michelin Bib Gourmand' : 'Michelin Bib Gourmand')].join(' ')
+                     [value, (value.to_i > 1 ? 'Michelin Bib Gourmand' : 'Michelin Bib Gourmand')].join(' ')
                    elsif status['star']
-                     [value, (value > 1 ? 'Michelin Stars' : 'Michelin Star')].join(' ')
+                     [value, (value.to_i > 1 ? 'Michelin Stars' : 'Michelin Star')].join(' ')
                    else
                      "yes"
                    end
-        puts "save #{record.inspect} #{row[14].inspect} #{michelin.inspect}"
         record.update! phone: row[14], michelin_status: michelin
       end
     end
@@ -81,6 +81,7 @@ namespace :zomato do
     offset = ENV['OFFSET'].to_i
     offset = 1 if offset == 0 # header
     limit = ENV['LIMIT'].to_i
+    limit = 100 if limit.zero?
     file_name = ENV['FILE'].presence or raise 'no file in env'
     zomato = Zomato.new
 
@@ -94,6 +95,7 @@ namespace :zomato do
   task import_timeout: :setup do
     offset = ENV['OFFSET'].to_i
     limit = ENV['LIMIT'].to_i
+    limit = 100 if limit.zero?
     file_name = ENV['FILE'].presence or raise 'no file in env'
     zomato = Zomato.new
 
@@ -108,6 +110,7 @@ namespace :zomato do
   task import_foodtruck: :setup do
     offset = ENV['OFFSET'].to_i
     limit = ENV['LIMIT'].to_i
+    limit = 100 if limit.zero?
     file_name = ENV['FILE'].presence or raise 'no file in env'
     zomato = Zomato.new
 
@@ -121,6 +124,7 @@ namespace :zomato do
   task import_faisal: :setup do
     offset = ENV['OFFSET'].to_i
     limit = ENV['LIMIT'].to_i
+    limit = 100 if limit.zero?
     file_name = ENV['FILE'].presence or raise 'no file in env'
     zomato = Zomato.new
 

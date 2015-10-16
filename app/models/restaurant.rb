@@ -28,6 +28,8 @@ class Restaurant < ActiveRecord::Base
       self.thumb_url = data['thumb']
       self.rating = 100 * data['user_rating']['aggregate_rating'].to_f / 5
       self.rating += rand(10)-5
+      self.rating = 99 if rating > 99
+      self.rating = 5 if rating < 5
       self.zomato_id = data['id']
       self.zomato_fetched_at = Time.current
       save
