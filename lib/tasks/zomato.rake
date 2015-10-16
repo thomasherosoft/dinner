@@ -64,9 +64,9 @@ namespace :zomato do
         value = michelin.scan(/\d+/).first
         # puts "save #{record.inspect} #{row[14].inspect} #{michelin.inspect}"
         michelin = if status['bib']
-                     [value, (value > 1 ? 'bibs' : 'bib')].join(' ')
+                     [value, (value > 1 ? 'Michelin Bib Gourmand' : 'Michelin Bib Gourmand')].join(' ')
                    elsif status['star']
-                     [value, (value > 1 ? 'stars' : 'star')].join(' ')
+                     [value, (value > 1 ? 'Michelin Stars' : 'Michelin Star')].join(' ')
                    else
                      "yes"
                    end
