@@ -1,4 +1,6 @@
 class RestaurantsController < ApplicationController
+  after_action :log_search
+
   def index
     @restaurants = Restaurant.
       order(rating: :desc).
@@ -40,5 +42,11 @@ class RestaurantsController < ApplicationController
         end
       end
     end
+  end
+
+  private
+
+  def log_search
+    Search.create log_line: params.except(:action, :controller)
   end
 end
