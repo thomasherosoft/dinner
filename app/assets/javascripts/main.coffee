@@ -1,5 +1,5 @@
 infoHTML = (data) ->
-  img = if data.photo then "<img src='#{data.photo}' style='margin:5px 5px 0 0;max-height:70px'>" else ''
+  img = if data.photo then "<img onerror='this.parentNode.removeChild(this)' src='#{data.photo}' style='margin:5px 5px 0 0;max-height:70px'>" else ''
   html = "<table><tr><td style='vertical-align:top'>#{img}</td><td>"
   html += data.name + '<br>'
   html += data.address + '<br>'
@@ -12,19 +12,21 @@ queue = []
 
 drain = ->
   item = queue.shift()
-  if item
+  if item && !item.miles
     App
-      .uberCost lat: item.latitude, lng: item.longitude
-      .then (x) ->
+      .distance lat: item.latitude, lng: item.longitude
+      .then (miles) ->
         m.startComputation()
-        item.cost = x
-        console.debug 'uber', item.name, x
+        item.miles = miles
+        if miles && miles <= 50
+          time = miles / 9 * 60
+          item.cost = Math.round(2.5 + 1.25*miles + 0.25*time)
+          item.cost = 5 if item.cost < 5
         m.endComputation()
         setTimeout drain, 50
   else
     setTimeout drain, 200
 drain()
-
 
 sync = (data) -> queue.push data
 
@@ -32,8 +34,6 @@ sync = (data) -> queue.push data
 restaurant =
   controller: (item) ->
     console.debug 'init restaurant'
-
-    sync(item)
 
     marker = App.newMarker
       position:
@@ -77,7 +77,7 @@ restaurant =
       m 'figcaption', [
         m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
           m 'figure', [
-            m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: ctrl.fallbackImageUrl
+            m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
             m 'span.item-rating', style: {color: 'white'}, (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
           ]
           m 'strong', item.name
@@ -86,7 +86,6 @@ restaurant =
             item.neighborhood
             item.cuisines.join(', ')
             ctrl.price_range()
-            item.michelin_status
           ].join(' - ')
           uber
         ]
@@ -94,29 +93,29 @@ restaurant =
     ]
 
 
-store = []
+top.store = []
 activeFilter = 'michelin'
 activeSearch = null
 
 load = (args={}) ->
-  args.filter && activeFilter = args.filter
-  activeSearch = args.search if args.search != null
+  args.filter ||= activeFilter
+  args.search = activeSearch if !args.search && args.search != ''
   App.x
     .get
-      data:
-        filter: activeFilter
-        search: activeSearch
-        page: args.page
+      data: args
       url: location.toString()
     .then (response) ->
+      activeFilter = args.filter
+      activeSearch = args.search
       if args.page
-        store = store.concat(response)
+        top.store = store.concat response.slice()
       else
-        store = response
+        top.store = response.slice()
         if store.length
           App.centerMap
             lat: store[0].latitude
             lng: store[0].longitude
+      store.forEach (x) -> sync(x)
 
 
 filterNames =
@@ -125,6 +124,7 @@ filterNames =
   timeout: 'TimeOut'
   foodtruck: 'F.Truck'
   faisal: 'Faisal'
+  deliveroo: 'Deliveroo'
 
 filters =
   controller: ->
@@ -152,50 +152,85 @@ app =
       page += 1
       load page: page
 
+    filtered: ->
+      if activeFilter == 'deliveroo'
+        store.filter (item) ->
+          item.miles && item.miles <= 2
+      else
+        store
+
 
   view: (ctrl) ->
-    hasMore = store.length && store[store.length-1].page < store[store.length-1].pages
-    total = store[0]?.totals
-    total && total = " of #{total}"
+    items = ctrl.filtered()
 
-    if activeSearch
-      head = "results matching \"#{activeSearch}\""
+    if activeFilter == 'deliveroo'
+      hasMore = items.length >= 20
+      total = ''
+      head = 'Deliveroo restaurants in your delivery area'
     else
-      head = "#{filterNames[activeFilter]} restaurants"
+      hasMore = items.length && items[items.length-1].page < items[items.length-1].pages
+
+      total = items[0]?.totals || 0
+      total = if total then " of #{total}" else ''
+      head = if activeSearch
+               if items[0]?.found_by
+                 "#{items[0].found_by} restaurants"
+               else
+                 "results matching \"#{activeSearch}\""
+             else
+               "#{filterNames[activeFilter]} restaurants"
+      head += ' in London'
 
     [
       m.component filters
 
-      m '.search-result', [
+      m '.search-result', config: mapAdjusts, [
         m '.more-filter', [
-          m 'span', "Showing #{store.length}#{total} #{head} in London"
+          m 'span', "Showing #{items.length}#{total} #{head}"
           m 'br'
           m 'hr'
         ]
 
         m '.row', [
-          store.map (item) ->
+          items.map (item) ->
             item.key = item.id
             m.component restaurant, item
         ]
       ]
 
-      m '.text-center', className: (if hasMore then '' else 'hidden'), [
-        m 'a', href: 'javascript:;', onclick: ctrl.loadMore, 'Show more...'
+      m '.text-center.has-show-more', className: (if hasMore then '' else 'hidden'), [
+        m 'a.show-more', href: 'javascript:;', onclick: ctrl.loadMore, 'Show more...'
       ]
     ]
 
 
+mapAdjusts = (el, init, ctx) ->
+  if activeFilter == 'deliveroo'
+    unless ctx.deliveroo
+      App.showMe()
+      ctx.deliveroo = App.drawCircle
+        strokeColor: 'blue'
+        strokeOpacity: 0.7
+        strokeWeight: 3
+        radius: 2*1609
+        fillColor: 'blue'
+        fillOpacity: 0.1
+  else if ctx.deliveroo
+    ctx.deliveroo.setMap(null)
+    ctx.deliveroo = null
+
+
+debouncedLoad = App.x.debounce 100, load
+
 search =
   controller: ->
     search: (v) ->
-      load search: v
+      debouncedLoad search: v
 
   view: (ctrl) ->
     m 'input.form-control',
       onkeyup: m.withAttr('value', ctrl.search)
-      placeholder: 'Search Restaurant Name'
-      value: (activeSearch || '')
+      placeholder: 'Search Restaurant Name or Cuisine'
 
 
 top.initApp = ->

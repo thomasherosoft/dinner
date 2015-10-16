@@ -8,4 +8,5 @@ json.array!(@restaurants) do |restaurant|
   json.pages @restaurants.total_pages
   json.totals @restaurants.total_entries
   json.cuisines restaurant.cuisines_names
+  json.found_by @found_by
 end

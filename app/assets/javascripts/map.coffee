@@ -21,24 +21,38 @@ App.initMap = ->
         lng: pos.coords.longitude
       infoWindow.close()
 
-      circle = new google.maps.Circle
-        center: myPosition
+      circle = App.drawCircle
         fillOpacity: 0
-        map: map
         radius: 3*1609
         strokeColor: '#800080'
         strokeOpacity: 0.9
         strokeWeight: 3
       circle.addListener 'mouseover', ->
         infoWindow.setPosition(myPosition)
-        infoWindow.setContent('Inside the purple circle, Uber costs < £12.<br> (Zoom out to see)')
+        infoWindow.setContent """
+          Purple circle = get anywhere for £12.
+          <br>
+          Blue circle = your Deliveroo coverage area (based on current location)
+        """
         infoWindow.open(map)
       circle.addListener 'mouseout', -> infoWindow.close()
+
+      App.drawCircle
+        fillColor: 'blue'
+        fillOpacity: 0.9
+        radius: 10
+        strokeColor: 'blue'
+        strokeOpacity: 0.9
+        strokeWeight: 3
     , -> infoWindow.setContent 'Error: The Geolocation service failed.'
   else
     infoWindow.setContent "Error: Your browser doesn't support geolocation."
 
   null
+
+App.drawCircle = (args) ->
+  new google.maps.Circle App.x.extend(args, map: map, center: myPosition)
+
 
 App.newMarker = (args) ->
   $.extend args, map: map
@@ -66,7 +80,7 @@ App.getPlace = (id) ->
   deferred.promise
 
 
-App.uberCost = (to) ->
+App.distance = (to) ->
   deferred = m.deferred()
 
   unless myPosition
@@ -82,13 +96,7 @@ App.uberCost = (to) ->
     if dist && dist.elements[0]
       dist = dist.elements[0]
       miles = dist.distance.value / 1609
-      if miles <= 50
-        time = miles / 9 * 60
-        cost = Math.round(2.5 + 1.25*miles + 0.25*time)
-        cost = 5 if cost < 5
-        deferred.resolve(cost)
-      else
-        deferred.resolve(0)
+      deferred.resolve(miles)
     else
       deferred.reject(status)
 
@@ -101,3 +109,5 @@ App.showInfo = (html, marker) ->
 
 
 App.centerMap = (position) -> map.setCenter position
+
+App.showMe = -> map.setCenter myPosition

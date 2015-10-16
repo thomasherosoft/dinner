@@ -250,6 +250,29 @@ body{
   background: #ffa9e5;
 }
 
+.show-more {
+  background: #3e1a58;
+  border-radius: 20px;
+  color: #fff;
+  display: inline-block;
+  font-size: 18px;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+.show-more:hover {
+  background: #ffa9e5;
+  text-decoration: none;
+}
+
+.show-more:visited {
+  color: #fff;
+}
+
+.has-show-more {
+  margin: 20px 0 40px;
+}
+
 .more-filter input{
   padding: 10px 20px;
   background:#FFF;

@@ -13,8 +13,15 @@ class RestaurantsController < ApplicationController
         end
       end
       format.json do
+
         if params[:search]
-          @restaurants = @restaurants.search(params[:search])
+          cuisines = Cuisine.search(params[:search]).to_a
+          if cuisines.size > 0
+            @found_by = cuisines.map(&:name).join(', ')
+            @restaurants = @restaurants.joins(:cuisines).where(cuisines: {id: cuisines.map(&:id)})
+          else
+            @restaurants = @restaurants.search(params[:search])
+          end
         end
 
         if params[:price_range].present?
@@ -26,12 +33,11 @@ class RestaurantsController < ApplicationController
         end
 
         if (filter_name = params[:filter]).present?
-          if %w( michelin zagat timeout foodtruck faisal ).include?(filter_name)
+          if %w( michelin zagat timeout foodtruck faisal deliveroo ).include?(filter_name)
             method = "#{filter_name}_status".to_sym
             @restaurants = @restaurants.where.not(method => nil)
           end
         end
-
       end
     end
   end

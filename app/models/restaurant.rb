@@ -10,7 +10,8 @@ class Restaurant < ActiveRecord::Base
   end
 
   def self.search(query)
-    where("name like ? OR city like ? OR address like ?", "%#{query}%", "%#{query}%", "%#{query}%")
+    where("lower(restaurants.name) like ? OR lower(restaurants.city) like ? OR lower(restaurants.address) like ?",
+          "%#{query.to_s.downcase}%", "%#{query.to_s.downcase}%", "%#{query.to_s.downcase}%")
   end
 
   def cuisines_names

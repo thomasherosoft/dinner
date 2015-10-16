@@ -65,11 +65,11 @@ namespace :zomato do
         value = status.scan(/\d+/).first.to_i
         value = nil if value.zero?
         michelin = if status['bib']
-                     [value, (value.to_i > 1 ? 'Michelin Bib Gourmand' : 'Michelin Bib Gourmand')].join(' ')
+                     'Michelin Bib Gourmand'
                    elsif status['star']
                      [value, (value.to_i > 1 ? 'Michelin Stars' : 'Michelin Star')].join(' ')
                    else
-                     "yes"
+                     'yes'
                    end
         record.update! phone: row[14], michelin_status: michelin
       end
@@ -89,6 +89,7 @@ namespace :zomato do
       search(zomato, row[2], row[12]) do |record|
         record.update phone: row[15], zagat_status: 'yes'
       end
+      sleep 1 + rand
     end
   end
 
