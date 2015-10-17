@@ -4,7 +4,7 @@ infoHTML = (data) ->
   html += data.name + '<br>'
   html += data.address + '<br>'
   html += data.phone + '<br>' if data.phone
-  html += "<img src='/assets/uber.jpg' style='max-height:13px'> £#{data.cost}" if data.cost
+  html += "<img src='/assets/uber.jpg' style='max-height:13px'> £#{data.cost}" + '<br>' if data.cost
   if data.michelin_status && data.michelin_status != 'yes'
     html += data.michelin_status + '<br>'
   html += data.rating + '% rated' if data.rating
