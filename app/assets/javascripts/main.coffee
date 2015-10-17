@@ -3,7 +3,7 @@ infoHTML = (data) ->
   html = "<table><tr><td style='vertical-align:top'>#{img}</td><td>"
   html += data.name + '<br>'
   html += data.address + '<br>'
-  html += data.phone + '<br>' if data.phone
+  html += "<a href= 'tel:"+ data.phone + "'>" + data.phone + "</a>" + '<br>' if data.phone
   html += "<img src='/assets/uber.jpg' style='max-height:13px'> £#{data.cost}" + '<br>' if data.cost
   if data.michelin_status && data.michelin_status != 'yes'
     html += data.michelin_status + '<br>'
