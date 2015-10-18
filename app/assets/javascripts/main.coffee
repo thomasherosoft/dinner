@@ -33,6 +33,7 @@ drain = ->
           if miles && miles <= 50
             time = miles / 9 * 60
             item.cost = Math.round(2.5 + 1.25*miles + 0.25*time)
+            App.adjustUberCircle(item.cost <= 12, lat: item.latitude, lng: item.longitude)
             item.cost = 5 if item.cost < 5
           m.endComputation()
           setTimeout drain, 50

@@ -1,4 +1,6 @@
 map = infoWindow = staticInfoWindow = places = distance = myPosition = null
+uberCircle = null
+uberRadius = 3*1609.34
 
 App.initMap = ->
   deferred = m.deferred()
@@ -26,13 +28,13 @@ App.initMap = ->
         lng: pos.coords.longitude
       infoWindow.close()
 
-      circle = App.drawCircle
+      uberCircle = App.drawCircle
         fillOpacity: 0
-        radius: 3*1609
+        radius: uberRadius
         strokeColor: '#800080'
         strokeOpacity: 0.9
         strokeWeight: 3
-      circle.addListener 'mouseover', ->
+      uberCircle.addListener 'mouseover', ->
         infoWindow.setPosition(myPosition)
         infoWindow.setContent """
           Purple circle = get anywhere for £12.
@@ -40,7 +42,7 @@ App.initMap = ->
           Blue circle = your Deliveroo coverage area (based on current location)
         """
         infoWindow.open(map)
-      circle.addListener 'mouseout', -> infoWindow.close()
+      uberCircle.addListener 'mouseout', -> infoWindow.close()
 
       App.drawCircle
         fillColor: 'blue'
@@ -91,13 +93,12 @@ App.distance = (to) ->
     distance.getDistanceMatrix
       origins: [myPosition],
       destinations: [to]
-      travelMode: google.maps.TravelMode.DRIVING
+      travelMode: google.maps.TravelMode.TRANSIT
     , (result, status) ->
       dist = result.rows[0]
-      cost = null
       if dist && dist.elements[0]
         dist = dist.elements[0]
-        miles = dist.distance.value / 1609
+        miles = dist.distance.value / 1609.34
         deferred.resolve(miles)
       else
         deferred.reject(status)
@@ -121,3 +122,16 @@ App.closeInfo = (permanent=false) ->
 App.centerMap = (position) -> map.setCenter position
 
 App.showMe = -> map.setCenter myPosition
+
+App.adjustUberCircle = (inside, radiusPoint) ->
+  if radiusPoint
+    p1 = new google.maps.LatLng myPosition.lat, myPosition.lng
+    p2 = new google.maps.LatLng radiusPoint.lat, radiusPoint.lng
+    meters = google.maps.geometry.spherical.computeDistanceBetween(p1, p2)
+    uberRadius = if inside
+                   Math.max uberRadius, meters
+                 else
+                   Math.min uberRadius, meters
+    uberCircle.setRadius uberRadius
+  else
+    uberRadius
