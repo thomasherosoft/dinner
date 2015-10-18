@@ -49,18 +49,18 @@ restaurant =
         lng: item.longitude
       title: item.name
 
-    showInfo = (center=false) ->
+    showInfo = (center=false, permanent=false) ->
       if center
         App.centerMap lat: item.latitude, lng: item.longitude
-      App.showInfo infoHTML(item), marker
+      App.showInfo infoHTML(item), marker, permanent
 
     marker.addListener 'mouseout', -> App.closeInfo()
     marker.addListener 'mouseover', -> showInfo()
-    marker.addListener 'click', -> showInfo()
+    marker.addListener 'click', -> showInfo(false, true)
 
     showInfo: ->
       m.redraw.strategy('none')
-      showInfo('center')
+      showInfo('center', true)
     onunload: -> marker.setMap(null)
     fallbackImageUrl: (e) ->
       e.target.src = '/assets/item-1.jpg'

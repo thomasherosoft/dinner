@@ -1,4 +1,4 @@
-map = infoWindow = places = distance = myPosition = null
+map = infoWindow = staticInfoWindow = places = distance = myPosition = null
 
 App.initMap = ->
   deferred = m.deferred()
@@ -15,6 +15,7 @@ App.initMap = ->
     deferred.resolve()
 
   infoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true
+  staticInfoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true, zIndex: 1
   places = new google.maps.places.PlacesService map
   distance = new google.maps.DistanceMatrixService
 
@@ -63,8 +64,6 @@ App.newMarker = (args) ->
   $.extend args, map: map
   new google.maps.Marker(args)
 
-App.closeInfo = -> infoWindow.close()
-
 App.getPlace = (id) ->
   deferred = m.deferred()
 
@@ -110,10 +109,14 @@ App.distance = (to) ->
   deferred.promise
 
 
-App.showInfo = (html, marker) ->
-  infoWindow.setContent(html)
-  infoWindow.open(map, marker)
+App.showInfo = (html, marker, permanent=false) ->
+  w = if permanent then staticInfoWindow else infoWindow
+  w.setContent(html)
+  w.open(map, marker)
 
+App.closeInfo = (permanent=false) ->
+  w = if permanent then staticInfoWindow else infoWindow
+  w.close()
 
 App.centerMap = (position) -> map.setCenter position
 
