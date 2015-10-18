@@ -15,20 +15,27 @@ queue = []
 
 drain = ->
   item = queue.shift()
-  if item && !item.miles
-    App
-      .distance lat: item.latitude, lng: item.longitude
-      .then (miles) ->
-        m.startComputation()
-        item.miles = miles
-        if miles && miles <= 50
-          time = miles / 9 * 60
-          item.cost = Math.round(2.5 + 1.25*miles + 0.25*time)
-          item.cost = 5 if item.cost < 5
-        m.endComputation()
-        setTimeout drain, 50
+  if item
+    if item.miles
+      drain()
+    else
+      App
+        .distance lat: item.latitude, lng: item.longitude
+        .then (miles) ->
+          m.startComputation()
+          item.miles = miles
+          if miles && miles <= 50
+            time = miles / 9 * 60
+            item.cost = Math.round(2.5 + 1.25*miles + 0.25*time)
+            item.cost = 5 if item.cost < 5
+          m.endComputation()
+          setTimeout drain, 50
+        , (status) ->
+          unless status
+            queue.push item
+            setTimeout drain, 100
   else
-    setTimeout drain, 200
+    setTimeout drain, 100
 drain()
 
 sync = (data) -> queue.push data
@@ -95,7 +102,7 @@ restaurant =
     ]
 
 
-top.store = []
+store = []
 activeFilter = 'michelin'
 activeSearch = null
 
@@ -110,9 +117,9 @@ load = (args={}) ->
       activeFilter = args.filter
       activeSearch = args.search
       if args.page
-        top.store = store.concat response.slice()
+        store = store.concat response.slice()
       else
-        top.store = response.slice()
+        store = response.slice()
         if store.length
           App.centerMap
             lat: store[0].latitude

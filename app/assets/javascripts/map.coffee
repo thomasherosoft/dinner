@@ -11,7 +11,7 @@ App.initMap = ->
       position: google.maps.ControlPosition.LEFT_CENTER
     zoom: 15
 
-  map.addListener 'idle', ->
+  map.addListener 'tilesloaded', ->
     deferred.resolve()
 
   infoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true
@@ -88,22 +88,24 @@ App.getPlace = (id) ->
 App.distance = (to) ->
   deferred = m.deferred()
 
-  unless myPosition
-    deferred.reject "Couldn't find your geolocation"
-
-  distance.getDistanceMatrix
-    origins: [myPosition],
-    destinations: [to]
-    travelMode: google.maps.TravelMode.DRIVING
-  , (result, status) ->
-    dist = result.rows[0]
-    cost = null
-    if dist && dist.elements[0]
-      dist = dist.elements[0]
-      miles = dist.distance.value / 1609
-      deferred.resolve(miles)
-    else
-      deferred.reject(status)
+  if myPosition
+    distance.getDistanceMatrix
+      origins: [myPosition],
+      destinations: [to]
+      travelMode: google.maps.TravelMode.DRIVING
+    , (result, status) ->
+      dist = result.rows[0]
+      cost = null
+      if dist && dist.elements[0]
+        dist = dist.elements[0]
+        miles = dist.distance.value / 1609
+        deferred.resolve(miles)
+      else
+        deferred.reject(status)
+  else
+    setTimeout ->
+      deferred.reject null
+    , 100
 
   deferred.promise
 
