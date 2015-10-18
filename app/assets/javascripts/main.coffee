@@ -1,3 +1,9 @@
+store = []
+activeFilter = 'michelin'
+activeSearch = null
+selectedRestaurantID = null
+
+
 infoHTML = (data) ->
   img = if data.photo then "<img onerror='this.parentNode.removeChild(this)' src='#{data.photo}' style='margin:5px 5px 0 0;max-height:70px'>" else ''
   html = "<table><tr><td style='vertical-align:top'>#{img}</td><td>"
@@ -58,8 +64,9 @@ restaurant =
     marker.addListener 'mouseover', -> showInfo()
     marker.addListener 'click', -> showInfo(false, true)
 
+    marker: marker
     showInfo: ->
-      m.redraw.strategy('none')
+      selectedRestaurantID = item.id
       showInfo('center', true)
     onunload: -> marker.setMap(null)
     fallbackImageUrl: (e) ->
@@ -67,6 +74,15 @@ restaurant =
 
     price_range: ->
       (item.price_range_currency for i in [1..item.price_range]).join('')
+
+
+  viewHandler: (item, marker, el, init, ctx) ->
+    unless init
+      marker.addListener 'click', ->
+        document.body.scrollTop = el.offsetTop - document.body.clientHeight/2 + el.clientHeight/2
+        m.startComputation()
+        selectedRestaurantID = item.id
+        m.endComputation()
 
 
   view: (ctrl, item)->
@@ -81,30 +97,29 @@ restaurant =
            else
              null
 
-    m '.col-md-12.item-widget', [
-      m 'figcaption', [
-        m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
-          m 'figure', [
-            m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
-            m 'span.item-rating', style: {color: 'white'}, (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
+    m '.col-md-12.item-widget',
+      className: (if item.id == selectedRestaurantID then 'selected' else '')
+      config: restaurant.viewHandler.bind(null, item, ctrl.marker)
+      [
+        m 'figcaption', [
+          m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
+            m 'figure', [
+              m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
+              m 'span.item-rating', style: {color: 'white'}, (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
+            ]
+            m 'strong', item.name
+            m 'span', item.address
+            m 'span', [
+              item.neighborhood
+              item.cuisines.join(', ')
+              ctrl.price_range()
+              (if item.michelin_status == 'yes' then '' else item.michelin_status)
+            ].join(' - ')
+            uber
           ]
-          m 'strong', item.name
-          m 'span', item.address
-          m 'span', [
-            item.neighborhood
-            item.cuisines.join(', ')
-            ctrl.price_range()
-            (if item.michelin_status == 'yes' then '' else item.michelin_status)
-          ].join(' - ')
-          uber
         ]
       ]
-    ]
 
-
-store = []
-activeFilter = 'michelin'
-activeSearch = null
 
 load = (args={}) ->
   args.filter ||= activeFilter
