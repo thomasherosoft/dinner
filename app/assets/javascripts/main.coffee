@@ -136,10 +136,12 @@ load = (args={}) ->
         store = store.concat response.slice()
       else
         store = response.slice()
+        queue = [] if args.search
         if store.length
-          App.centerMap
-            lat: store[0].latitude
-            lng: store[0].longitude
+          setTimeout ->
+            App.centerMap
+              lat: store[0].latitude
+              lng: store[0].longitude
       store.forEach (x) -> sync(x)
 
 
@@ -250,7 +252,8 @@ debouncedLoad = App.x.debounce 100, load
 search =
   controller: ->
     search: (v) ->
-      debouncedLoad search: v
+      unless activeSearch == v
+        debouncedLoad search: v
 
   view: (ctrl) ->
     m 'input.form-control',
