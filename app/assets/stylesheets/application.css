@@ -14,6 +14,7 @@
  *= require rangeslider
  *= require bootstrap-slider
  *= require bootstrap-theme
+ *= require font-awesome
  *= require_tree .
  *= require_self
  */
@@ -260,13 +261,23 @@ body{
   text-decoration: none;
 }
 
+.show-more .fa-spin {
+  display: none;
+}
+
+.show-more.in-progress .fa-spin {
+  display: inherit;
+}
+
 .show-more:hover {
   background: #ffa9e5;
   text-decoration: none;
 }
 
-.show-more:visited {
+.show-more:visited, .show-more:focus {
   color: #fff;
+  outline: none;
+  text-decoration: none;
 }
 
 .has-show-more {

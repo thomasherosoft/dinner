@@ -174,10 +174,12 @@ filters =
 
 app =
   controller: ->
-    loadMore: ->
+    loadMore: (e) ->
+      e.target.classList.add 'in-progress'
       page = if store.length then store[store.length-1].page else 0
       page += 1
-      load page: page
+      load(page: page).then ->
+        e.target?.classList.remove 'in-progress'
 
     filtered: ->
       store.filter (item) ->
@@ -226,7 +228,11 @@ app =
       ]
 
       m '.text-center.has-show-more', className: (if hasMore then '' else 'hidden'), [
-        m 'a.show-more', href: 'javascript:;', onclick: ctrl.loadMore, 'Show more...'
+        m 'a.show-more',
+          href: 'javascript:;'
+          onclick: ctrl.loadMore
+          'Show more... '
+          [ m 'i.fa.fa-spin.fa-spinner' ]
       ]
     ]
 
