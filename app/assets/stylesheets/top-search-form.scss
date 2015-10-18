@@ -1,0 +1,31 @@
+#search-form {
+  .input-group {
+    background: #fff;
+    border-radius: 4px;
+  }
+
+  .input-group-addon {
+    background: #fff;
+    color: #aaa;
+
+    &:last-child {
+      cursor: pointer;
+    }
+
+    &:last-child:hover {
+      color: darken(#aaa, 20%);
+    }
+  }
+
+  .form-control {
+    border-left: 0;
+    border-right: 0;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+
+    &:focus {
+      border-color: #ccc;
+    }
+  }
+}

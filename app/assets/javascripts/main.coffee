@@ -257,14 +257,24 @@ debouncedLoad = App.x.debounce 100, load
 
 search =
   controller: ->
+    clear: (e) ->
+      activeSearch = ''
+      e.target.parentNode.parentNode
+        .querySelector('input').value = ''
+      debouncedLoad search: ''
+
     search: (v) ->
       unless activeSearch == v
         debouncedLoad search: v
 
   view: (ctrl) ->
-    m 'input.form-control',
-      onkeyup: m.withAttr('value', ctrl.search)
-      placeholder: 'Search Restaurant Name or Cuisine'
+    m '.input-group', [
+      m '.input-group-addon', [ m 'i.fa.fa-search' ]
+      m 'input.form-control',
+        onkeyup: m.withAttr('value', ctrl.search)
+        placeholder: 'Search Restaurant Name or Cuisine'
+      m '.input-group-addon', onclick: ctrl.clear, [ m 'i.fa.fa-times' ]
+    ]
 
 
 top.initApp = ->
