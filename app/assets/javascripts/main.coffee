@@ -156,6 +156,7 @@ filterNames =
 filters =
   controller: ->
     filter: (name) ->
+      queue = []
       load filter: name
 
   view: (ctrl) ->
@@ -210,18 +211,24 @@ app =
                "#{filterNames[activeFilter]} restaurants"
       head += ' in London'
 
+    header = if items.length == 0 && queue.length
+               'Calculating results...'
+             else
+               "Showing #{items.length}#{total} #{head}"
+
     [
       m.component filters
 
       m '.search-result', config: mapAdjusts, [
         m '.more-filter', [
-          m 'span', "Showing #{items.length}#{total} #{head}"
+          m 'span', header
           m 'br'
           m 'hr'
         ]
 
         m '.row', [
           items.map (item) ->
+            item.key = item.id
             m.component restaurant, item
         ]
       ]
