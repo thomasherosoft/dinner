@@ -258,10 +258,11 @@ debouncedLoad = App.x.debounce 100, load
 search =
   controller: ->
     clear: (e) ->
-      activeSearch = ''
-      e.target.parentNode.parentNode
-        .querySelector('input').value = ''
-      debouncedLoad search: ''
+      if activeSearch
+        activeSearch = ''
+        e.target.parentNode.parentNode
+          .querySelector('input').value = ''
+        load search: ''
 
     search: (v) ->
       unless activeSearch == v
@@ -273,7 +274,10 @@ search =
       m 'input.form-control',
         onkeyup: m.withAttr('value', ctrl.search)
         placeholder: 'Search Restaurant Name or Cuisine'
-      m '.input-group-addon', onclick: ctrl.clear, [ m 'i.fa.fa-times' ]
+      m '.input-group-addon',
+        className: (if activeSearch then '' else 'transparent')
+        onclick: ctrl.clear
+        [ m 'i.fa.fa-times' ]
     ]
 
 

@@ -8,11 +8,15 @@
     background: #fff;
     color: #aaa;
 
-    &:last-child {
+    &.transparent {
+      color: #fff;
+    }
+
+    &:last-child:not(.transparent) {
       cursor: pointer;
     }
 
-    &:last-child:hover {
+    &:last-child:hover:not(.transparent) {
       color: darken(#aaa, 20%);
     }
   }
