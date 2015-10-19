@@ -1,0 +1,1 @@
+$(function(){$("#price_range").slider({formatter:function(t){return"1"==t?"$":"2"==t?"$$":"3"==t?"$$$":"4"==t?"$$$$":void 0}})});
