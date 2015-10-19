@@ -222,7 +222,6 @@ app =
 
         m '.row', [
           items.map (item) ->
-            item.key = item.id
             m.component restaurant, item
         ]
       ]

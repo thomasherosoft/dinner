@@ -13,7 +13,7 @@ App.initMap = ->
       position: google.maps.ControlPosition.LEFT_CENTER
     zoom: 15
 
-  map.addListener 'tilesloaded', ->
+  map.addListener 'idle', ->
     deferred.resolve()
 
   infoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true
@@ -98,7 +98,7 @@ App.distance = (to) ->
       dist = result.rows[0]
       if dist && dist.elements[0]
         dist = dist.elements[0]
-        miles = dist.distance.value / 1609.34
+        miles = dist.distance?.value / 1609.34
         deferred.resolve(miles)
       else
         deferred.reject(status)
