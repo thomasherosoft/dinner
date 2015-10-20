@@ -32,16 +32,20 @@ class RestaurantsController < ApplicationController
       end
       format.json do
         cuisines = params[:search_name].present? ? Cuisine.search(params[:search_name]).to_a : []
-        if cuisines.size > 0
-          @found_by = cuisines.map(&:name).join(', ')
-          @restaurants = @restaurants.
-            joins(:cuisines).
-            where(cuisines: {id: cuisines.map(&:id)})
-        elsif (query = params[:search_name]).present?
-          @restaurants = Restaurant.search query, search_opts.merge(fields: [{name: :word_start}])
-        elsif (query = params[:search_location]).present?
-          @restaurants = Restaurant.search query, search_opts.merge(fields: [{address: :word_start}])
-        end
+        @restaurants = if cuisines.size > 0
+                         @found_by = cuisines.map(&:name).join(', ')
+                         @restaurants.
+                           joins(:cuisines).
+                           where(cuisines: {id: cuisines.map(&:id)})
+                       elsif params[:luck].present?
+                         Restaurant.order('random()').paginate(per_page: 5, page: 1)
+                       elsif (query = params[:search_name]).present?
+                         Restaurant.search query, search_opts.merge(fields: [{name: :word_start}])
+                       elsif (query = params[:search_location]).present?
+                         Restaurant.search query, search_opts.merge(fields: [{address: :word_start}])
+                       else
+                         @restaurants
+                       end
       end
     end
   end

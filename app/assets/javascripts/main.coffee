@@ -1,6 +1,7 @@
 store = []
 activeFilter = 'michelin'
 activeSearchName = activeSearchLocation = null
+activeLuck = false
 selectedRestaurantID = null
 
 
@@ -129,11 +130,12 @@ load = (args={}) ->
   App.x
     .get
       data: args
-      url: location.toString()
+      url: location.pathname
     .then (response) ->
       activeFilter = args.filter
       activeSearchName = args.search_name
       activeSearchLocation = args.search_location
+      activeLuck = args.luck
       if args.page
         store = store.concat response.slice()
       else
@@ -161,10 +163,24 @@ filters =
       queue = []
       load filter: name
 
+    luck: (e) ->
+      spinner = e.target.children[0]
+      spinner.classList.remove('hidden')
+      queue = []
+      load(luck: true).then ->
+        spinner.classList.add('hidden')
+
+
   view: (ctrl) ->
     m '.search-filter', [
       m 'form', [
-        m 'h3', 'Explore Your City'
+        m 'h3', 'Explore Your City', [
+          m 'span',
+            onclick: ctrl.luck
+            style: {cursor: 'pointer', marginLeft: '2em'}
+            "I'm feeling lucky"
+            [ m 'i.fa.fa-spin.fa-spinner.hidden', style: {marginLeft: '.5em'} ]
+        ]
         m 'ul.filters-icons', [
           Object.keys(filterNames).map (name) ->
             m 'li', className: (if activeFilter == name then 'active' else ''), [
@@ -223,6 +239,8 @@ app =
 
     header = if items.length == 0 && queue.length > 0
                'Calculating results...'
+             else if activeLuck
+               "Try your luck with these #{items.length}..."
              else
                "Showing #{items.length}#{total} #{head}"
 
