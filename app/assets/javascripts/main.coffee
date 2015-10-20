@@ -214,7 +214,7 @@ app =
     items = ctrl.filtered()
 
     if activeFilter == 'deliveroo'
-      hasMore = items.length >= 20
+      hasMore = items.length >= 7
       total = ''
       head = 'Deliveroo restaurants in your delivery area'
     else

@@ -1,13 +1,15 @@
 class RestaurantsController < ApplicationController
   after_action :log_search
 
+  PER_PAGE = 7
+
   def index
     @restaurants = apply_filter Restaurant.
       order(rating: :desc).
-      paginate(page: params[:page], per_page: 20)
+      paginate(page: params[:page], per_page: PER_PAGE)
 
     search_opts = ({
-      page: params[:page], per_page: 20,
+      page: params[:page], per_page: PER_PAGE,
       order: {rating: :desc}
     }).merge(apply_filter || {})
 
