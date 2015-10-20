@@ -299,6 +299,7 @@ search =
 
     useMyPosition: ->
       if App.myPosition
+        App.centerMap App.myPosition
         location = 'My Location'
         perform()
 

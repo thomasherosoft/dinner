@@ -2,6 +2,31 @@ map = infoWindow = staticInfoWindow = places = distance = myPosition = null
 uberCircle = null
 uberRadius = 3*1609.34
 
+addMyLocationButton = ->
+  ctrl = document.createElement 'div'
+  ctrl.style.backgroundColor = '#fff'
+  ctrl.style.border = '2px solid #fff'
+  ctrl.style.borderRadius = '3px'
+  ctrl.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)'
+  ctrl.style.cursor = 'pointer'
+  ctrl.style.marginLeft = '10px'
+  ctrl.style.padding = '4px 0'
+  ctrl.style.textAlign = 'center'
+  ctrl.style.width = '28px'
+
+  icon = document.createElement 'i'
+  icon.className = 'fa fa-location-arrow'
+  icon.style.left = '-1px'
+  icon.style.position = 'relative'
+  icon.style.top = '1px'
+  ctrl.appendChild icon
+
+  ctrl.addEventListener 'click', ->
+    map.setCenter myPosition if myPosition
+
+  map.controls[google.maps.ControlPosition.LEFT_CENTER].push ctrl
+
+
 App.initMap = ->
   deferred = m.deferred()
   map = new google.maps.Map document.getElementById('map'),
@@ -13,15 +38,16 @@ App.initMap = ->
       position: google.maps.ControlPosition.LEFT_CENTER
     zoom: 15
 
+  addMyLocationButton()
+
   map.addListener 'idle', ->
     deferred.resolve()
 
   infoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true
   staticInfoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true, zIndex: 1
+  staticInfoWindow.close()
   places = new google.maps.places.PlacesService map
   distance = new google.maps.DistanceMatrixService
-
-  staticInfoWindow.close()
 
   if navigator.geolocation
     navigator.geolocation.getCurrentPosition (pos) ->
