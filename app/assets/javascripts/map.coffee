@@ -21,6 +21,8 @@ App.initMap = ->
   places = new google.maps.places.PlacesService map
   distance = new google.maps.DistanceMatrixService
 
+  staticInfoWindow.close()
+
   if navigator.geolocation
     navigator.geolocation.getCurrentPosition (pos) ->
       App.myPosition = myPosition =
@@ -51,14 +53,18 @@ App.initMap = ->
         strokeColor: 'blue'
         strokeOpacity: 0.9
         strokeWeight: 3
-    , -> infoWindow.setContent 'Error: The Geolocation service failed.'
+    , ->
+      App.myPosition = myPosition = 0
+      infoWindow.setContent 'Error: The Geolocation service failed.'
   else
+    App.myPosition = myPosition = 0
     infoWindow.setContent "Error: Your browser doesn't support geolocation."
 
   deferred.promise
 
 
 App.drawCircle = (args) ->
+  return unless args.center || myPosition
   new google.maps.Circle App.x.extend(args, map: map, center: myPosition)
 
 
@@ -104,7 +110,7 @@ App.distance = (to) ->
         deferred.reject(status)
   else
     setTimeout ->
-      deferred.reject null
+      deferred.reject myPosition == 0
     , 100
 
   deferred.promise
@@ -121,7 +127,7 @@ App.closeInfo = (permanent=false) ->
 
 App.centerMap = (position) -> map.setCenter position
 
-App.showMe = -> map.setCenter myPosition
+App.showMe = -> map.setCenter myPosition if myPosition
 
 App.adjustUberCircle = (inside, radiusPoint) ->
   if radiusPoint

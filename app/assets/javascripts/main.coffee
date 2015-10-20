@@ -38,9 +38,9 @@ drain = ->
           m.endComputation()
           setTimeout drain, 50
         , (status) ->
-          unless status
-            queue.push item
-            setTimeout drain, 100
+          queue.push item unless status
+          m.redraw() unless queue.length
+          setTimeout drain, 100
   else
     setTimeout drain, 100
 drain()
@@ -186,8 +186,10 @@ app =
       store.filter (item) ->
         if activeFilter == 'deliveroo'
           item.miles && item.miles <= 2
-        else
+        else if App.myPosition
           item.miles
+        else
+          true
 
 
   view: (ctrl) ->
@@ -211,7 +213,7 @@ app =
                "#{filterNames[activeFilter]} restaurants"
       head += ' in London'
 
-    header = if items.length == 0 && queue.length
+    header = if items.length == 0 && queue.length > 0
                'Calculating results...'
              else
                "Showing #{items.length}#{total} #{head}"
@@ -294,8 +296,9 @@ search =
       location
 
     useMyPosition: ->
-      location = 'My Location'
-      perform()
+      if App.myPosition
+        location = 'My Location'
+        perform()
 
 
   view: (ctrl) ->
