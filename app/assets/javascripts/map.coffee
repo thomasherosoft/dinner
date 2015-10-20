@@ -23,7 +23,7 @@ App.initMap = ->
 
   if navigator.geolocation
     navigator.geolocation.getCurrentPosition (pos) ->
-      myPosition =
+      App.myPosition = myPosition =
         lat: pos.coords.latitude
         lng: pos.coords.longitude
       infoWindow.close()

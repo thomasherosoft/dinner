@@ -1,35 +1,53 @@
 #search-form {
-  .input-group {
-    background: #fff;
-    border-radius: 4px;
-  }
+  .search-group {
+    display: inline-block;
+    margin-right: .5em;
+    position: relative;
 
-  .input-group-addon {
-    background: #fff;
-    color: #aaa;
+    > .form-control {
+      max-width: 25vw !important;
+      padding-left: 23px;
+      padding-right: 23px;
 
-    &.transparent {
-      color: #fff;
+      &.location {
+        max-width: 15vw !important;
+      }
     }
 
-    &:last-child:not(.transparent) {
+    > .fa:first-child {
+      color: #aaa;
+      left: 6px;
+      position: absolute;
+      top: 9px;
+    }
+
+    > .fa:last-child {
+      color: #aaa;
       cursor: pointer;
+      right: 6px;
+      position: absolute;
+      top: 9px;
+
+      &:hover:not(.transparent) {
+        color: darken(#aaa, 30%);
+      }
+
+      &.transparent {
+        color: #fff;
+        cursor: default;
+      }
     }
 
-    &:last-child:hover:not(.transparent) {
-      color: darken(#aaa, 20%);
+    &:last-child {
+      margin-right: 0;
     }
   }
 
-  .form-control {
-    border-left: 0;
-    border-right: 0;
-    box-shadow: none;
-    padding-left: 0;
-    padding-right: 0;
+  .fa.location {
+    cursor: pointer;
 
-    &:focus {
-      border-color: #ccc;
+    &:hover {
+      color: darken(#aaa, 30%);
     }
   }
 }

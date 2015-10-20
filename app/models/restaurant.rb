@@ -1,17 +1,14 @@
 class Restaurant < ActiveRecord::Base
   has_and_belongs_to_many :cuisines
 
+  searchkick locations: ['location'], word_start: [:name, :address]
+
   def self.find_or_create_from_zomato_record(data)
     find_or_initialize_by(
       name: data['name'],
       latitude: data['location']['latitude'].to_d,
       longitude: data['location']['longitude'].to_d
     ).tap{|record| record.fill_from_zomato_record(data) }
-  end
-
-  def self.search(query)
-    where("lower(restaurants.name) like ? OR lower(restaurants.city) like ? OR lower(restaurants.address) like ?",
-          "%#{query.to_s.downcase}%", "%#{query.to_s.downcase}%", "%#{query.to_s.downcase}%")
   end
 
   def cuisines_names
@@ -38,5 +35,22 @@ class Restaurant < ActiveRecord::Base
         map{|c| Cuisine.find_or_create_by(name: c) }.
         map(&:id)
     end
+  end
+
+  def search_data
+    filters = []
+    filters << 'michelin' if michelin_status.present?
+    filters << 'zagat' if zagat_status.present?
+    filters << 'timeout' if timeout_status.present?
+    filters << 'foodtruck' if foodtruck_status.present?
+    filters << 'faisal' if faisal_status.present?
+    filters << 'deliveroo' if deliveroo_status.present?
+    {
+      name: name,
+      address: address,
+      filter: filters,
+      location: [latitude, longitude].map(&:to_f),
+      rating: rating
+    }
   end
 end
