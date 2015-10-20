@@ -211,12 +211,12 @@ app =
                  "#{items[0].found_by} restaurants"
                else
                  loc = if activeSearchLocation && ('+'+activeSearchLocation).indexOf(''+App.myPosition?.lat) == 1
-                         "near you"
+                         'in 3 mile radius near you'
                        else
-                         ''
+                         'results'
                  subj = activeSearchName
                  subj ||= if loc then '' else activeSearchLocation
-                 "results #{loc} " + (if subj then "matching \"#{subj}\"" else '')
+                 loc + ' ' + (if subj then "matching \"#{subj}\"" else '')
              else
                "#{filterNames[activeFilter]} restaurants"
       head += ' in London' unless activeSearchLocation
