@@ -240,6 +240,7 @@ app =
     header = if items.length == 0 && queue.length > 0
                'Calculating results...'
              else if activeLuck
+               hasMore = false
                "Try your luck with these #{items.length}..."
              else
                "Showing #{items.length}#{total} #{head}"
