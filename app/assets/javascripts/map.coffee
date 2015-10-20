@@ -28,6 +28,8 @@ App.initMap = ->
       App.myPosition = myPosition =
         lat: pos.coords.latitude
         lng: pos.coords.longitude
+        # lat: 51.512545 # testing purposes
+        # lng: -0.12033  # testing purposes
       infoWindow.close()
 
       uberCircle = App.drawCircle

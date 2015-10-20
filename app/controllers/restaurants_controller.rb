@@ -58,7 +58,7 @@ class RestaurantsController < ApplicationController
         attr = "#{params[:filter]}_status".to_sym
         relation.where.not(attr => nil)
       else
-        {filter: [params[:filter]]}
+        {where: {filter: [params[:filter]]}}
       end
     end
   end

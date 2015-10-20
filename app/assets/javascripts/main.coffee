@@ -1,6 +1,6 @@
 store = []
 activeFilter = 'michelin'
-activeSearch = null
+activeSearchName = activeSearchLocation = null
 selectedRestaurantID = null
 
 
@@ -124,14 +124,16 @@ restaurant =
 
 load = (args={}) ->
   args.filter ||= activeFilter
-  args.search_name = activeSearch if !args.search_name && args.search_name != ''
+  args.search_name = activeSearchName if !args.search_name && args.search_name != ''
+  args.search_location = activeSearchLocation if !args.search_location && args.search_location != ''
   App.x
     .get
       data: args
       url: location.toString()
     .then (response) ->
       activeFilter = args.filter
-      activeSearch = args.search_name
+      activeSearchName = args.search_name
+      activeSearchLocation = args.search_location
       if args.page
         store = store.concat response.slice()
       else
@@ -185,9 +187,9 @@ app =
     filtered: ->
       store.filter (item) ->
         if activeFilter == 'deliveroo'
-          item.miles && item.miles <= 2
+          +item.miles >= 0 && item.miles <= 2
         else if App.myPosition
-          item.miles
+          +item.miles >= 0
         else
           true
 
@@ -204,11 +206,11 @@ app =
 
       total = items[0]?.totals || 0
       total = if total then " of #{total}" else ''
-      head = if activeSearch
+      head = if activeSearchName || activeSearchLocation
                if items[0]?.found_by
                  "#{items[0].found_by} restaurants"
                else
-                 "results matching \"#{activeSearch}\""
+                 "results matching \"#{activeSearchName || activeSearchLocation}\""
              else
                "#{filterNames[activeFilter]} restaurants"
       head += ' in London'
@@ -290,7 +292,7 @@ search =
       name
 
     search_location: (val) ->
-      if val
+      if val || val == ''
         location = val
         debounced()
       location
@@ -317,7 +319,7 @@ search =
       m '.search-group', [
         m 'i.fa.fa-location-arrow.location', onclick: ctrl.useMyPosition
         m 'input.form-control.location',
-          onkeypress: m.withAttr('value', ctrl.search_location)
+          onkeyup: m.withAttr('value', ctrl.search_location)
           placeholder: 'Location'
           value: ctrl.search_location()
         m 'i.fa.fa-times',
