@@ -43,6 +43,7 @@ html, body {
 
 .header-right{
   float: right;
+  margin-top: 4px;
 }
 
 a.logo{
