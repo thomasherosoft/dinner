@@ -16,7 +16,7 @@ class RestaurantsController < ApplicationController
       if loc.size == 2 && loc.reject(&:zero?).size == 2
         (search_opts[:where] ||= {})[:location] = {
           near: loc,
-          within: '10mi'
+          within: '3mi'
         }
         params[:search_location] = '*'
       end

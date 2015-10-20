@@ -210,10 +210,16 @@ app =
                if items[0]?.found_by
                  "#{items[0].found_by} restaurants"
                else
-                 "results matching \"#{activeSearchName || activeSearchLocation}\""
+                 loc = if activeSearchLocation && ('+'+activeSearchLocation).indexOf(''+App.myPosition?.lat) == 1
+                         "near you"
+                       else
+                         ''
+                 subj = activeSearchName
+                 subj ||= if loc then '' else activeSearchLocation
+                 "results #{loc} " + (if subj then "matching \"#{subj}\"" else '')
              else
                "#{filterNames[activeFilter]} restaurants"
-      head += ' in London'
+      head += ' in London' unless activeSearchLocation
 
     header = if items.length == 0 && queue.length > 0
                'Calculating results...'
@@ -262,8 +268,9 @@ mapAdjusts = (items, el, initalle, ctx) ->
     ctx.deliveroo.setMap(null)
     ctx.deliveroo = null
 
-  App.fitTo items.map (x) ->
+  coords = items.map (x) ->
     new google.maps.LatLng x.latitude, x.longitude
+  App.fitMapTo coords if coords.length
 
 search =
   controller: ->
@@ -278,10 +285,12 @@ search =
     debounced = App.x.debounce 250, perform
 
     clear_name: (e) ->
+      e.target.parentNode.querySelector('input').value = ''
       name = ''
       perform()
 
     clear_location: (e) ->
+      e.target.parentNode.querySelector('input').value = ''
       location = ''
       perform()
 
@@ -297,10 +306,11 @@ search =
         debounced()
       location
 
-    useMyPosition: ->
+    useMyPosition: (e) ->
       if App.myPosition
         App.centerMap App.myPosition
-        location = 'My Location'
+        e.target.parentNode.querySelector('input')
+          .value = location = 'My Location'
         perform()
 
 
@@ -311,7 +321,6 @@ search =
         m 'input.form-control',
           onkeyup: m.withAttr('value', ctrl.search_name)
           placeholder: 'Search Restaurant Name or Cuisine'
-          value: ctrl.search_name()
         m 'i.fa.fa-times',
           className: (if ctrl.search_name() then '' else 'transparent')
           onclick: ctrl.clear_name
@@ -322,7 +331,6 @@ search =
         m 'input.form-control.location',
           onkeyup: m.withAttr('value', ctrl.search_location)
           placeholder: 'Location'
-          value: ctrl.search_location()
         m 'i.fa.fa-times',
           className: (if ctrl.search_location() then '' else 'transparent')
           onclick: ctrl.clear_location

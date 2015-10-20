@@ -171,7 +171,7 @@ App.adjustUberCircle = (inside, radiusPoint) ->
     uberRadius
 
 
-App.fitTo = (coords) ->
+App.fitMapTo = (coords) ->
   bounds = new google.maps.LatLngBounds
   coords.forEach (c) -> bounds.extend(c)
   map.fitBounds bounds
