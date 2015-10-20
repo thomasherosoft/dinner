@@ -124,14 +124,14 @@ restaurant =
 
 load = (args={}) ->
   args.filter ||= activeFilter
-  args.search = activeSearch if !args.search && args.search != ''
+  args.search_name = activeSearch if !args.search_name && args.search_name != ''
   App.x
     .get
       data: args
       url: location.toString()
     .then (response) ->
       activeFilter = args.filter
-      activeSearch = args.search
+      activeSearch = args.search_name
       if args.page
         store = store.concat response.slice()
       else
@@ -228,7 +228,7 @@ app =
 
         m '.row', [
           items.map (item) ->
-            item.key = item.id
+            item.key = [item.id, item.name, item.address].join()
             m.component restaurant, item
         ]
       ]
@@ -263,27 +263,64 @@ debouncedLoad = App.x.debounce 100, load
 
 search =
   controller: ->
-    clear: (e) ->
-      if activeSearch
-        activeSearch = ''
-        e.target.parentNode.parentNode
-          .querySelector('input').value = ''
-        load search: ''
+    name = location = ''
 
-    search: (v) ->
-      unless activeSearch == v
-        debouncedLoad search: v
+    perform = ->
+      loc = if location == 'My Location' then [App.myPosition.lat, App.myPosition.lng].join(',') else location
+      queue = []
+      load
+        search_name: name
+        search_location: loc
+    debounced = App.x.debounce 250, perform
+
+    clear_name: (e) ->
+      name = ''
+      perform()
+
+    clear_location: (e) ->
+      location = ''
+      perform()
+
+    search_name: (val) ->
+      if val || val == ''
+        name = val
+        debounced()
+      name
+
+    search_location: (val) ->
+      if val
+        location = val
+        debounced()
+      location
+
+    useMyPosition: ->
+      location = 'My Location'
+      perform()
+
 
   view: (ctrl) ->
-    m '.input-group', [
-      m '.input-group-addon', [ m 'i.fa.fa-search' ]
-      m 'input.form-control',
-        onkeyup: m.withAttr('value', ctrl.search)
-        placeholder: 'Search Restaurant Name or Cuisine'
-      m '.input-group-addon',
-        className: (if activeSearch then '' else 'transparent')
-        onclick: ctrl.clear
-        [ m 'i.fa.fa-times' ]
+    m 'form.form-inline', onsubmit: ((e) -> e.preventDefault()), [
+      m '.search-group', [
+        m 'i.fa.fa-search'
+        m 'input.form-control',
+          onkeyup: m.withAttr('value', ctrl.search_name)
+          placeholder: 'Search Restaurant Name or Cuisine'
+          value: ctrl.search_name()
+        m 'i.fa.fa-times',
+          className: (if ctrl.search_name() then '' else 'transparent')
+          onclick: ctrl.clear_name
+      ]
+
+      m '.search-group', [
+        m 'i.fa.fa-location-arrow.location', onclick: ctrl.useMyPosition
+        m 'input.form-control.location',
+          onkeypress: m.withAttr('value', ctrl.search_location)
+          placeholder: 'Location'
+          value: ctrl.search_location()
+        m 'i.fa.fa-times',
+          className: (if ctrl.search_location() then '' else 'transparent')
+          onclick: ctrl.clear_location
+      ]
     ]
 
 

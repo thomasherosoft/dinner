@@ -58,8 +58,9 @@ group :development do
 
   gem 'quiet_assets'
   gem 'mechanize'
-  gem 'typhoeus'
   gem 'hashie'
 end
 
 gem 'will_paginate'
+gem 'typhoeus'
+gem 'searchkick'
