@@ -223,7 +223,7 @@ app =
     [
       m.component filters
 
-      m '.search-result', config: mapAdjusts, [
+      m '.search-result', config: mapAdjusts.bind(null, items), [
         m '.more-filter', [
           m 'span', header
           m 'br'
@@ -247,7 +247,7 @@ app =
     ]
 
 
-mapAdjusts = (el, init, ctx) ->
+mapAdjusts = (items, el, initalle, ctx) ->
   if activeFilter == 'deliveroo'
     unless ctx.deliveroo
       App.showMe()
@@ -262,8 +262,8 @@ mapAdjusts = (el, init, ctx) ->
     ctx.deliveroo.setMap(null)
     ctx.deliveroo = null
 
-
-debouncedLoad = App.x.debounce 100, load
+  App.fitTo items.map (x) ->
+    new google.maps.LatLng x.latitude, x.longitude
 
 search =
   controller: ->
