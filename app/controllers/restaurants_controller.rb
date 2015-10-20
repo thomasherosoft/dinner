@@ -18,6 +18,7 @@ class RestaurantsController < ApplicationController
           near: loc,
           within: '10mi'
         }
+        params[:search_location] = '*'
       end
     end
 

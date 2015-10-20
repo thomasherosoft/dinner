@@ -299,7 +299,7 @@ search =
 
 
   view: (ctrl) ->
-    [
+    m 'form.form-inline', onsubmit: ((e) -> e.preventDefault()), [
       m '.search-group', [
         m 'i.fa.fa-search'
         m 'input.form-control',
