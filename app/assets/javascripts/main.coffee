@@ -78,10 +78,9 @@ infoDOM = (data) ->
         t = review.text.slice(0,200)
         t += '...' if t.length < review.text.length
         m '.review', [
-          m '.pull-right', unix2date(review.time)
           m '.rating', ratingDOM(100 * review.rating / 5)
           "#{review.rating} by #{review.author_name}"
-          m 'p', t
+          m 'p', unix2date(review.time) + ' ' + t
         ]
     ]
   ]
