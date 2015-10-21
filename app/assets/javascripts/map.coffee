@@ -27,6 +27,21 @@ addMyLocationButton = ->
   map.controls[google.maps.ControlPosition.LEFT_CENTER].push ctrl
 
 
+addUberMarker = ->
+  console.debug 'addUberMarker'
+  btn = document.createElement 'div'
+  btn.style.backgroundColor = '#fff'
+  btn.style.border = '2px solid #fff'
+  btn.style.borderRadius = '2px'
+  btn.style.boxShadow = '0 0 3px rgba(0,0,0,.3)'
+  btn.style.padding = '5px'
+  btn.style.marginTop = '10px'
+  btn.style.textAlign = 'center'
+  btn.innerText = 'Purple Circle = £12 on Uber'
+
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push btn
+
+
 App.initMap = ->
   deferred = m.deferred()
   map = new google.maps.Map document.getElementById('map'),
@@ -68,15 +83,7 @@ App.initMap = ->
         strokeColor: '#800080'
         strokeOpacity: 0.9
         strokeWeight: 3
-      uberCircle.addListener 'mouseover', ->
-        infoWindow.setPosition(myPosition)
-        infoWindow.setContent """
-          Purple circle = get anywhere for £12.
-          <br>
-          Blue circle = your Deliveroo coverage area (based on current location)
-        """
-        infoWindow.open(map)
-      uberCircle.addListener 'mouseout', -> infoWindow.close()
+      addUberMarker()
 
       App.drawCircle
         fillColor: 'blue'
