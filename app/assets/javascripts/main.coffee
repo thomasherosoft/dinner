@@ -84,8 +84,7 @@ infoDOM = (data) ->
     m '.reviews', className: (if reviews.length then '' else 'hidden'), [
       m 'h5', 'Reviews'
       reviews.map (review) ->
-        t = review.text.slice(0,200)
-        t += '...' if t.length < review.text.length
+        t = review.text.slice(0,70).trim().replace(/\s+\S+$/, '...')
         m '.review', [
           m '.rating', ratingDOM(100 * review.rating / 5)
           "#{review.rating} by #{review.author_name}"

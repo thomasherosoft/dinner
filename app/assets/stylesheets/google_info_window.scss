@@ -1,8 +1,13 @@
 .gm-style-iw {
+  max-width: 220px;
   overflow: visible !important;
 
   > div {
     overflow: visible !important;
+
+    > div {
+      margin-right: -20px;
+    }
   }
 
   .header {
@@ -10,7 +15,7 @@
     background-size: cover;
     color: #fff;
     margin-left: -14px;
-    margin-right: -37px;
+    margin-right: -17px;
     margin-top: -8px;
     padding: 10px 0;
     text-align: center;
@@ -18,9 +23,6 @@
 
     > .name {
       font-size: 2em;
-    }
-
-    > .info {
     }
   }
 
@@ -54,9 +56,5 @@
     color: #e6c43c;
     display: inline-block;
     margin-right: .5em;
-  }
-
-  .review > p {
-    max-width: 200px;
   }
 }
