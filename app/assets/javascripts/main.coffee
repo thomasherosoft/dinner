@@ -68,6 +68,16 @@ infoDOM = (data) ->
                else
                  address
 
+  phone = if data.phone
+            [
+              m 'dt', 'phone'
+              m 'dd', [
+                m 'a', href: "tel:#{data.phone}", data.phone
+              ]
+            ]
+          else
+            null
+
   reviews = (data.reviews || []).slice(0, 2)
   [
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
@@ -81,10 +91,7 @@ infoDOM = (data) ->
     ]
 
     m 'dl.dl-horizontal', [
-      m 'dt', 'phone'
-      m 'dd', [
-        m 'a', href: "tel:#{data.phone}", data.phone
-      ]
+      phone
       m 'dt', 'address'
       m 'dd', [citymapper]
       m 'dt', 'cuisines'
