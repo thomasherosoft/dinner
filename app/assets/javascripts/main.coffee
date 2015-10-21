@@ -373,9 +373,11 @@ mapAdjusts = (items, el, initalle, ctx) ->
     ctx.deliveroo.setMap(null)
     ctx.deliveroo = null
 
-  coords = items.map (x) ->
-    new google.maps.LatLng x.latitude, x.longitude
-  App.fitMapTo coords if coords.length
+  if ctx.lastItemCount != items.length
+    ctx.lastItemCount = items.length
+    coords = items.map (x) ->
+      new google.maps.LatLng x.latitude, x.longitude
+    App.fitMapTo coords if coords.length
 
 search =
   controller: ->
