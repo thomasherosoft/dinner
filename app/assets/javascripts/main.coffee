@@ -55,6 +55,19 @@ infoDOM = (data) ->
       ]
     ]
 
+  address = m.trust(data.address.replace(/\s*,\s*/g, '<br>'))
+  citymapper = if App.myPosition
+                 s = [App.myPosition.lat, App.myPosition.lng].join(',')
+                 e = [data.latitude, data.longitude].join(',')
+                 f = encodeURIComponent(App.myPosition.address)
+                 a = encodeURIComponent(data.address)
+                 m 'a',
+                   href: "https://citymapper.com/london/?start=#{s}&saddr=#{f}&end=#{e}&eaddr=#{a}"
+                   target: '_blank'
+                   address
+               else
+                 address
+
   reviews = (data.reviews || []).slice(0, 2)
   [
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
@@ -73,7 +86,7 @@ infoDOM = (data) ->
         m 'a', href: "tel:#{data.phone}", data.phone
       ]
       m 'dt', 'address'
-      m 'dd', m.trust(data.address.replace(/\s*,\s*/g, '<br>'))
+      m 'dd', [citymapper]
       m 'dt', 'cuisines'
       m 'dd', data.cuisines.join(', ')
       michelin

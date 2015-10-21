@@ -1,4 +1,4 @@
-map = infoWindow = staticInfoWindow = places = distance = myPosition = null
+map = infoWindow = staticInfoWindow = places = distance = geocoder = myPosition = null
 uberCircle = null
 uberRadius = 3*1609.34
 
@@ -48,6 +48,7 @@ App.initMap = ->
   staticInfoWindow.close()
   places = new google.maps.places.PlacesService map
   distance = new google.maps.DistanceMatrixService
+  geocoder = new google.maps.Geocoder
 
   if navigator.geolocation
     navigator.geolocation.getCurrentPosition (pos) ->
@@ -57,6 +58,9 @@ App.initMap = ->
         # lat: 51.512545 # testing purposes
         # lng: -0.12033  # testing purposes
       infoWindow.close()
+
+      App.getAddressByCoord(myPosition).then (x) ->
+        myPosition.address = x
 
       uberCircle = App.drawCircle
         fillOpacity: 0
@@ -145,6 +149,21 @@ App.distance = (to) ->
   deferred.promise
 
 
+App.getAddressByCoord = (pos) ->
+  deferred = m.deferred()
+  geocoder.geocode location: pos, (data, status) ->
+    if status == google.maps.GeocoderStatus.OK
+      data.some (x) ->
+        if x.formatted_address
+          deferred.resolve(x.formatted_address)
+        else
+          false
+    else
+      deferred.reject(status)
+
+  deferred.promise
+
+
 App.showInfo = (html, marker, permanent=false) ->
   w = if permanent then staticInfoWindow else infoWindow
   w.setContent(html)
@@ -189,5 +208,3 @@ debouncedFitMapTo = App.x.debounce 500, fitMapTo
 App.fitMapTo = (coords) ->
   fitQueue.push coords
   debouncedFitMapTo()
-
-App.map = -> map
