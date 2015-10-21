@@ -46,6 +46,14 @@ infoDOM = (data) ->
       m 'dd.accolades', accolades.join(', ')
     ]
 
+  if data.cost
+    uberCost = [
+      m 'dt', 'uber cost'
+      m 'dd', [
+        m 'img', src: '/assets/uber.jpg', style: {maxHeight: '16px'}
+        " £#{data.cost}"
+      ]
+    ]
 
   reviews = (data.reviews || []).slice(0, 2)
   [
@@ -70,6 +78,7 @@ infoDOM = (data) ->
       m 'dd', data.cuisines.join(', ')
       michelin
       accolades
+      uberCost
     ]
 
     m '.reviews', className: (if reviews.length then '' else 'hidden'), [
