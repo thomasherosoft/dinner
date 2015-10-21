@@ -465,7 +465,7 @@ search =
 
 
 top.initApp = ->
-  App.initMap().then ->
-    load().then ->
-      m.mount document.querySelector('.map-side-bar'), app
-      m.mount document.querySelector('#search-form'), search
+  App.initMap()
+  load().then ->
+    m.mount document.querySelector('.map-side-bar'), app
+    m.mount document.querySelector('#search-form'), search
