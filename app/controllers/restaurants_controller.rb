@@ -38,7 +38,8 @@ class RestaurantsController < ApplicationController
                          @found_by = cuisines.map(&:name).join(', ')
                          @restaurants.
                            joins(:cuisines).
-                           where(cuisines: {id: cuisines.map(&:id)})
+                           where(cuisines: {id: cuisines.map(&:id)}).
+                           uniq
                        elsif params[:luck].present?
                          Restaurant.order('random()').paginate(per_page: 5, page: 1)
                        elsif (query = params[:search_name]).present?
