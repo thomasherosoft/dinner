@@ -44,7 +44,7 @@ App.initMap = ->
     deferred.resolve()
 
   infoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true
-  staticInfoWindow = new google.maps.InfoWindow map: map, disableAutoPan: true, zIndex: 1
+  staticInfoWindow = new google.maps.InfoWindow map: map, zIndex: 1
   staticInfoWindow.close()
   places = new google.maps.places.PlacesService map
   distance = new google.maps.DistanceMatrixService
