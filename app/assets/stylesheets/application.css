@@ -140,12 +140,12 @@ body{
   position: fixed;
   height: 100%;
   right: 0px;
-  width: 65%;
+  width: 70%;
 }
 
 .map-side-bar{
   float: left;
-  width: 35%;
+  width: 30%;
   padding: 10px;
 }
 
@@ -234,13 +234,14 @@ body{
 }
 
 .search-filter ul li a{
-    display: block;
-    padding: 10px 20px;
-    border-radius: 20px;
-    background: #3e1a58;
-    text-align: center;
-    font-size: 18px;
-    color: #FFF;
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 28px;
+  background: #3e1a58;
+  text-align: center;
+  font-size: 18px;
+  color: #FFF;
+  line-height: 30px;
 }
 
 .search-filter ul li.active a,

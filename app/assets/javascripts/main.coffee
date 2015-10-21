@@ -262,6 +262,14 @@ filterNames =
   faisal: 'Faisal'
   deliveroo: 'Deliveroo'
 
+shortFilterNames =
+  michelin: 'M'
+  zagat: 'Z'
+  timeout: 'TO'
+  foodtruck: 'FT'
+  faisal: 'F'
+  deliveroo: 'D'
+
 filters =
   controller: ->
     filter: (name) ->
@@ -275,6 +283,11 @@ filters =
       load(luck: true).then ->
         spinner.classList.add('hidden')
 
+    showTip: (e) ->
+      $(e.target).tooltip('show')
+
+    hideTip: (e) ->
+      $(e.target).tooltip('hide')
 
   view: (ctrl) ->
     m '.search-filter', [
@@ -289,7 +302,16 @@ filters =
         m 'ul.filters-icons', [
           Object.keys(filterNames).map (name) ->
             m 'li', className: (if activeFilter == name then 'active' else ''), [
-              m 'a', href: 'javascript:;', onclick: ctrl.filter.bind(null, name), filterNames[name]
+              m 'a',
+                href: 'javascript:;'
+                onclick: ctrl.filter.bind(null, name)
+                onmouseover: ctrl.showTip
+                onmouseout: ctrl.hideTip
+                title: filterNames[name]
+                shortFilterNames[name]
+                # replace line above with
+                #   m 'img', className: 'some-class', src: '/path/to/image.png'
+                # and remove onmouse* handlers above which changes innerText
             ]
         ]
       ]
