@@ -172,7 +172,24 @@ App.adjustUberCircle = (inside, radiusPoint) ->
     uberRadius
 
 
-App.fitMapTo = (coords) ->
+fitQueue = []
+fitMapTo = ->
+  coords = fitQueue.pop()
+  fitQueue.splice(0, fitQueue.length)
+
   bounds = new google.maps.LatLngBounds
   coords.forEach (c) -> bounds.extend(c)
+
+  google.maps.event.addListenerOnce map, 'bounds_changed', ->
+    z = map.getZoom()
+    if z > 13
+      map.setZoom(13)
+
   map.fitBounds bounds
+debouncedFitMapTo = App.x.debounce 500, fitMapTo
+
+App.fitMapTo = (coords) ->
+  fitQueue.push coords
+  debouncedFitMapTo()
+
+App.map = -> map
