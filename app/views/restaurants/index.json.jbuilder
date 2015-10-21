@@ -1,5 +1,5 @@
 json.array!(@restaurants) do |restaurant|
-  json.extract! restaurant, :id, :name, :zagat_status, :michelin_status, :address, :city, :price_range, :price_range_currency, :rating, :phone, :google_place_id
+  json.extract! restaurant, :id, :name, :zagat_status, :michelin_status, :address, :city, :price_range, :price_range_currency, :rating, :phone, :google_place_id, :timeout_status
   json.url post_url(restaurant, format: :json)
   json.latitude restaurant.latitude.to_f
   json.longitude restaurant.longitude.to_f

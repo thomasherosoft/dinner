@@ -38,15 +38,12 @@ infoDOM = (data) ->
     ]
 
   accolades = []
-  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'Zagat' if data.zagat_status
-  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'Timeout' if data.timeout_status
-  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'FoodTruck' if data.foodtruck_status
-  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'Faisal' if data.faisal_status
-  console.debug 'accolades', accolades
+  accolades.push 'Zagat' if data.zagat_status
+  accolades.push 'TimeOut Top100' if data.timeout_status
   if accolades.length
     accolades = [
       m 'dt', 'accolades'
-      m 'dd.accolades', accolades
+      m 'dd.accolades', accolades.join(', ')
     ]
 
 
