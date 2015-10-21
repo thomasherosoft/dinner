@@ -181,9 +181,7 @@ fitMapTo = ->
   coords.forEach (c) -> bounds.extend(c)
 
   google.maps.event.addListenerOnce map, 'bounds_changed', ->
-    z = map.getZoom()
-    if z > 13
-      map.setZoom(13)
+    map.setZoom(15) if map.getZoom() > 15
 
   map.fitBounds bounds
 debouncedFitMapTo = App.x.debounce 500, fitMapTo
