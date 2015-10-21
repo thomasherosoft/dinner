@@ -114,6 +114,7 @@ App.getPlace = (id) ->
         phone: data.formatted_phone_number
         photo: data.photos?[0]?.getUrl(maxWidth: 800)
         rating: Math.floor(100 * (data.rating || 0) / 5.0)
+        reviews: data.reviews
     else
       deferred.reject(status)
 

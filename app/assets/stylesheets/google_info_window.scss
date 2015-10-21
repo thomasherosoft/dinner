@@ -1,0 +1,62 @@
+.gm-style-iw {
+  overflow: visible !important;
+
+  > div {
+    overflow: visible !important;
+  }
+
+  .header {
+    background-position: 50%;
+    background-size: cover;
+    color: #fff;
+    margin-left: -14px;
+    margin-right: -37px;
+    margin-top: -8px;
+    padding: 10px 0;
+    text-align: center;
+    text-shadow: 0 0 1px black;
+
+    > .name {
+      font-size: 2em;
+    }
+
+    > .info {
+    }
+  }
+
+  .dl-horizontal {
+    margin: 10px 0 20px;
+
+    dt {
+      color: #888;
+      width: 90px;
+    }
+
+    dd {
+      margin-bottom: .5em;
+      margin-left: 110px;
+    }
+  }
+
+  .accolades img {
+    max-height: 18px;
+  }
+
+  .reviews {
+    h5 {
+      color: #888;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+  }
+
+  .rating {
+    color: #e6c43c;
+    display: inline-block;
+    margin-right: .5em;
+  }
+
+  .review > p {
+    max-width: 300px;
+  }
+}

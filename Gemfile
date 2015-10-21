@@ -59,6 +59,7 @@ group :development do
   gem 'quiet_assets'
   gem 'mechanize'
   gem 'hashie'
+  gem 'google_places'
 end
 
 gem 'will_paginate'

@@ -5,17 +5,89 @@ activeLuck = false
 selectedRestaurantID = null
 
 
-infoHTML = (data) ->
-  img = if data.photo then "<img onerror='this.parentNode.removeChild(this)' src='#{data.photo}' style='margin:5px 5px 0 0;max-height:70px'>" else ''
-  html = "<table><tr><td style='vertical-align:top'>#{img}</td><td>"
-  html += data.name + '<br>'
-  html += data.address + '<br>'
-  html += "<a href= 'tel:"+ data.phone + "'>" + data.phone + "</a>" + '<br>' if data.phone
-  html += "<img src='/assets/uber.jpg' style='max-height:13px'> £#{data.cost}" + '<br>' if data.cost
-  if data.michelin_status && data.michelin_status != 'yes'
-    html += data.michelin_status + '<br>'
-  html += data.rating + '% rated' if data.rating
-  html + '</td></tr></table>'
+ratingDOM = (percents) ->
+  out = []
+  for i in [1..Math.floor(percents/20)]
+    out.push m 'i.fa.fa-star'
+  out.push m 'i.fa.fa-star-half-o' if percents % 20
+  if out.length < 5
+    for i in [1..(5-out.length)]
+      out.push m 'i.fa.fa-star-o'
+  out
+
+
+zp = (v) ->
+  if v < 10 then "0#{v}" else v
+
+
+unix2date = (stamp) ->
+  t = new Date stamp*1000
+  [
+    zp(t.getDate())
+    zp(t.getMonth()+1)
+    t.getFullYear()
+  ].join('/')
+
+
+infoDOM = (data) ->
+  michelin = if data.michelin_status == 'yes' then null else data.michelin_status
+  if michelin
+    michelin = [
+      m 'dt', 'Michelin rated'
+      m 'dd', michelin
+    ]
+
+  accolades = []
+  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'Zagat' if data.zagat_status
+  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'Timeout' if data.timeout_status
+  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'FoodTruck' if data.foodtruck_status
+  accolades.push m 'img', src: '/assets/michelin.jpg', title: 'Faisal' if data.faisal_status
+  console.debug 'accolades', accolades
+  if accolades.length
+    accolades = [
+      m 'dt', 'accolades'
+      m 'dd.accolades', accolades
+    ]
+
+
+  reviews = (data.reviews || []).slice(0, 2)
+  [
+    m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
+      m '.name', data.name
+      m '.info', [
+        "#{(data.miles || 0).toFixed(1)} miles"
+        " - #{(data.reviews || []).length} reviews"
+      ]
+      m '.rating', ratingDOM(data.rating)
+      " #{data.rating}%"
+    ]
+
+    m 'dl.dl-horizontal', [
+      m 'dt', 'phone'
+      m 'dd', [
+        m 'a', href: "tel:#{data.phone}", data.phone
+      ]
+      m 'dt', 'address'
+      m 'dd', m.trust(data.address.replace(/\s*,\s*/g, '<br>'))
+      m 'dt', 'cuisines'
+      m 'dd', data.cuisines.join(', ')
+      michelin
+      accolades
+    ]
+
+    m '.reviews', className: (if reviews.length then '' else 'hidden'), [
+      m 'h5', 'Reviews'
+      reviews.map (review) ->
+        t = review.text.slice(0,200)
+        t += '...' if t.length < review.text.length
+        m '.review', [
+          m '.pull-right', unix2date(review.time)
+          m '.rating', ratingDOM(100 * review.rating / 5)
+          "#{review.rating} by #{review.author_name}"
+          m 'p', t
+        ]
+    ]
+  ]
 
 
 queue = []
@@ -58,9 +130,18 @@ restaurant =
       title: item.name
 
     showInfo = (center=false, permanent=false) ->
-      if center
-        App.centerMap lat: item.latitude, lng: item.longitude
-      App.showInfo infoHTML(item), marker, permanent
+      fn = ->
+        if center
+          App.centerMap lat: item.latitude, lng: item.longitude
+        div = document.createElement('div')
+        m.render div, infoDOM(item)
+        App.showInfo div, marker, permanent
+      if !item.google_place_id || item.reviews
+        fn()
+      else
+        App.getPlace(item.google_place_id).then (x) ->
+          item.reviews = x.reviews
+          fn()
 
     marker.addListener 'mouseout', -> App.closeInfo()
     marker.addListener 'mouseover', -> showInfo()
