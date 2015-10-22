@@ -37,6 +37,7 @@ html, body {
   position: fixed;
   top: 0px;
   width: 100%;
+  min-width: 1024px;
   z-index: 999;
 
 }
@@ -122,6 +123,8 @@ body{
 
 .main-wrap{
   margin-top: 73px;
+  overflow: hidden;
+  width: 100%;
 }
 
 #notice{
@@ -137,15 +140,17 @@ body{
 }
 
 .home-map{
-  position: fixed;
+  position:fixed;
+  box-sizing: border-box;
   height: 100%;
-  right: 0px;
-  width: 70%;
+  left: 0;
+  width: calc(100% - 405px);
+  margin-left: 405px;
 }
 
 .map-side-bar{
   float: left;
-  width: 30%;
+  width: 405px;
   padding: 10px;
 }
 
@@ -162,7 +167,14 @@ body{
 
 .search-filter span{
   font-size: 14px;
-  margin-right: 10px;
+  margin-right: 0px;
+  float: right;
+  color: #ff00b1;
+  margin-top:6px;
+}
+
+.search-filter span:hover{
+  text-decoration: underline;
 }
 
 .accolades-panel{
@@ -223,7 +235,7 @@ body{
 .search-filter ul{
   background: #CCC;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 56px 10px 10px;
   margin: 0px -10px;
   list-style: none;
 }

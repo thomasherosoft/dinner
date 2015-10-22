@@ -26,6 +26,27 @@
     }
   }
 
+
+  .name, .info, .rating {
+      position: relative;
+      z-index: 100;
+  }
+
+
+  .header{
+    position: relative;
+  }
+  .header::after {
+    background: rgba(0, 0, 0, .5) none repeat scroll 0 0;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
   .dl-horizontal {
     margin: 10px 0 20px;
 
