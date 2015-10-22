@@ -258,8 +258,8 @@ filterNames =
   michelin: 'Michelin'
   zagat: 'Zagat'
   timeout: 'TimeOut'
-  foodtruck: 'F.Truck'
-  faisal: 'Faisal'
+  foodtruck: 'Food Trucks'
+  faisal: 'Editors Choice'
   deliveroo: 'Deliveroo'
 
 shortFilterNames =
@@ -292,7 +292,7 @@ filters =
   view: (ctrl) ->
     m '.search-filter', [
       m 'form', [
-        m 'h3', 'Explore Your City', [
+        m 'h3', 'Explore London', [
           m 'span',
             onclick: ctrl.luck
             style: {cursor: 'pointer', marginLeft: '2em'}
@@ -362,7 +362,7 @@ app =
                  loc + ' ' + (if subj then "matching \"#{subj}\"" else '')
              else
                "#{filterNames[activeFilter]} restaurants"
-      head += ' in London' unless activeSearchLocation
+      head += '' unless activeSearchLocation
 
     header = if items.length == 0 && queue.length > 0
                'Calculating results...'

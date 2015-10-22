@@ -144,13 +144,13 @@ body{
   box-sizing: border-box;
   height: 100%;
   left: 0;
-  width: calc(100% - 405px);
-  margin-left: 405px;
+  width: calc(100% - 325px);
+  margin-left: 325px;
 }
 
 .map-side-bar{
   float: left;
-  width: 405px;
+  width: 325px;
   padding: 10px;
 }
 
@@ -171,10 +171,10 @@ body{
 
 .search-filter span{
   font-size: 14px;
-  margin-right: 0px;
+  margin-right: -1px;
   float: right;
   color: #ff00b1;
-  margin-top:6px;
+  margin-top:-17px;
 }
 
 .search-filter span:hover{
@@ -228,7 +228,8 @@ body{
 .more-filter span{
   float: right;
   font-size: 16px;
-  margin-top:12px;
+  margin-left: 5px;
+  margin-top: 16px;
 }
 
 .search-filter{
@@ -238,7 +239,7 @@ body{
 .search-filter ul{
   background: #CCC;
   border-radius: 10px;
-  padding: 10px 56px 10px 10px;
+  padding: 10px 20px 10px 10px;
   margin: 0px -10px;
   list-style: none;
 }
