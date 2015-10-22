@@ -25,8 +25,8 @@ html, body {
   padding: 0;
 }
 #map {
-  height: 720px;
-  width: 910px;
+  height: 100%;
+  width: 100%;
   background-color: rgb(229, 227, 223);
 }
 

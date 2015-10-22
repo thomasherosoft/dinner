@@ -265,8 +265,8 @@ filterNames =
 shortFilterNames =
   michelin: 'M'
   zagat: 'Z'
-  timeout: 'TO'
-  foodtruck: 'FT'
+  timeout: 'T'
+  foodtruck: 'O'
   faisal: 'F'
   deliveroo: 'D'
 
