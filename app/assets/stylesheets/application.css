@@ -36,8 +36,8 @@ html, body {
   padding:15px !important;
   position: fixed;
   top: 0px;
-  width: 100%;
   min-width: 1024px;
+  width: 100%;
   z-index: 999;
 
 }
@@ -370,4 +370,37 @@ body{
 
 .item-widget.selected > figcaption {
   box-shadow: 0px 0px 10px 1px rgba(0,0,0,0.75);
+}
+
+@media (max-width: 360px){
+  .navbar-form{
+    min-width: 300px;
+    text-align: center;
+    padding: 2px 15px 15px !important;
+  }
+  .header-right{
+    margin: 10px 0px;
+    display: none;
+  }
+
+  #search-form .search-group > .form-control,
+  #search-form .search-group > .form-control.location{
+    width: 50%;
+    max-width: inherit !important;
+  }
+  .main-wrap{
+    margin-top: 100px;
+  }
+  .search-filter ul li a:hover {
+    background: #3e1a58 none repeat scroll 0 0;
+    text-decoration: none;
+  }
+
+  .navbar-form a.logo{
+    margin-right: 0px;
+  }
+
+  .search-result .item-widget a:hover{
+    text-decoration: none;
+  }
 }

@@ -255,19 +255,19 @@ load = (args={}) ->
 
 
 filterNames =
-  michelin: 'Michelin'
-  zagat: 'Zagat'
-  timeout: 'TimeOut'
-  foodtruck: 'Food Trucks'
-  faisal: 'Editors Choice'
-  deliveroo: 'Deliveroo'
+  michelin: 'M'
+  zagat: 'Z'
+  timeout: 'T'
+  foodtruck: 'F'
+  faisal: 'E'
+  deliveroo: 'D'
 
 shortFilterNames =
   michelin: 'M'
   zagat: 'Z'
   timeout: 'T'
-  foodtruck: 'O'
-  faisal: 'F'
+  foodtruck: 'F'
+  faisal: 'E'
   deliveroo: 'D'
 
 filters =
