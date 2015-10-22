@@ -160,6 +160,10 @@ body{
   border-bottom: 1px solid #F2F2F2;
 }
 
+.map-side-bar h3{
+  margin-top: 0px;
+}
+
 .search-filter{
   padding: 20px 0px;
   border-bottom: 1px solid #F2F2F2;
@@ -229,7 +233,6 @@ body{
 
 .search-filter{
   padding: 15px;
-  margin-top: 10px;
 }
 
 .search-filter ul{
