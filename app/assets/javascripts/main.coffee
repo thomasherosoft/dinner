@@ -1,9 +1,8 @@
 store = []
-activeFilter = 'michelin'
+activeFilter = ''
 activeSearchName = activeSearchLocation = null
 activeLuck = false
 selectedRestaurantID = null
-
 
 ratingDOM = (percents) ->
   out = []
@@ -14,7 +13,6 @@ ratingDOM = (percents) ->
     for i in [1..(5-out.length)]
       out.push m 'i.fa.fa-star-o'
   out
-
 
 zp = (v) ->
   if v < 10 then "0#{v}" else v
@@ -291,14 +289,7 @@ filters =
 
   view: (ctrl) ->
     m '.search-filter', [
-      m 'form', [
-        m 'h3', 'Explore London', [
-          m 'span',
-            onclick: ctrl.luck
-            style: {cursor: 'pointer', marginLeft: '2em'}
-            "I'm feeling lucky"
-            [ m 'i.fa.fa-spin.fa-spinner.hidden', style: {marginLeft: '.5em'} ]
-        ]
+      m 'form', className: (if activeSearchName != '' then 'hide-form' else ''), [
         m 'ul.filters-icons', [
           Object.keys(filterNames).map (name) ->
             m 'li', className: (if activeFilter == name then 'active' else ''), [
@@ -316,7 +307,6 @@ filters =
         ]
       ]
     ]
-
 
 app =
   controller: ->
@@ -375,7 +365,7 @@ app =
     [
       m.component filters
 
-      m '.search-result', config: mapAdjusts.bind(null, items), [
+      m '.search-result', config: mapAdjusts.bind(null, items), className: (if activeSearchName != '' then 'hide-form' else ''), [
         m '.more-filter', [
           m 'span', header
           m 'br'
@@ -461,19 +451,81 @@ search =
           .value = location = 'My Location'
         perform()
 
-
   view: (ctrl) ->
+
     m 'form.form-inline', onsubmit: ((e) -> e.preventDefault()), [
-      m '.search-group', [
+      m '.search-group', className: (if activeSearchName != '' then 'hide-form' else ''), [
         m 'i.fa.fa-search'
         m 'input.form-control',
           onkeyup: m.withAttr('value', ctrl.search_name)
           placeholder: 'Search Restaurant Name or Cuisine'
-        m 'i.fa.fa-times',
+          m 'i.fa.fa-times',
           className: (if ctrl.search_name() then '' else 'transparent')
           onclick: ctrl.clear_name
       ]
+    ]
 
+location_search =
+  controller: ->
+    name = location = ''
+    controller_obj = this
+
+    perform = ->
+      loc = if location == 'My Location' then [App.myPosition.lat, App.myPosition.lng].join(',') else location
+      queue = []
+      load
+        search_name: name
+        search_location: loc
+    debounced = App.x.debounce 250, perform
+
+    clear_name: (e) ->
+      e.target.parentNode.querySelector('input').value = ''
+      name = ''
+      perform()
+
+    clear_location: (e) ->
+      e.target.parentNode.querySelector('input').value = ''
+      location = ''
+      perform()
+
+    search_name: (val) ->
+      if val || val == ''
+        name = val
+        debounced()
+      name
+
+    search_location: (val) ->
+      if val || val == ''
+        location = val
+        debounced()
+      location
+
+    useMyPosition: (e) ->
+      if App.myPosition
+        App.centerMap App.myPosition
+        e.target.parentNode.querySelector('input')
+          .value = location = 'My Location'
+        perform()
+
+    luck: (e) ->
+      spinner = e.target.children[0]
+      spinner.classList.remove('hidden')
+      queue = []
+      load(luck: true).then ->
+        spinner.classList.add('hidden')
+
+    search: (e) ->
+      e.preventDefault()
+      val = jQuery(e.target).find('input').val()
+
+      if val || val == ''
+        location = val
+        debounced()
+      location
+
+
+  view: (ctrl) ->
+    m 'form.form-inline', onsubmit: ctrl.search, [
       m '.search-group', [
         m 'i.fa.fa-location-arrow.location', onclick: ctrl.useMyPosition
         m 'input.form-control.location',
@@ -483,11 +535,20 @@ search =
           className: (if ctrl.search_location() then '' else 'transparent')
           onclick: ctrl.clear_location
       ]
-    ]
 
+      m 'button',
+        type: 'submit'
+        'Search'
+
+      m 'button',
+        onclick: ctrl.luck
+        "I'm feeling lucky"
+        [ m 'i.fa.fa-spin.fa-spinner.hidden' ]
+    ]
 
 top.initApp = ->
   App.initMap()
   load().then ->
-    m.mount document.querySelector('.map-side-bar'), app
+    m.mount document.querySelector('.map-side-bar .search-result-wrapper'), app
     m.mount document.querySelector('#search-form'), search
+    m.mount document.querySelector('#location-search'), location_search

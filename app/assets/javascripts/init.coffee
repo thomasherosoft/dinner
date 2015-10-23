@@ -17,7 +17,6 @@ xhr = (x) ->
   x.setRequestHeader 'X-Requested-With', 'XMLHttpRequest'
   x.setRequestHeader 'X-Requested-For', location.pathname
 
-
 App.x.debounce = (wait, fn, immediate=false) ->
   timeout = args = context = timestamp = result = null
 
