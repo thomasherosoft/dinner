@@ -28,19 +28,18 @@ App.c.filters =
         spinner.classList.add('hidden')
 
     showTip: (e) ->
-      $(e.target).tooltip('show')
+      # $(e.target).tooltip('show')
 
     hideTip: (e) ->
-      $(e.target).tooltip('hide')
+      # $(e.target).tooltip('hide')
 
   view: (ctrl) ->
     [
       m 'h3', 'Explore London', [
-        m 'small',
+        m 'small.lucky',
           onclick: ctrl.luck
-          style: {cursor: 'pointer', marginLeft: '2em'}
           "I'm feeling lucky"
-          [ m 'i.fa.fa-spin.fa-spinner.hidden', style: {marginLeft: '.5em'} ]
+          [ m 'i.fa.fa-spin.fa-spinner.hidden' ]
       ]
       m 'ul.filters-icons', [
         Object.keys(filterNames).map (name) ->

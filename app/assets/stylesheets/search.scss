@@ -38,13 +38,12 @@ $red-light: lighten(#ff00b1, 20%);
     &:focus {
       background: #ffeefa;
       outline: none;
+      & ~ .suggestions {
+        display: initial;
+      }
     }
 
     &.in-progress ~ .fa-spinner {
-      display: initial;
-    }
-
-    &.with-suggestions ~ .suggestions {
       display: initial;
     }
   }
@@ -54,10 +53,15 @@ $red-light: lighten(#ff00b1, 20%);
     border-radius: 4px;
     border: 1px solid $red-dark;
     color: #fff;
+    cursor: pointer;
     flex: 0 0;
     margin: 10px 0;
     max-width: 150px;
     padding: 8px 10px;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   .search-wrap > .suggestions {
@@ -79,6 +83,40 @@ $red-light: lighten(#ff00b1, 20%);
 
       &:last-child {
         border-bottom: 0;
+      }
+
+      &.selected, &:hover {
+        background: #eee;
+      }
+
+      &.muted {
+        color: #aaa;
+        cursor: default;
+        font-size: 13px;
+        white-space: normal;
+
+        &:hover {
+          background: initial;
+        }
+      }
+
+      &.head {
+        background: lighten($red-light, 20%);
+        cursor: default;
+
+        &:hover {
+          background: lighten($red-light, 20%);
+        }
+      }
+
+      &.location {
+        padding-left: 15px;
+
+        > .fa {
+          color: $red-dark;
+          left: -5px;
+          position: relative;
+        }
       }
     }
   }

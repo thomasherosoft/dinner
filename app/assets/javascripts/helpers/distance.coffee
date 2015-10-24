@@ -27,4 +27,7 @@ drain = ->
 drain()
 
 pubsub.subscribe 'calculate-distance', (x) ->
-  queue.push x
+  if Array.isArray(x)
+    x.forEach (i) -> queue.push i
+  else
+    queue.push x
