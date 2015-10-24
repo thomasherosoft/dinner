@@ -28,7 +28,6 @@ addMyLocationButton = ->
 
 
 addUberMarker = ->
-  console.debug 'addUberMarker'
   btn = document.createElement 'div'
   btn.style.backgroundColor = '#fff'
   btn.style.border = '2px solid #fff'
@@ -42,7 +41,7 @@ addUberMarker = ->
   map.controls[google.maps.ControlPosition.TOP_LEFT].push btn
 
 
-App.initMap = ->
+top.initMap = ->
   deferred = m.deferred()
   map = new google.maps.Map document.getElementById('map'),
     center:

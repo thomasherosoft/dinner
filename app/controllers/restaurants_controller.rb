@@ -53,6 +53,19 @@ class RestaurantsController < ApplicationController
     end
   end
 
+  def suggestions
+    head :ok
+  end
+
+  def autocomplete
+    @restaurants = Restaurant.search(
+      params[:q],
+      fields: [{name: :word_start}, {address: :word_start}],
+      limit: 10
+    )
+    render :index
+  end
+
   private
 
   def log_search

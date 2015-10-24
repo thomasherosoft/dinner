@@ -1,0 +1,14 @@
+aside > header {
+  background-color: #ff00b1;
+
+  a.logo{
+    color: #FFF;
+    display: block;
+    font: 28px normal;
+    padding: .5em 1em;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
