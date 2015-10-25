@@ -2,26 +2,35 @@ map = infoWindow = staticInfoWindow = places = distance = geocoder = myPosition 
 uberCircle = null
 uberRadius = 3*1609.34
 
-addMyLocationButton = ->
+addLeftButtons = ->
   ctrl = document.createElement 'div'
-  ctrl.style.backgroundColor = '#fff'
-  ctrl.style.border = '2px solid #fff'
-  ctrl.style.borderRadius = '3px'
-  ctrl.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)'
-  ctrl.style.cursor = 'pointer'
-  ctrl.style.marginLeft = '10px'
-  ctrl.style.padding = '4px 0'
-  ctrl.style.textAlign = 'center'
-  ctrl.style.width = '28px'
+  ctrl.className = 'gm-controls'
+
+  icon = document.createElement 'i'
+  icon.className = 'fa fa-plus'
+  ctrl.appendChild icon
+  icon.addEventListener 'click', ->
+    map.setZoom map.getZoom()+1
+  map.controls[google.maps.ControlPosition.LEFT_CENTER].push ctrl
+
+  ctrl = document.createElement 'div'
+  ctrl.className = 'gm-controls'
+
+  icon = document.createElement 'i'
+  icon.className = 'fa fa-minus'
+  ctrl.appendChild icon
+  icon.addEventListener 'click', ->
+    map.setZoom map.getZoom()-1
+  map.controls[google.maps.ControlPosition.LEFT_CENTER].push ctrl
+
+  ctrl = document.createElement 'div'
+  ctrl.className = 'gm-controls'
 
   icon = document.createElement 'i'
   icon.className = 'fa fa-location-arrow'
-  icon.style.left = '-1px'
-  icon.style.position = 'relative'
-  icon.style.top = '1px'
   ctrl.appendChild icon
 
-  ctrl.addEventListener 'click', ->
+  icon.addEventListener 'click', ->
     map.setCenter myPosition if myPosition
 
   map.controls[google.maps.ControlPosition.LEFT_CENTER].push ctrl
@@ -47,12 +56,10 @@ top.initMap = ->
     center:
       lat: 51.5084509
       lng: -0.1433683
-    zoomControl: true
-    zoomControlOptions:
-      position: google.maps.ControlPosition.LEFT_CENTER
+    disableDefaultUI: true
     zoom: 15
 
-  addMyLocationButton()
+  addLeftButtons()
 
   map.addListener 'idle', ->
     deferred.resolve()
@@ -67,10 +74,10 @@ top.initMap = ->
   if navigator.geolocation
     navigator.geolocation.getCurrentPosition (pos) ->
       App.myPosition = myPosition =
-        lat: pos.coords.latitude
-        lng: pos.coords.longitude
-        # lat: 51.512545 # testing purposes
-        # lng: -0.12033  # testing purposes
+        # lat: pos.coords.latitude
+        # lng: pos.coords.longitude
+        lat: 51.512545 # testing purposes
+        lng: -0.12033  # testing purposes
       infoWindow.close()
 
       App.getAddressByCoord(myPosition).then (x) ->
@@ -107,8 +114,8 @@ App.drawCircle = (args) ->
 
 
 App.newMarker = (args) ->
-  $.extend args, map: map
-  new google.maps.Marker(args)
+  opts = App.x.extend args, map: map
+  new google.maps.Marker(opts)
 
 App.getPlace = (id) ->
   deferred = m.deferred()

@@ -47,11 +47,14 @@
     z-index: 10;
 }
 
-  .dl-horizontal {
+  dl {
     margin: 10px 0 20px;
 
     dt {
       color: #888;
+      float: left;
+      font-weight: bold;
+      text-align: right;
       width: 90px;
     }
 
@@ -77,5 +80,9 @@
     color: #e6c43c;
     display: inline-block;
     margin-right: .5em;
+
+    > .fa {
+      margin: 0 1px;
+    }
   }
 }

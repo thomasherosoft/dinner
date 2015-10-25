@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020140309) do
+ActiveRecord::Schema.define(version: 20151016124945) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "cuisines", force: :cascade do |t|
     t.string   "name"
@@ -24,30 +27,12 @@ ActiveRecord::Schema.define(version: 20151020140309) do
     t.integer "restaurant_id", null: false
   end
 
-  create_table "posts", force: :cascade do |t|
-    t.string   "name"
-    t.string   "michelin_status"
-    t.string   "zagat_status"
-    t.string   "address"
-    t.string   "city"
-    t.string   "cuisine"
-    t.string   "neighborhood"
-    t.string   "price_range"
-    t.decimal  "longitude"
-    t.decimal  "latitude"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "image_present",   default: false, null: false
-    t.float    "rating",          default: 0.0
-    t.string   "placeid"
-    t.string   "phone"
-  end
-
   create_table "restaurants", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",                 null: false
     t.string   "address"
     t.string   "phone"
     t.string   "city"
+    t.string   "area"
     t.decimal  "latitude"
     t.decimal  "longitude"
     t.string   "zipcode"
@@ -63,10 +48,12 @@ ActiveRecord::Schema.define(version: 20151020140309) do
     t.string   "timeout_status"
     t.string   "foodtruck_status"
     t.string   "faisal_status"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
     t.string   "deliveroo_status"
     t.string   "google_place_id"
+    t.string   "zomato_url"
+    t.string   "reviews_count"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "searches", force: :cascade do |t|

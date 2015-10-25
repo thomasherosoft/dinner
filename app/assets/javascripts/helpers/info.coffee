@@ -95,7 +95,7 @@ infoDOM = (data) ->
     ]
 
     m '.reviews', className: (if reviews.length then '' else 'hidden'), [
-      m 'h5', 'Reviews'
+      m 'h5', 'Google Reviews'
       reviews.map (review) ->
         t = review.text.slice(0,70).trim().replace(/\s+\S+$/, '...')
         m '.review', [
@@ -109,5 +109,5 @@ infoDOM = (data) ->
 
 pubsub.subscribe 'show-info', ({data, bind, permanent}) ->
   div = document.createElement('div')
-  m.render div, infoDOM(item)
+  m.render div, infoDOM(data)
   App.showInfo div, bind, permanent

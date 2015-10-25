@@ -26,7 +26,11 @@ drain = ->
     setTimeout drain, 100
 drain()
 
-pubsub.subscribe 'calculate-distance', (x) ->
+pubsub.subscribe 'reset-distance-queue', ->
+  queue = []
+
+pubsub.subscribe 'calculate-distance', (x, reset=true) ->
+  queue = [] if reset
   if Array.isArray(x)
     x.forEach (i) -> queue.push i
   else

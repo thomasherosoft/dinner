@@ -14,18 +14,23 @@ namespace :zomato do
   end
 
   task refresh: :setup do
+    limit = ENV['LIMIT'].to_i
+    limit = 50 if limit < 0 || limit > 50
     zomato = Zomato.new
 
     arel = Restaurant.arel_table
     Restaurant.
       where.not(zomato_id: nil).
       where(
-        arel[:fetched_at].lt(3.days.ago).
-        or(arel[:fetched_at].eq(nil))
+        arel[:zomato_fetched_at].lt(3.days.ago).
+        or(arel[:zomato_fetched_at].eq(nil))
       ).find_each do |restaurant|
         if data = zomato.find(restaurant.zomato_id)
           restaurant.fill_from_zomato_record(data)
         end
+        sleep 1+rand
+        limit -= 1
+        break if limit == 0
       end
   end
 

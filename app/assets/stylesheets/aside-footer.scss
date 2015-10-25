@@ -1,31 +1,8 @@
 aside > footer {
   align-items: center;
-  background-color: #ff00b1;
-  justify-content: space-between;
-  padding: 0 20px;
+  justify-content: space-around;
 
-  .social-icons {
-    display: inline-block;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    > li {
-      display: inline-block;
-      padding: 0px 10px;
-    }
-
-    > li > a {
-      color: #fff;
-    }
-  }
-
-  a.blog{
-    background: #fff;
-    border-radius: 5px;
+  a {
     color: #ff00b1;
-    font-size: 14px;
-    padding: 7px 20px;
-    text-transform: uppercase;
   }
 }

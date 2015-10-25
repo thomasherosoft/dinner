@@ -1,10 +1,10 @@
 filterNames =
-  michelin: 'M'
-  zagat: 'Z'
-  timeout: 'T'
-  foodtruck: 'F'
+  michelin: 'Michelin'
+  zagat: 'Zagat'
+  timeout: 'TimeOut'
+  foodtruck: 'F.Truck'
   faisal: 'E'
-  deliveroo: 'D'
+  deliveroo: 'Deliveroo'
 
 shortFilterNames =
   michelin: 'M'
@@ -14,18 +14,22 @@ shortFilterNames =
   faisal: 'E'
   deliveroo: 'D'
 
+store = null
+pubsub.subscribe 'adjust-filter', (data) -> store = data
+
+
 App.c.filters =
   controller: ->
     filter: (name) ->
-      queue = []
-      load filter: name
+      # queue = []
+      # load filter: name
 
     luck: (e) ->
-      spinner = e.target.children[0]
-      spinner.classList.remove('hidden')
-      queue = []
-      load(luck: true).then ->
-        spinner.classList.add('hidden')
+      # spinner = e.target.children[0]
+      # spinner.classList.remove('hidden')
+      # queue = []
+      # load(luck: true).then ->
+      #   spinner.classList.add('hidden')
 
     showTip: (e) ->
       # $(e.target).tooltip('show')
@@ -57,3 +61,4 @@ App.c.filters =
           ]
       ]
     ]
+

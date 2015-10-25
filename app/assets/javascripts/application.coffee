@@ -5,5 +5,5 @@
 #= require_tree ./components
 #= require_tree ./helpers
 
-'search filters'.split(/\s+/).forEach (c) ->
+'search filters restaurants'.split(/\s+/).forEach (c) ->
   m.mount document.getElementById(c), App.c[c]

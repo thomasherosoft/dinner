@@ -36,8 +36,11 @@ $red-light: lighten(#ff00b1, 20%);
     padding: 10px 30px;
 
     &:focus {
-      background: #ffeefa;
       outline: none;
+    }
+
+    &.active {
+      background: #ffeefa;
       & ~ .suggestions {
         display: initial;
       }
@@ -108,16 +111,16 @@ $red-light: lighten(#ff00b1, 20%);
           background: lighten($red-light, 20%);
         }
       }
-
-      &.location {
-        padding-left: 15px;
-
-        > .fa {
-          color: $red-dark;
-          left: -5px;
-          position: relative;
-        }
-      }
     }
+  }
+}
+
+.with-icon {
+  padding-left: 15px;
+
+  > .fa {
+    color: $red-dark;
+    left: -5px;
+    position: relative;
   }
 }

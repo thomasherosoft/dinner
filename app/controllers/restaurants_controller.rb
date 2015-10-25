@@ -4,23 +4,23 @@ class RestaurantsController < ApplicationController
   PER_PAGE = 7
 
   def index
-    @restaurants = apply_filter Restaurant.
+    @restaurants = Restaurant.
       order(rating: :desc).
       paginate(page: params[:page], per_page: PER_PAGE)
 
     search_opts = ({
       page: params[:page], per_page: PER_PAGE,
-      order: {rating: :desc}
-    }).merge(apply_filter || {})
+      order: {rating: :desc},
+      facets: [:filter]
+    })
 
-    if params[:search_location].present?
-      loc = params[:search_location].split(',').map(&:to_f)
+    if params[:location].present?
+      loc = params[:location].split(',').map(&:to_f)
       if loc.size == 2 && loc.reject(&:zero?).size == 2
         (search_opts[:where] ||= {})[:location] = {
           near: loc,
           within: '3mi'
         }
-        params[:search_location] = '*'
       end
     end
 
@@ -33,21 +33,10 @@ class RestaurantsController < ApplicationController
         end
       end
       format.json do
-        cuisines = params[:search_name].present? ? Cuisine.search(params[:search_name]).to_a : []
-        @restaurants = if cuisines.size > 0
-                         @found_by = cuisines.map(&:name).join(', ')
-                         @restaurants.
-                           joins(:cuisines).
-                           where(cuisines: {id: cuisines.map(&:id)}).
-                           uniq
-                       elsif params[:luck].present?
+        @restaurants = if params[:luck].present?
                          Restaurant.order('random()').paginate(per_page: 5, page: 1)
-                       elsif (query = params[:search_name]).present?
-                         Restaurant.search query, search_opts.merge(fields: [{name: :word_start}])
-                       elsif (query = params[:search_location]).present?
-                         Restaurant.search query, search_opts.merge(fields: [{address: :word_start}])
                        else
-                         @restaurants
+                         Restaurant.search (params[:q].presence || '*'), search_opts
                        end
       end
     end
@@ -60,8 +49,13 @@ class RestaurantsController < ApplicationController
   def autocomplete
     @restaurants = Restaurant.search(
       params[:q],
-      fields: [{name: :word_start}, {address: :word_start}],
-      limit: 10
+      fields: [
+        {name: :word_start},
+        {address: :word_start},
+        {area: :word_start},
+        {cuisines: :word_start}
+      ],
+      limit: PER_PAGE
     )
     render :index
   end

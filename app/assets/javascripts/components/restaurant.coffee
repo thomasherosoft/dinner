@@ -24,7 +24,7 @@ App.c.restaurant =
 
     marker: marker
     showInfo: ->
-      selectedRestaurantID = item.id
+      App.s.selectedRestaurantID = item.id
       showInfo('center', true)
     onunload: -> marker.setMap(null)
     fallbackImageUrl: (e) ->
@@ -39,7 +39,7 @@ App.c.restaurant =
       marker.addListener 'click', ->
         document.body.scrollTop = el.offsetTop - document.body.clientHeight/2 + el.clientHeight/2
         m.startComputation()
-        selectedRestaurantID = item.id
+        App.s.selectedRestaurantID = item.id
         m.endComputation()
 
 
@@ -55,25 +55,24 @@ App.c.restaurant =
            else
              null
 
-    m '.col-md-12.item-widget',
-      className: (if item.id == selectedRestaurantID then 'selected' else '')
-      config: restaurant.viewHandler.bind(null, item, ctrl.marker)
+    m 'figure.restaurant', [
+      className: (if item.id == App.s.selectedRestaurantID then 'selected' else '')
+      config: App.c.restaurant.viewHandler.bind(null, item, ctrl.marker)
       [
-        m 'figcaption', [
-          m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
-            m 'figure', [
-              m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
-              m 'span.item-rating', style: {color: 'white'}, (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
-            ]
-            m 'strong', item.name
-            m 'span', item.address
-            m 'span', [
-              item.neighborhood
-              item.cuisines.join(', ')
-              ctrl.price_range()
-              (if item.michelin_status == 'yes' then '' else item.michelin_status)
-            ].join(' - ')
-            uber
+        m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
+          m 'figcaption', [
+            m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
+            m '.item-rating', (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
           ]
+          m 'strong', item.name
+          m 'span', item.address
+          m 'span', [
+            item.neighborhood
+            item.cuisines.join(', ')
+            ctrl.price_range()
+            (if item.michelin_status == 'yes' then '' else item.michelin_status)
+          ].filter((x) -> x ).join(' - ')
+          uber
         ]
       ]
+    ]

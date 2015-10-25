@@ -1,16 +1,12 @@
 source 'https://rubygems.org'
 
-
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
-# Use sqlite3 as the database for Active Record
-group :development, :test do
-  gem 'sqlite3'
-end
+
+gem 'pg'
 group :production, :staging do
-      gem 'pg'
-      gem 'rails_12factor'
+  gem 'rails_12factor'
 end
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Rails Slider gem
@@ -28,8 +24,6 @@ gem 'jquery-rails'
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
