@@ -37,7 +37,7 @@ App.c.search =
         e.target.parentNode.parentNode.querySelector('input').value = x.name
         suggestions = []
         selected = null
-        self.search()
+        self.search !!x.thelocation
       input: input
       loading: -> loading
       search: (mylocation=false) ->
@@ -95,7 +95,7 @@ App.c.search =
           m 'li.muted', 'Search for restaurant by name, address, location, cuisine ...'
 
           m 'li.location.with-icon',
-            onmousedown: ctrl.search.bind(null, 'my location')
+            onmousedown: ctrl.choose.bind(null, name: 'Current Location', thelocation: true)
             [
               m 'i.fa.fa-location-arrow'
               'Use Current Location'
