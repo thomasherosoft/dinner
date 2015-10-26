@@ -1,4 +1,6 @@
 top.App =
+  c: {} # component namespace
+  s: {} # state namespace
   x:
     extend: ->
       h = {}

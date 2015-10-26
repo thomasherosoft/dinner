@@ -1,0 +1,47 @@
+body {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
+  width: 100%;
+
+  > aside {
+    flex: 0 0 325px;
+  }
+
+  > article {
+    flex: 1 1 auto;
+    height: 100%;
+  }
+}
+
+body > aside {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+
+  > header {
+    flex: 0 0 60px;
+    margin: 0 -10px;
+  }
+
+  > main {
+    flex: 1 auto;
+    height: 100%;
+    overflow-y: auto;
+    padding: 0 10px;
+  }
+
+  > footer {
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 0 0 30px;
+  }
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

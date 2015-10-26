@@ -1,0 +1,25 @@
+//= require font-awesome
+//= require_tree .
+//= require_self
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body, input, button {
+  font-family: 'BoosterNextFY-Regular';
+  font-size: 14px;
+}
+
+@font-face {
+  font-family: 'BoosterNextFY-Regular';
+  src: url('BoosterNextFY-Regular.eot');
+  src: url('BoosterNextFY-Regular.eot?#iefix') format('embedded-opentype'),
+  url('BoosterNextFY-Regular.woff') format('woff'),
+  url('BoosterNextFY-Regular.ttf') format('truetype'),
+  url('BoosterNextFY-Regular.svg#journalregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

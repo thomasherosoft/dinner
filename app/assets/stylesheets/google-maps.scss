@@ -1,0 +1,25 @@
+.gm-controls {
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 6px 0;
+  text-align: center;
+  width: 40px;
+
+  i {
+    color: #444;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 24px;
+    margin: 12px 6px;
+    padding: 8px 10px;
+    user-select: none;
+
+    &:first-child {
+      margin-top: 6px
+    }
+
+    &:last-child {
+      margin-bottom: 6px;
+    }
+  }
+}

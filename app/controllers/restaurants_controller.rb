@@ -4,53 +4,99 @@ class RestaurantsController < ApplicationController
   PER_PAGE = 7
 
   def index
-    @restaurants = apply_filter Restaurant.
-      order(rating: :desc).
-      paginate(page: params[:page], per_page: PER_PAGE)
+    search_opts = {
+      facets: [:filter],
+      order: {rating: :desc},
+      page: params[:page], per_page: PER_PAGE
+    }
+    where = {}
 
-    search_opts = ({
-      page: params[:page], per_page: PER_PAGE,
-      order: {rating: :desc}
-    }).merge(apply_filter || {})
-
-    if params[:search_location].present?
-      loc = params[:search_location].split(',').map(&:to_f)
-      if loc.size == 2 && loc.reject(&:zero?).size == 2
-        (search_opts[:where] ||= {})[:location] = {
-          near: loc,
-          within: '3mi'
+    if query == 'Current Location'
+      @query = '*'
+      if location.present?
+        where[:location] = {
+          near: location,
+          within: '1mi'
         }
-        params[:search_location] = '*'
       end
     end
+
+    if Hash === params[:filters]
+      if (radius = params[:filters][:location].to_i) > 0
+        where[:location] = { near: location, within: "#{radius}mi" }
+      end
+
+      if (cuisine = params[:filters][:cuisine]).present? && cuisine != 'all'
+        where[:cuisines] = /#{cuisine.downcase}.*/
+      end
+
+      if (rating = params[:filters][:rating].to_i) > 0
+        where[:rating] = {gt: rating}
+      end
+    end
+
+    search_opts[:where] = where if where.present?
+
+    logger.debug search_opts.inspect
 
     respond_to do |format|
       format.html do
         if params[:search].present? || params[:filter].present?
           redirect_to action: :index
         else
+          @cuisines = Cuisine.order(:name).pluck(:name)
           render layout: !request.xhr?
         end
       end
       format.json do
-        cuisines = params[:search_name].present? ? Cuisine.search(params[:search_name]).to_a : []
-        @restaurants = if cuisines.size > 0
-                         @found_by = cuisines.map(&:name).join(', ')
-                         @restaurants.
-                           joins(:cuisines).
-                           where(cuisines: {id: cuisines.map(&:id)}).
-                           uniq
-                       elsif params[:luck].present?
-                         Restaurant.order('random()').paginate(per_page: 5, page: 1)
-                       elsif (query = params[:search_name]).present?
-                         Restaurant.search query, search_opts.merge(fields: [{name: :word_start}])
-                       elsif (query = params[:search_location]).present?
-                         Restaurant.search query, search_opts.merge(fields: [{address: :word_start}])
-                       else
-                         @restaurants
-                       end
+        @restaurants = Restaurant.search query, search_opts
       end
     end
+  end
+
+  def suggestions
+    head :ok
+  end
+
+  def autocomplete
+    @restaurants = Restaurant.search(
+      params[:q],
+      fields: [
+        {name: :word_start},
+        {address: :word_start},
+        {area: :word_start},
+        {cuisines: :word_start}
+      ],
+      highlight: true,
+      limit: PER_PAGE
+    )
+
+    names = []
+    addresses = []
+    areas = []
+    cuisines = []
+    @restaurants.response['hits']['hits'].each do |hit|
+      hit['highlight'].each do |k,v|
+        case k.to_s.split('.').first
+        when 'name' then names << v
+        when 'address' then addresses << v
+        when 'area' then areas << v
+        when 'cuisines' then cuisines << v
+        end
+      end
+    end
+
+    result = {}
+    ary = names.flatten.uniq
+    result[:names] = ary unless ary.blank?
+    ary = addresses.flatten.uniq
+    result[:addresses] = ary unless ary.blank?
+    ary = areas.flatten.uniq
+    result[:cities] = ary unless ary.blank?
+    ary = cuisines.flatten.uniq
+    result[:cuisines] = ary unless ary.blank?
+
+    render json: result
   end
 
   private
@@ -68,5 +114,18 @@ class RestaurantsController < ApplicationController
         {where: {filter: [params[:filter]]}}
       end
     end
+  end
+
+  def parse_location(input)
+    loc = input.to_s.split(',').map(&:to_f)
+    loc.size == 2 && loc.reject(&:zero?).size == 2 ? loc : []
+  end
+
+  def location
+    @location ||= parse_location params[:location]
+  end
+
+  def query
+    @query ||= params[:q].presence || params[:query].presence || '*'
   end
 end
