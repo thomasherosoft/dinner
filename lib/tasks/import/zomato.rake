@@ -33,7 +33,7 @@ namespace :import do
       found = total = 0
       CSV.read(ENV['FILE']).select{|r| r[16].to_s.start_with?('020') }.each_with_index do |row, idx|
         query = (row[3] + ' ' + row[13]).split.
-          reject{|w| %w( st rd ln pl ct sq sl ).index(w.downcase.delete('.,')) }.
+          reject{|w| %w( st rd ln pl ct sq sl at ).index(w.downcase.delete('.,')) }.
           join(' ').gsub('&amp;', '&')
         if db = Restaurant.search(query).first
           status = row[6].to_s.downcase
@@ -65,7 +65,7 @@ namespace :import do
       found = total = 0
       CSV.read(ENV['FILE']).each do |row|
         query = ([row[2], row[12]] * ' ').split.
-          reject{|w| %w( st rd ln pl ct sq sl ).index(w.downcase.delete('.,')) }.
+          reject{|w| %w( st rd ln pl ct sq sl at ).index(w.downcase.delete('.,')) }.
           join(' ').gsub('&amp;', '&')
         if db = Restaurant.search(query).first
           db.update zagat_status: 'yes'
@@ -87,7 +87,7 @@ namespace :import do
       found = total = 0
       CSV.read(ENV['FILE']).each do |row|
         query = ([row[0], row[1]] * ' ').split.
-          reject{|w| %w( st rd ln pl ct sq sl ).index(w.downcase.delete('.,')) }.
+          reject{|w| %w( st rd ln pl ct sq sl at ).index(w.downcase.delete('.,')) }.
           join(' ').gsub('&amp;', '&')
         if db = Restaurant.search(query).first
           db.update foodtruck_status: 'yes'
@@ -109,7 +109,7 @@ namespace :import do
       found = total = 0
       CSV.read(ENV['FILE']).each do |row|
         query = (row[0]).split.
-          reject{|w| %w( st rd ln pl ct sq sl ).index(w.downcase.delete('.,')) }.
+          reject{|w| %w( st rd ln pl ct sq sl at ).index(w.downcase.delete('.,')) }.
           join(' ').gsub('&amp;', '&')
         if db = Restaurant.search(query).first
           db.update timeout_status: 'yes'
@@ -131,7 +131,7 @@ namespace :import do
       found = total = 0
       CSV.read(ENV['FILE']).each do |row|
         query = (row[0]).split.
-          reject{|w| %w( st rd ln pl ct sq sl ).index(w.downcase.delete('.,')) }.
+          reject{|w| %w( st rd ln pl ct sq sl at ).index(w.downcase.delete('.,')) }.
           join(' ').gsub('&amp;', '&')
         if db = Restaurant.search(query).first
           db.update deliveroo_status: 'yes'
