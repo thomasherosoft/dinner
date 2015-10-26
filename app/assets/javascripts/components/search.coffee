@@ -67,6 +67,7 @@ App.c.search =
           onchange: m.withAttr('value', ctrl.input)
           onfocus: ctrl.activate
           onkeyup: ctrl.navigate
+          placeholder: 'Location, cuisine or name'
         m 'i.fa.fa-search'
         m 'i.fa.fa-spin.fa-spinner'
 
