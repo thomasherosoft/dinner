@@ -55,7 +55,8 @@ App.c.restaurant =
            else
              null
 
-    m 'figure.restaurant', [
+    console.debug 'restaurant ID=', item.id, 'selected?', App.s.selectedRestaurantID
+    m 'figure.restaurant',
       className: (if item.id == App.s.selectedRestaurantID then 'selected' else '')
       config: App.c.restaurant.viewHandler.bind(null, item, ctrl.marker)
       [
@@ -75,4 +76,3 @@ App.c.restaurant =
           uber
         ]
       ]
-    ]
