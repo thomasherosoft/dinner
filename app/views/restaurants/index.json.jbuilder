@@ -8,7 +8,6 @@ json.array!(@restaurants) do |restaurant|
   json.pages @restaurants.total_pages
   json.totals @restaurants.total_entries
   json.cuisines restaurant.cuisines_names
-  json.found_by @found_by
   if @restaurants.respond_to?(:facets) && @restaurants.facets
     json.facets @restaurants.facets['filter']['terms'] do |f|
       json.set! f['term'], f['count']

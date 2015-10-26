@@ -1,6 +1,4 @@
-$red: #ff00b1;
-$red-dark: darken(#ff00b1, 10%);
-$red-light: lighten(#ff00b1, 20%);
+@import "common";
 
 #search {
   display: flex;

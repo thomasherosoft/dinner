@@ -1,6 +1,5 @@
 input = m.prop ''
-selected = null
-suggestions = []
+suggestions = null
 loading = false
 active = false
 
@@ -16,9 +15,10 @@ loadSuggestions = (e) ->
       url: '/restaurants/autocomplete'
     .then (x) ->
       m.startComputation()
-      suggestions = x.slice()
+      suggestions = x
       loading = false
       m.endComputation()
+      # console.timeEnd('load suggestion')
     , ->
       m.startComputation()
       loading = false
@@ -31,55 +31,34 @@ App.c.search =
     self =
       activate: -> active = true
       deactivate: -> active = false
-      suggestions: -> suggestions
-      choose: (x, e) ->
-        input x.name
-        e.target.parentNode.parentNode.querySelector('input').value = x.name
-        suggestions = []
-        selected = null
-        self.search !!x.thelocation
+      choose: (value, e) ->
+        input value
+        e.target.parentNode.parentNode.querySelector('input').value = value
+        suggestions = null
+        self.search()
       input: input
-      loading: -> loading
       search: (mylocation=false) ->
         self.deactivate()
-        args = if mylocation
-                 location: [App.myPosition?.lat, App.myPosition?.lng].join(',') if mylocation
-               else
-                 q: input()
-        setTimeout -> pubsub.publish 'search-for', args
+        App.s.query = input()
+        setTimeout -> pubsub.publish 'search'
       selected: -> selected
 
       navigate: (e) ->
         if e.keyCode == 13
-          if use = suggestions.filter((x) -> x.id == selected)[0]
-            self.choose(use, e)
-          else
-            self.search()
+          self.search()
           return
         else if e.keyCode == 27
           return self.deactivate()
-        else if e.keyCode == 38 || e.keyCode == 40
-          if suggestions.length
-            e.preventDefault()
-            found = suggestions.some (x, i) ->
-              if x.id == selected
-                selected = suggestions[if e.keyCode == 38 then i-1 else i+1]?.id
-              else
-                false
-            selected = false unless found
-            unless selected
-              x = if e.keyCode == 38 then suggestions.length-1 else 0
-              selected = suggestions[x].id
-          else
-            selected = null
+        suggestions = null unless e.target.value
         self.activate()
         debouncedLoad(e)
+        # console.time('load suggestion')
 
 
   view: (ctrl) ->
     state = []
-    state.push 'with-suggestions' if ctrl.suggestions().length
-    state.push 'in-progress' if ctrl.loading()
+    state.push 'with-suggestions' if suggestions
+    state.push 'in-progress' if loading
     state.push 'active' if active
     [
       m '.search-wrap', [
@@ -95,13 +74,13 @@ App.c.search =
           m 'li.muted', 'Search for restaurant by name, address, location, cuisine ...'
 
           m 'li.location.with-icon',
-            onmousedown: ctrl.choose.bind(null, name: 'Current Location', thelocation: true)
+            onmousedown: ctrl.choose.bind(null, 'Current Location')
             [
               m 'i.fa.fa-location-arrow'
               'Use Current Location'
             ]
 
-          (if suggestions.length then results(ctrl) else samples(ctrl))
+          (if suggestions && Object.keys(suggestions).length then results(ctrl) else samples(ctrl))
         ]
       ]
 
@@ -115,7 +94,7 @@ samples = (ctrl) ->
   [
     m 'li.head', 'Samples'
     ['Mayfair', 'Fitzrovia', 'Marylebone', 'Notting Hill'].map (x) ->
-      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, name: x), [
+      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [
         m 'i.fa.fa-map'
         x
       ]
@@ -126,47 +105,34 @@ samples = (ctrl) ->
       'Dishroom, Boundary Street'
       'Locanda Locatelli, Seymour Street'
     ].map (x) ->
-      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, name: x), [
+      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [
         m 'i.fa.fa-cutlery'
         x
       ]
   ]
 
+suggestionKeys =
+  names:
+    name: 'Restaurant'
+    icon: 'fa-cutlery'
+  addresses:
+    name: 'Address'
+    icon: 'fa-map-o'
+  cities:
+    name: 'City'
+    icon: 'fa-map-o'
+  cuisines:
+    name: 'Cuisine'
+    icon: 'fa-asterisk'
 
 results = (ctrl) ->
-  areas = []
-  cuisines = []
-  suggestions.forEach (s) ->
-    areas.push s.area if areas.indexOf(s.area) < 0
-    s.cuisines.forEach (c) ->
-      cuisines.push c if cuisines.indexOf(c) < 0
-
-  areas.splice 3, 4
-  cuisines.splice 3, 4
-  suggestions.splice 3, 4
-
-  [
-    m 'li.head', 'Restaurants'
-    suggestions.map (x) ->
-      m 'li.with-icon',
-        className: (if x.id == ctrl.selected() then 'selected' else '')
-        onmousedown: ctrl.choose.bind(null, x)
-        [
-          m 'i.fa.fa-cutlery'
-          [x.name, x.address].join(', ')
-        ]
-
-    m 'li.head', 'City'
-    areas.map (x) ->
-      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, name: x), [
-        m 'i.fa.fa-map-o'
-        x
+  Object.keys(suggestionKeys).map (key) ->
+    if Array.isArray(suggestions[key]) && suggestions[key].length
+      [
+        m 'li.head', suggestionKeys[key].name
+        suggestions[key].map (x) ->
+          m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x.replace(/<[^>]+>/g, '')), [
+            m 'i.fa', className: suggestionKeys[key].icon
+            m.trust(x)
+          ]
       ]
-
-    m 'li.head', 'Cuisines'
-    cuisines.map (x) ->
-      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, name: x), [
-        m 'i.fa.fa-asterisk'
-        x
-      ]
-  ]

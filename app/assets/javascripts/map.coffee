@@ -78,6 +78,9 @@ top.initMap = ->
         # lng: pos.coords.longitude
         lat: 51.512545 # testing purposes
         lng: -0.12033  # testing purposes
+
+      App.s.location = [myPosition.lat, myPosition.lng].join(',')
+
       infoWindow.close()
 
       App.getAddressByCoord(myPosition).then (x) ->

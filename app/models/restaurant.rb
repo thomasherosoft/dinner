@@ -5,7 +5,9 @@ class Restaurant < ActiveRecord::Base
 
   validates_presence_of :name
 
-  searchkick locations: ['location'], word_start: [:name, :address, :area]
+  searchkick highlight: [:name, :address, :area, :cuisines],
+             locations: ['location'],
+             word_start: [:name, :address, :area]
 
   def self.find_or_create_from_zomato_record(data)
     find_or_initialize_by(
@@ -52,7 +54,7 @@ class Restaurant < ActiveRecord::Base
     {
       address: address,
       area: area,
-      cuisines: cuisines.map(&:name).join(' '),
+      cuisines: cuisines.map(&:name).join(' ').downcase,
       filter: filters,
       location: [latitude, longitude].map(&:to_f),
       name: name,

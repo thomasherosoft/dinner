@@ -55,7 +55,6 @@ App.c.restaurant =
            else
              null
 
-    console.debug 'restaurant ID=', item.id, 'selected?', App.s.selectedRestaurantID
     m 'figure.restaurant',
       className: (if item.id == App.s.selectedRestaurantID then 'selected' else '')
       config: App.c.restaurant.viewHandler.bind(null, item, ctrl.marker)
