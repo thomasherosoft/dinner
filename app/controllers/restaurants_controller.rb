@@ -11,11 +11,14 @@ class RestaurantsController < ApplicationController
     }
     where = {}
 
-    if query == 'Current Location' && location.present?
-      where[:location] = {
-        near: location,
-        within: '1mi'
-      }
+    if query == 'Current Location'
+      @query = '*'
+      if location.present?
+        where[:location] = {
+          near: location,
+          within: '1mi'
+        }
+      end
     end
 
     if Hash === params[:filters]
