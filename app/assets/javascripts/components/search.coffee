@@ -103,7 +103,7 @@ samples = (ctrl) ->
     [
       'Gymkhana, Albemarle Street'
       'Asakusa, Eversholt Street'
-      'Dishroom, Boundary Street'
+      'Dishoom, Boundary Street'
       'Locanda Locatelli, Seymour Street'
     ].map (x) ->
       m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [

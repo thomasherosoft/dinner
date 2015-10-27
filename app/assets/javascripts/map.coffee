@@ -57,7 +57,7 @@ top.initMap = ->
       lat: 51.5084509
       lng: -0.1433683
     disableDefaultUI: true
-    zoom: 15
+    zoom: 12
 
   addLeftButtons()
 
