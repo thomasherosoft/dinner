@@ -37,10 +37,11 @@ App.c.restaurants =
       pubsub.publish 'search', page: store[store.length-1].page+1
 
   view: (ctrl) ->
-    head = if loading
+    head =
+      if loading
              'Calculating...'
            else if store.length
-             "Showing #{store.length} of #{store[0].totals || 0} restaurants"
+             "About #{round_to_nth(store[0].totals, 10) || 0} restaurants"
            else
              ''
     moreButton = if store.length && store[store.length-1].page < store[store.length-1].pages
@@ -63,6 +64,8 @@ App.c.restaurants =
       moreButton
     ]
 
+round_to_nth = (number, nth) ->
+  if number % nth >= (nth/2) then parseInt(number / nth) * nth + nth else parseInt(number / nth) * nth
 
 mapAdjusts = (el, init, ctx) ->
   if ctx.lastItemCount != store.length

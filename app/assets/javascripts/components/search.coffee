@@ -67,7 +67,7 @@ App.c.search =
           onchange: m.withAttr('value', ctrl.input)
           onfocus: ctrl.activate
           onkeyup: ctrl.navigate
-          placeholder: 'Location, cuisine or name'
+          placeholder: 'Search..'
         m 'i.fa.fa-search'
         m 'i.fa.fa-spin.fa-spinner'
 
@@ -87,14 +87,14 @@ App.c.search =
 
       m 'button.search',
         onclick: ctrl.search
-        'Search'
+        'Find Restaurants'
     ]
 
 
 samples = (ctrl) ->
   [
     m 'li.head', 'Samples'
-    ['Mayfair', 'Fitzrovia', 'Marylebone', 'Notting Hill'].map (x) ->
+    ['Mayfair', 'Notting Hill'].map (x) ->
       m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [
         m 'i.fa.fa-map'
         x
@@ -102,8 +102,6 @@ samples = (ctrl) ->
 
     [
       'Gymkhana, Albemarle Street'
-      'Asakusa, Eversholt Street'
-      'Dishoom, Boundary Street'
       'Locanda Locatelli, Seymour Street'
     ].map (x) ->
       m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [
