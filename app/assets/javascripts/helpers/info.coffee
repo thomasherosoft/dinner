@@ -78,9 +78,8 @@ infoDOM = (data) ->
       m '.info', [
         "#{(data.miles || 0).toFixed(1)} miles"
         " - #{(data.reviews || []).length} reviews"
+        " - #{data.rating}%"
       ]
-      m '.rating', ratingDOM(data.rating)
-      " #{data.rating}%"
     ]
 
     m 'dl.dl-horizontal', [
