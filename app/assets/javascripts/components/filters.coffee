@@ -68,7 +68,7 @@ App.c.filters =
           #  m 'i.fa.fa-question-circle'
           #  m 'span.tooltip-text', 'Lorem ipsum'
           #]
-        #]
+        ]
 
         m 'dt', 'Cuisine'
         m 'dd', [

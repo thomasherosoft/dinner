@@ -41,7 +41,7 @@ App.c.restaurants =
       if loading
              'Calculating...'
            else if store.length
-             "About #{round_to_nth(store[0].totals, 10) || 0} restaurants"
+             "About #{round_to_nth(store[0].totals,  Math.pow(10, count_num_size(store[0].totals))  ) || store[0].totals} restaurants"
            else
              ''
     moreButton = if store.length && store[store.length-1].page < store[store.length-1].pages
@@ -66,6 +66,13 @@ App.c.restaurants =
 
 round_to_nth = (number, nth) ->
   if number % nth >= (nth/2) then parseInt(number / nth) * nth + nth else parseInt(number / nth) * nth
+
+count_num_size = (num) ->
+  size = 1
+  while num > 1.000 
+    num = num/1.000
+    size += 1
+  size
 
 mapAdjusts = (el, init, ctx) ->
   if ctx.lastItemCount != store.length
