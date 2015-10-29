@@ -21,18 +21,34 @@
 
     dd {
       padding: 5px 0 5px 50px;
-      .tooltip {
+
+      span.tooltip {
         position: relative;
-        .tooltip-text {
-          display: none;
-          position: absoulte;
-          top: 0;
-          left: 0;
-          &.active {
-            display: block;
+        outline:none; 
+        &:hover {
+          text-decoration:none;
+          span {
+            display:inline; 
+            position:absolute; 
+            color:#111;
+            border:1px solid #DCA; 
+            background:#fffAF0;
           }
         }
+        span {
+            z-index:10;
+            display:none; 
+            padding:6px 17px;
+            margin-top:22px; 
+            margin-left:-10em;
+            width:10em; 
+            line-height:16px;
+            /*CSS3 extras*/
+            border-radius:4px;
+            box-shadow: 5px 5px 8px #CCC;
+        }
       }
+
     }
   }
 
