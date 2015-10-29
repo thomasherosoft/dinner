@@ -39,11 +39,11 @@ App.c.restaurants =
   view: (ctrl) ->
     head =
       if loading
-             'Calculating...'
-           else if store.length
-             "About #{round_to_nth(store[0].totals,  Math.pow(10, count_num_size(store[0].totals))  ) || store[0].totals} restaurants"
-           else
-             ''
+         'Calculating...'
+      else if store.length
+         "About #{round_to_nth(store[0].totals,  Math.pow(10, count_num_size(store[0].totals))  ) || store[0].totals} restaurants"
+      else
+         ''
     moreButton = if store.length && store[store.length-1].page < store[store.length-1].pages
       m '.show-more-wrapper', [
         m 'a.show-more',
@@ -69,8 +69,8 @@ round_to_nth = (number, nth) ->
 
 count_num_size = (num) ->
   size = 1
-  while num > 1.000 
-    num = num/1.000
+  while num > 1000 
+    num = num/1000
     size += 1
   size
 

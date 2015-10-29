@@ -18,6 +18,8 @@ saveState = (e) ->
     rating: list.querySelector('.rating').value
   localStorage.setItem 'filters', JSON.stringify(App.s.filters)
 
+# drawTooltip = (e) ->
+#   if $(this).hasClass('active') then $(this).removeClass('active') else $(this).addClass('active')
 
 
 App.c.filters =
@@ -63,11 +65,14 @@ App.c.filters =
             m 'option', '2 miles'
             m 'option', '3 miles'
           ]
-          #onmouseover: if $(this).hasClass('active') then $(this).removeClass('active') else $(this).addClass('active')
-          #m 'span.tooltip', [
-          #  m 'i.fa.fa-question-circle'
-          #  m 'span.tooltip-text', 'Lorem ipsum'
-          #]
+          # onmouseover: if $(this).hasClass('active') then $(this).removeClass('active') else $(this).addClass('active')
+          # onmouseover: {config: drawTooltip}
+          # [
+          #   m 'span.tooltip', [
+          #     m 'i.fa.fa-question-circle'
+          #     m 'span.tooltip-text', 'Lorem ipsum'
+          #   ]
+          # ]
         ]
 
         m 'dt', 'Cuisine'
