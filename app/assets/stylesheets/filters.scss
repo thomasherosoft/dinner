@@ -21,6 +21,18 @@
 
     dd {
       padding: 5px 0 5px 50px;
+      .tooltip {
+        position: relative;
+        .tooltip-text {
+          display: none;
+          position: absoulte;
+          top: 0;
+          left: 0;
+          &.active {
+            display: block;
+          }
+        }
+      }
     }
   }
 

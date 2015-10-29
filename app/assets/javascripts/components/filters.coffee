@@ -63,7 +63,12 @@ App.c.filters =
             m 'option', '2 miles'
             m 'option', '3 miles'
           ]
-        ]
+          #onmouseover: if $(this).hasClass('active') then $(this).removeClass('active') else $(this).addClass('active')
+          #m 'span.tooltip', [
+          #  m 'i.fa.fa-question-circle'
+          #  m 'span.tooltip-text', 'Lorem ipsum'
+          #]
+        #]
 
         m 'dt', 'Cuisine'
         m 'dd', [
