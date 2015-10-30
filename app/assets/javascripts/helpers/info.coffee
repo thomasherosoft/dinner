@@ -77,7 +77,7 @@ infoDOM = (data) ->
       m '.name', data.name
       m '.info', [
         "#{(data.miles || 0).toFixed(1)} miles"
-        " - #{(data.reviews || []).length} reviews"
+        " - #{(data.reviews || []).length + data.reviews_count} reviews"
         " - #{data.rating}%"
       ]
     ]
