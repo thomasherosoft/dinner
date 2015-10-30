@@ -64,6 +64,12 @@
       outline: none;
     }
   }
+  @media (max-width:900px){
+    button.search {
+      display: none;
+    }
+  }
+
 
   .search-wrap > .suggestions {
     border: 1px solid $red-light;

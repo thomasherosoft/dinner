@@ -7,7 +7,7 @@
 
   &.selected {
     box-shadow: 0 0 5px 3px rgba(0,0,0,0.5);;
-    padding: 2px;
+    padding: 5px;
   }
 
   .item-image {
@@ -17,14 +17,56 @@
   > a {
     color: inherit;
 
+    > .title {
+      font-size: 1.45em;
+      padding-bottom: 5px;
+    }
+    @media (max-width:900px){
+      > .divider {
+        margin: 0 -10px;
+        padding-bottom: 10px;
+        border-top: 1px solid #9C9C9C;
+      }
+    }
+  }
+  .info {
     > span {
-      margin-left: .5em;
+      font-size: 0.94em;
+      color: #101015;
+      line-height: 23px;
+      /*margin-left: -0.5em;*/
+      word-wrap: break-word;
+
+
+      > strong {
+        color: #4D4C4C;
+      }
+      
+    }
+    
+    @media (min-width:900px){
+      span.rst_rating {
+        display: none
+      }
+    }
+
+    > strong:after, > span:after {
+      content:"\A";
+      white-space: pre;
     }
   }
 
-  figcaption {
-    min-height: 80px;
-    position: relative;
+  @media (min-width:900px){
+    figcaption {
+      min-height: 80px;
+      position: relative;
+    }
+  }
+
+  @media (max-width:900px){
+    figcaption {
+      display: none;
+    }
   }
 
   .item-rating {
@@ -38,6 +80,18 @@
     position: absolute;
   }
 }
+
+@media (max-width:900px){
+  .restaurant {
+    margin: 20px 0;
+    border: 1px solid #9C9C9C;
+    padding: 10px 10px;
+    background-color: rgba(6, 5, 5, 0.03);
+    border-radius: 5px;
+    /*box-shadow: 5px 5px 8px #CCC;*/
+  }
+}
+
 
 .show-more-wrapper {
   margin: 10px 0;

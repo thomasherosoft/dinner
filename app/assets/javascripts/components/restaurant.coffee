@@ -44,16 +44,14 @@ App.c.restaurant =
 
 
   view: (ctrl, item)->
-    uber = if item.cost
-             [
-               ' - '
-               m 'span', [
-                 m 'img', src: '/assets/uber.jpg', style: {maxHeight: '13px'}
-                 " £#{item.cost}"
-               ]
-             ]
-           else
-             null
+    u_cost = if item.cost then item.cost else "N/A"
+    uber =  [
+              m 'span', [
+                m 'img', src: '/assets/uber.jpg', style: {maxHeight: '13px'}
+                " £#{u_cost}"
+              ]
+            ]
+    price_range = if ctrl.price_range() then ctrl.price_range() else "N/A"
 
     m 'figure.restaurant',
       className: (if item.id == App.s.selectedRestaurantID then 'selected' else '')
@@ -64,14 +62,49 @@ App.c.restaurant =
             m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
             m '.item-rating', (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
           ]
-          m 'strong', item.name
-          m 'span', item.address
+          m '.title', [
+            m 'strong', item.name
+          ]
+          m '.divider'
+        ]
+        m '.info', [
+          # console.log item
+          # console.log ctrl
+          if item.rating
+            m 'span.rst_rating', [
+              m 'strong', "Rating:" 
+              m 'span', "#{item.rating}%"
+            ]
+          if item.address
+            m 'span', [
+              m 'strong', "Address:" 
+              m 'span', item.address
+            ]
+          if item.neighborhood 
+            m 'span', [
+              m 'strong', "Neighborhood:" 
+              m 'span', item.neighborhood
+            ]
+          if item.cuisines.join(', ') 
+            m 'span', [
+              m 'strong', "Cuisines:" 
+              m 'span', item.cuisines.join(', ')
+            ]
           m 'span', [
-            item.neighborhood
-            item.cuisines.join(', ')
-            ctrl.price_range()
-            (if item.michelin_status == 'yes' then '' else item.michelin_status)
-          ].filter((x) -> x ).join(' - ')
+            m 'strong', "Price range:" 
+            m 'span', price_range
+          ] 
+          if item.michelin_status && item.michelin_status != "yes" 
+            m 'span', [
+              m 'strong', "Michelin status:" 
+              m 'span', item.michelin_status
+            ]
           uber
+          # m 'span', [
+          #   item.neighborhood
+          #   item.cuisines.join(', ')
+          #   ctrl.price_range()
+          #   (if item.michelin_status == 'yes' then '' else item.michelin_status)
+          # ].filter((x) -> x ).join(' - ')
         ]
       ]
