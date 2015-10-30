@@ -21,7 +21,7 @@ class Restaurant < ActiveRecord::Base
     cuisines.pluck(:name)
   end
 
-  def fill_from_zomato_record(data)
+  def fill_from_zomato_record(data, do_save=true)
     transaction do
       self.address = data['location']['address']
       self.city = data['location']['city']
@@ -36,7 +36,7 @@ class Restaurant < ActiveRecord::Base
       self.rating = 5 if rating < 5
       self.zomato_id = data['id']
       self.zomato_fetched_at = Time.current
-      save
+      save if do_save
       self.cuisine_ids = data['cuisines'].split(/[\s,]+/).
         map{|c| Cuisine.find_or_create_by(name: c) }.
         map(&:id)

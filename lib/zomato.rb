@@ -1,18 +1,21 @@
 class Zomato
-  attr_reader :headers, :results_count, :results, :response_code
+  attr_reader :headers, :results_count, :results_offset, :results, :response_code
+
+  MAX_RESULTS_COUNT = 20
 
   def initialize
     setup
   end
 
-  def search(query)
+  def search(query, extra={})
     @offset = 0
     @query = query
     @results_count = 0
-    if (json = invoke(:search, q: query)).empty?
+    if (json = invoke(:search, extra.merge(q: query))).empty?
       json
     else
       @results_count = json['results_found'].to_i
+      @results_offset = json['results_start'].to_i
       if json['restaurants'].empty?
         json
       else
@@ -27,16 +30,16 @@ class Zomato
     invoke('restaurant', res_id: id)
   end
 
+  def config
+    @config ||= Rails.application.config_for('zomato')
+  end
+
   private
 
   def invoke(suffix, args)
     response = Typhoeus.get(url(suffix, args), headers: headers)
     @response_code = response.code
     response.code == 200 ? JSON.load(response.body) : []
-  end
-
-  def config
-    @config ||= Rails.application.config_for('zomato')
   end
 
   def setup

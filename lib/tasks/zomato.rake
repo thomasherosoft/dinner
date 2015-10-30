@@ -3,6 +3,37 @@ namespace :zomato do
     require 'zomato' unless defined?(Zomato)
   end
 
+  task newly_opened: :setup do
+    existing = Restaurant.where(newly_opened: true).ids
+    zomato = Zomato.new
+    starts = 0
+    begin
+      results = zomato.search(
+        '',
+        collection_id: zomato.config['newly_opened_collection_id'],
+        start: starts
+      )
+      puts "offset=#{starts} fetched=#{results.size}"
+
+      results.each_with_index do |result,idx|
+        record = Restaurant.find_or_initialize_by(zomato_id: result['id'])
+        record.name = result['name']
+        record.latitude = result['location']['latitude'].to_d
+        record.longitude = result['location']['longitude'].to_d
+        record.fill_from_zomato_record(result, false)
+        record.newly_opened = true
+        saved = record.save
+        puts "\t#{idx+1}\t#{result['id']} #{result['name']} => #{saved.inspect}"
+      end
+
+      starts += results.size
+    end while results.size >= Zomato::MAX_RESULTS_COUNT
+
+    Restaurant.
+      where(id: (existing - Restaurant.where(newly_opened: true).ids)).
+      update_all newly_opened: false
+  end
+
   desc 'Hit zomato API with 1000calls/day limit (could be reduced by setting LIMIT environment variable)'
   task fetch: :setup do
     query = ENV['QUERY']

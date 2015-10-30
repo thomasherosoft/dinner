@@ -2,6 +2,7 @@ default: &default
   # api_key: d312d342f34a8cd418c94b6ce4ad4441
   api_key: 1a695d4c7d8be4c261cb879d27b6c8a0
   city_id: 61 # London, UK
+  newly_opened_collection_id: 29
   url: https://developers.zomato.com/api/v2.1
 
 development:

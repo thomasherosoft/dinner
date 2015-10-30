@@ -57,13 +57,19 @@ App.c.restaurant =
 
     topRated =
       if item.rating >= 82 && ((item.reviews || []).length + item.reviews_count) >= 30
-        m 'div.top-rated', [
+        m '.top-rated', [
           ' Top Rated '
           m '.tooltip', [
             m 'sup', [m 'i.fa.fa-asterisk', style: 'font-size: 12px']
             m '.tooltip-text', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
           ]
         ]
+      else
+        null
+
+    newlyOpened =
+      if item.newly_opened
+        m '.newly-opened', 'Newly Opened'
       else
         null
 
@@ -76,6 +82,7 @@ App.c.restaurant =
             m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
             m '.item-rating', (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
             topRated
+            newlyOpened
           ]
           m 'strong', item.name
           m 'span', item.address

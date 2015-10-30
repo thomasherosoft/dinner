@@ -1,3 +1,5 @@
+@import "common";
+
 #restaurants {
   margin: 50px 0;
 }
@@ -46,6 +48,15 @@
     padding: 10px;
     position: absolute;
     right: 0;
+  }
+
+  .newly-opened {
+    background: #2f89ec;
+    color: #fff;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 10px;
   }
 }
 

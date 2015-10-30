@@ -71,6 +71,12 @@ infoDOM = (data) ->
           else
             null
 
+  newlyOpened =
+    if data.newly_opened
+      m '.newly-opened', 'Newly Opened'
+    else
+      null
+
   reviews = (data.reviews || []).slice(0, 2)
   [
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
@@ -80,6 +86,7 @@ infoDOM = (data) ->
         " - #{(data.reviews || []).length + data.reviews_count} reviews"
         " - #{data.rating}%"
       ]
+      newlyOpened
     ]
 
     m 'dl.dl-horizontal', [
