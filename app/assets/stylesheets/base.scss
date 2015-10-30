@@ -3,38 +3,65 @@ body {
   flex-flow: row nowrap;
   height: 100%;
   width: 100%;
+  
+  @media (min-width:960px){
+    > aside {
+      flex: 0 0 325px;
+      display: flex;
+      flex-flow: column nowrap;
+      height: 100%;
 
-  > aside {
-    flex: 0 0 325px;
+      > header {
+        flex: 0 0 60px;
+        margin: 0 -10px;
+      }
+
+      > main {
+        flex: 1 auto;
+        height: 100%;
+        overflow-y: scroll;
+        padding: 0 10px;
+      }
+
+      > footer {
+        display: flex;
+        flex-flow: row nowrap;
+        flex: 0 0 30px;
+      }
+    }
+
+    > article {
+      flex: 1 1 auto;
+      height: 100%;
+    }
   }
 
-  > article {
-    flex: 1 1 auto;
-    height: 100%;
-  }
-}
+  @media (max-width:960px){
+    > aside {
+      flex: 0 0 100%;
+      display: flex;
+      flex-flow: column nowrap;
+      height: 100%;
 
-body > aside {
-  display: flex;
-  flex-flow: column nowrap;
-  height: 100%;
+      > header {
+        flex: 0 0 60px;
+        margin: 0 0px;
+      }
 
-  > header {
-    flex: 0 0 60px;
-    margin: 0 -10px;
-  }
+      > main {
+        flex: 1 auto;
+        height: 100%;
+        overflow-y: scroll;
+        padding: 0 10px;
+      }
 
-  > main {
-    flex: 1 auto;
-    height: 100%;
-    overflow-y: scroll;
-    padding: 0 10px;
-  }
+      > footer {
+        display: flex;
+        flex-flow: row nowrap;
+        flex: 0 0 30px;
+      }
+    }
 
-  > footer {
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 0 0 30px;
   }
 }
 
