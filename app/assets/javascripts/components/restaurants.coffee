@@ -64,12 +64,13 @@ App.c.restaurants =
       moreButton
     ]
 
+
 round_to_nth = (number, nth) ->
   if number % nth >= (nth/2) then parseInt(number / nth) * nth + nth else parseInt(number / nth) * nth
 
 count_num_size = (num) ->
   size = 1
-  while num > 1000 
+  while num > 1000
     num = num/1000
     size += 1
   size

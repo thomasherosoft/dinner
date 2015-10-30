@@ -55,6 +55,18 @@ App.c.restaurant =
            else
              null
 
+    topRated =
+      if item.rating >= 82 && ((item.reviews || []).length + item.reviews_count) >= 30
+        m 'div.top-rated', [
+          ' Top Rated '
+          m '.tooltip', [
+            m 'sup', [m 'i.fa.fa-asterisk', style: 'font-size: 12px']
+            m '.tooltip-text', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+          ]
+        ]
+      else
+        null
+
     m 'figure.restaurant',
       className: (if item.id == App.s.selectedRestaurantID then 'selected' else '')
       config: App.c.restaurant.viewHandler.bind(null, item, ctrl.marker)
@@ -63,6 +75,7 @@ App.c.restaurant =
           m 'figcaption', [
             m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
             m '.item-rating', (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
+            topRated
           ]
           m 'strong', item.name
           m 'span', item.address

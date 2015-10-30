@@ -61,9 +61,9 @@ App.c.filters =
             m 'option', '2 miles'
             m 'option', '3 miles'
           ]
-          m 'span.tooltip', [
+          m '.tooltip', [
             m 'i.fa.fa-question-circle'
-            m 'span.tooltip-text', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            m '.tooltip-text', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
           ]
         ]
 
