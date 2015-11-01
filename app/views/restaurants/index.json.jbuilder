@@ -10,12 +10,14 @@ json.array!(@restaurants) do |restaurant|
   json.cuisines restaurant.cuisines.map(&:name)
   json.miles restaurant.distance
 
-  time = restaurant.distance / 9 * 60
-  cost = 2.5 + 1.25*restaurant.distance + 0.25*time
-  if cost < 5
-    json.cost 5
-  else
-    json.cost cost.round
+  if restaurant.distance <= 50
+    time = restaurant.distance / 9 * 60
+    cost = 2.5 + 1.25*restaurant.distance + 0.25*time
+    if cost < 5
+      json.cost 5
+    else
+      json.cost cost.round
+    end
   end
 
   if @restaurants.respond_to?(:facets) && @restaurants.facets
