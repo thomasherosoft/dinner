@@ -6,17 +6,25 @@ class RestaurantsController < ApplicationController
   def index
     search_opts = {
       facets: [:filter],
-      order: {rating: :desc},
-      page: params[:page], per_page: PER_PAGE
+      include: [:cuisines],
+      page: params[:page], per_page: PER_PAGE,
+      order: {rating: :desc}
     }
     where = {}
+
+    if location.present?
+      search_opts[:boost_by_distance] = {
+        field: :location,
+        origin: location
+      }
+    end
 
     if query == 'Current Location'
       @query = '*'
       if location.present?
         where[:location] = {
           near: location,
-          within: '1mi'
+          within: '0.5mi'
         }
       end
     end
@@ -36,8 +44,6 @@ class RestaurantsController < ApplicationController
     end
 
     search_opts[:where] = where if where.present?
-
-    logger.debug search_opts.inspect
 
     respond_to do |format|
       format.html do

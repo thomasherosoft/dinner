@@ -36,6 +36,9 @@ class Restaurant < ActiveRecord::Base
       self.rating = 5 if rating < 5
       self.zomato_id = data['id']
       self.zomato_fetched_at = Time.current
+      self.latitude = data['location']['latitude'].to_d if latitude.to_f == 0
+      self.longitude = data['location']['longitude'].to_d if longitude.to_f == 0
+      self.name = data['name'] if name.blank?
       save if do_save
       self.cuisine_ids = data['cuisines'].split(/[\s,]+/).
         map{|c| Cuisine.find_or_create_by(name: c) }.
@@ -60,5 +63,9 @@ class Restaurant < ActiveRecord::Base
       name: name,
       rating: rating
     }
+  end
+
+  def should_index?
+    latitude.to_f != 0 && longitude.to_f != 0
   end
 end

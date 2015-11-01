@@ -57,6 +57,7 @@ App.c.restaurants =
 
     [
       m 'h3', config: mapAdjusts, head
+      (if App.s.query then m('h4', App.s.query.toUpperCase()) else null)
       m.component App.c.filters
       store.map (s) ->
         s.key = s.name + s.address
