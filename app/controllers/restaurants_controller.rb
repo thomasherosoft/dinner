@@ -54,7 +54,7 @@ class RestaurantsController < ApplicationController
       end
 
       if (rating = params[:filters][:rating].to_i) > 0
-        where[:rating] = {gt: rating}
+        where[:rating] = {gte: rating}
       end
     end
 
