@@ -69,6 +69,8 @@ App.c.search =
           onfocus: ctrl.activate
           onkeyup: ctrl.navigate
           placeholder: 'Search..'
+          autocorrect: off
+          spellcheck: off
         m 'i.fa.fa-search'
         m 'i.fa.fa-spin.fa-spinner'
 
