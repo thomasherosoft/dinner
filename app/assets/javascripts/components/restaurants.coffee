@@ -53,20 +53,14 @@ App.c.restaurants =
     else
       null
 
-    searchString =
-      if App.s.query && !App.s.type
-        m 'h4', App.s.query.toUpperCase()
-      else
-        null
-
     [
       m 'h3', config: mapAdjusts, head
-      searchString
+      m 'h4', (if App.s.query && !App.s.type then App.s.query.toUpperCase() else '')
       m.component App.c.filters
       store.map (s) ->
-        s.key = s.name + s.address
+        s.key = s.id + s.name
         m.component App.c.restaurant, s
-      m '.show-more-wrapper', key: 'show-more-button', [moreButton]
+      m '.show-more-wrapper', [moreButton]
     ]
 
 

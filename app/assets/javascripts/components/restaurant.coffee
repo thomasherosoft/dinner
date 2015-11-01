@@ -27,7 +27,8 @@ App.c.restaurant =
     showInfo: ->
       App.s.selectedRestaurantID = item.id
       showInfo('center', true)
-    onunload: -> marker.setMap(null)
+    onunload: ->
+      marker.setMap(null)
     fallbackImageUrl: (e) ->
       e.target.src = '/assets/item-1.jpg'
 
