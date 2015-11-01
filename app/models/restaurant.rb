@@ -3,6 +3,8 @@ class Restaurant < ActiveRecord::Base
 
   scope :search_import, -> { includes(:cuisines) }
 
+  attr_accessor :distance
+
   validates_presence_of :name
 
   searchkick highlight: [:name, :address, :area, :cuisines],

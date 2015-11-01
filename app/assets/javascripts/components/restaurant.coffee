@@ -7,7 +7,6 @@ App.c.restaurant =
       title: item.name
 
     showInfo = (center=false, permanent=false) ->
-      m.redraw.strategy 'none'
       fn = ->
         if center
           App.centerMap lat: item.latitude, lng: item.longitude

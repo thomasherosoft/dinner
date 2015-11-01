@@ -19,8 +19,6 @@ pubsub.subscribe 'search', (args) ->
         store = store.concat response.slice()
       else
         store = response.slice()
-        # TODO move to web worker
-        setTimeout -> pubsub.publish('calculate-distance', store)
         setTimeout -> pubsub.publish('adjust-filters', store)
         if store.length
           setTimeout ->
@@ -80,3 +78,5 @@ mapAdjusts = (el, init, ctx) ->
     coords = store.map (x) ->
       new google.maps.LatLng x.latitude, x.longitude
     App.fitMapTo coords if coords.length
+    store.forEach (x) ->
+      App.adjustUberCircle(x.cost <= 12, lat: x.latitude, lng: x.longitude)

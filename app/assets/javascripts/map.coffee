@@ -1,6 +1,6 @@
 map = infoWindow = staticInfoWindow = places = distance = geocoder = myPosition = null
-uberCircle = null
 uberRadius = 3*1609.34
+uberCircle = null
 
 addLeftButtons = ->
   ctrl = document.createElement 'div'
@@ -76,8 +76,8 @@ top.initMap = ->
       App.myPosition = myPosition =
         lat: pos.coords.latitude
         lng: pos.coords.longitude
-        # lat: 51.512545 # testing purposes
-        # lng: -0.12033  # testing purposes
+        # lat: 51.524943 # testing purposes
+        # lng: -0.1980104 # testing purposes
 
       App.s.location = [myPosition.lat, myPosition.lng].join(',')
 
@@ -90,7 +90,7 @@ top.initMap = ->
         fillOpacity: 0
         radius: uberRadius
         strokeColor: '#800080'
-        strokeOpacity: 0.9
+        strokeOpacity: 0.7
         strokeWeight: 3
       addUberMarker()
 
@@ -148,13 +148,15 @@ App.distance = (to) ->
     distance.getDistanceMatrix
       origins: [myPosition],
       destinations: [to]
-      travelMode: google.maps.TravelMode.TRANSIT
+      travelMode: google.maps.TravelMode.DRIVING
+      unitSystem: google.maps.UnitSystem.IMPERIAL
     , (result, status) ->
+      console.debug result
       dist = result.rows[0]
       if dist && dist.elements[0]
         dist = dist.elements[0]
         miles = dist.distance?.value / 1609.34
-        deferred.resolve(miles)
+        deferred.resolve(miles, result)
       else
         deferred.reject(status)
   else

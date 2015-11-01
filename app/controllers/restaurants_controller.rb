@@ -24,6 +24,14 @@ class RestaurantsController < ApplicationController
         field: :location,
         origin: location
       }
+      search_opts[:order] = {
+        rating: :desc,
+        _geo_distance: {
+          location: {lat: location.first, lon: location.last},
+          order: 'asc',
+          unit: 'mi'
+        }
+      }
     end
 
     if query == 'Current Location'
@@ -63,6 +71,9 @@ class RestaurantsController < ApplicationController
       end
       format.json do
         @restaurants = Restaurant.search query, search_opts
+        @restaurants.each_with_index do |r,i|
+          r.distance = @restaurants.response['hits']['hits'][i]['sort'].try(:last)
+        end
       end
     end
   end
