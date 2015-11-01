@@ -82,7 +82,8 @@ infoDOM = (data) ->
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
       m '.name', data.name
       m '.info', [
-        "#{(data.miles || 0).toFixed(1)} miles"
+        m 'i.fa.fa-male'
+        " #{(data.miles || 0).toFixed(1)} miles"
         " - #{(data.reviews || []).length + data.reviews_count} reviews"
         " - #{data.rating}%"
       ]
