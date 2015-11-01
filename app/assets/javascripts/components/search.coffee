@@ -31,15 +31,16 @@ App.c.search =
     self =
       activate: -> active = true
       deactivate: -> active = false
-      choose: (value, e) ->
+      choose: (value, type, e) ->
         input value
-        e.target.parentNode.parentNode.querySelector('input').value = value
+        document.querySelector('input.search').value = value
         suggestions = null
-        self.search()
+        self.search(type)
       input: input
-      search: (mylocation=false) ->
+      search: (type) ->
         self.deactivate()
         App.s.query = input()
+        App.s.type = type if type && !type.type
         setTimeout -> pubsub.publish 'search'
       selected: -> selected
 
@@ -75,7 +76,7 @@ App.c.search =
           m 'li.muted', 'Search for restaurant by name, address, location, cuisine ...'
 
           m 'li.location.with-icon',
-            onmousedown: ctrl.choose.bind(null, 'Current Location')
+            onmousedown: ctrl.choose.bind(null, 'Current Location', 'location')
             [
               m 'i.fa.fa-location-arrow'
               'Use Current Location'
@@ -95,18 +96,18 @@ samples = (ctrl) ->
   [
     m 'li.head', 'Samples'
     ['Mayfair', 'Notting Hill'].map (x) ->
-      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [
+      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x, 'cities'), [
         m 'i.fa.fa-map'
         x
       ]
 
     [
-      'Gymkhana, Albemarle Street'
-      'Locanda Locatelli, Seymour Street'
+      ['Gymkhana', 'Albemarle Street']
+      ['Locanda Locatelli', 'Seymour Street']
     ].map (x) ->
-      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x), [
+      m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x[0], 'names'), [
         m 'i.fa.fa-cutlery'
-        x
+        x.join(', ')
       ]
   ]
 
@@ -130,7 +131,7 @@ results = (ctrl) ->
       [
         m 'li.head', suggestionKeys[key].name
         suggestions[key].map (x) ->
-          m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x.replace(/<[^>]+>/g, '')), [
+          m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x.replace(/<[^>]+>/g, ''), key), [
             m 'i.fa', className: suggestionKeys[key].icon
             m.trust(x)
           ]

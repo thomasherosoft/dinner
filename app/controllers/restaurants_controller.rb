@@ -5,12 +5,19 @@ class RestaurantsController < ApplicationController
 
   def index
     search_opts = {
-      facets: [:filter],
       include: [:cuisines],
       page: params[:page], per_page: PER_PAGE,
       order: {rating: :desc}
     }
     where = {}
+
+    search_opts[:fields] = case params[:type]
+                           when 'names' then [:name]
+                           when 'cities' then ['area^10', 'address']
+                           when 'addresses' then [:address]
+                           when 'cuisines' then [:cuisines]
+                           end
+    search_opts[:order] = nil if search_opts[:fields].present?
 
     if location.present?
       search_opts[:boost_by_distance] = {

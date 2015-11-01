@@ -45,24 +45,28 @@ App.c.restaurants =
       else
          ''
     moreButton = if store.length && store[store.length-1].page < store[store.length-1].pages
-      m '.show-more-wrapper', [
-        m 'a.show-more',
-          href: 'javascript:;'
-          onclick: ctrl.loadMore
-          (if loading then 'Loading more... ' else 'Show more...')
-          [ m 'i.fa.fa-spin.fa-spinner', className: (if loading then '' else 'hidden') ]
-      ]
+      m 'a.show-more',
+        href: 'javascript:;'
+        onclick: ctrl.loadMore
+        (if loading then 'Loading more... ' else 'Show more...')
+        [ m 'i.fa.fa-spin.fa-spinner', className: (if loading then '' else 'hidden') ]
     else
       null
 
+    searchString =
+      if App.s.query && !App.s.type
+        m 'h4', App.s.query.toUpperCase()
+      else
+        null
+
     [
       m 'h3', config: mapAdjusts, head
-      (if App.s.query then m('h4', App.s.query.toUpperCase()) else null)
+      searchString
       m.component App.c.filters
       store.map (s) ->
         s.key = s.name + s.address
         m.component App.c.restaurant, s
-      moreButton
+      m '.show-more-wrapper', key: 'show-more-button', [moreButton]
     ]
 
 
