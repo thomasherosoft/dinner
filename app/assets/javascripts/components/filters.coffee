@@ -16,7 +16,9 @@ saveState = (e) ->
     location: list.querySelector('.location').value
     cuisine: list.querySelector('.cuisine').value
     rating: list.querySelector('.rating').value
-  localStorage.setItem 'filters', JSON.stringify(App.s.filters)
+  try
+    localStorage.setItem 'filters', JSON.stringify(App.s.filters)
+  catch e
 
 App.c.filters =
   controller: ->
