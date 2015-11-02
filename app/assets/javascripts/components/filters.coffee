@@ -77,7 +77,7 @@ App.c.filters =
       m 'dl.filters-list', className: (if shown then '' else 'hidden'), [
         m 'dt', 'Location'
         m 'dd', [
-          m 'select.location', value: App.s.filters.location, [
+          m 'select.location', value: (App.s.filters.location || 'anywhere'), [
             m 'option', 'anywhere'
             m 'option', '1 mile'
             m 'option', '2 miles'
@@ -91,7 +91,7 @@ App.c.filters =
 
         m 'dt', 'Cuisine'
         m 'dd', [
-          m 'select.cuisine', value: App.s.filters.cuisine, [
+          m 'select.cuisine', value: (App.s.filters.cuisine || 'all'), [
             CUISINES.map (x) ->
               m 'option', x
           ]
@@ -103,7 +103,7 @@ App.c.filters =
 
         m 'dt', 'Rating'
         m 'dd', [
-          m 'select.rating', value: App.s.filters.rating, [
+          m 'select.rating', value: (App.s.filters.rating || 'all'), [
             m 'option', 'all'
             m 'option', '90%+'
             m 'option', '80%+'

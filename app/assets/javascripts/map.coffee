@@ -204,7 +204,7 @@ App.adjustUberCircle = (inside, radiusPoint) ->
                    Math.max uberRadius, meters
                  else
                    Math.min uberRadius, meters
-    uberCircle.setRadius uberRadius
+    uberCircle?.setRadius uberRadius
   else
     uberRadius
 
