@@ -98,7 +98,7 @@ App.c.search =
 
 samples = (ctrl) ->
   [
-    m 'li.head', 'Samples'
+    m 'li.head', 'Suggestions'
     ['Mayfair', 'Notting Hill'].map (x) ->
       m 'li.with-icon', onmousedown: ctrl.choose.bind(null, x, 'cities'), [
         m 'i.fa.fa-map'
