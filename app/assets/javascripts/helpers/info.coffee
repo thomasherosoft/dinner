@@ -87,7 +87,7 @@ infoDOM = (data) ->
         m 'i.fa.fa-male'
         " #{(data.miles || 0).toFixed(1)} miles"
         (if reviewsCount > 0 then " - #{reviewsCount} reviews" else '')
-        " - #{data.rating}%"
+        (if data.rating > 0 then " - #{data.rating}%" else '')
       ]
       newlyOpened
     ]
