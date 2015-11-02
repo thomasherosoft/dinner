@@ -65,7 +65,7 @@ App.c.filters =
           ]
           m '.tooltip', [
             m 'i.fa.fa-question-circle'
-            m '.tooltip-text', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            m '.tooltip-text', 'Default view is 0.5 mile radius from your location.'
           ]
         ]
 
@@ -75,11 +75,7 @@ App.c.filters =
             CUISINES.map (x) ->
               m 'option', x
           ]
-          m 'span.tooltip', [
-            m 'i.fa.fa-question-circle'
-            m 'span.tooltip-text', 'Lorem ipsum dolor sit amet'
           ]
-        ]
 
         m 'dt', 'Rating'
         m 'dd', [
@@ -87,10 +83,6 @@ App.c.filters =
             m 'option', 'all'
             m 'option', '90%+'
             m 'option', '80%+'
-          ]
-          m 'span.tooltip', [
-            m 'i.fa.fa-question-circle'
-            m 'span.tooltip-text', 'Lorem ipsum'
           ]
         ]
       ]
