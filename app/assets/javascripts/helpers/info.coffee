@@ -78,13 +78,15 @@ infoDOM = (data) ->
       null
 
   reviews = (data.reviews || []).slice(0, 2)
+  reviewsCount = (data.reviews || []).length + data.reviews_count
+
   [
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
       m '.name', data.name
       m '.info', [
         m 'i.fa.fa-male'
         " #{(data.miles || 0).toFixed(1)} miles"
-        " - #{(data.reviews || []).length + data.reviews_count} reviews"
+        (if reviewsCount > 0 then " - #{reviewsCount} reviews" else '')
         " - #{data.rating}%"
       ]
       newlyOpened
