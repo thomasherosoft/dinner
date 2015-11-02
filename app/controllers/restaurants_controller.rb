@@ -34,6 +34,17 @@ class RestaurantsController < ApplicationController
       }
     end
 
+    if Array === search_opts[:fields] && search_opts[:fields].flatten.include?(:name)
+      search_opts[:order] = {
+        _score: :desc,
+        _geo_distance: {
+          location: {lat: location.first, lon: location.last},
+          order: 'asc',
+          unit: 'mi'
+        }
+      }
+    end
+
     if query == 'Current Location'
       @query = '*'
       if location.present?
