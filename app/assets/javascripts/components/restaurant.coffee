@@ -62,7 +62,7 @@ App.c.restaurant =
           ' Top Rated '
           m '.tooltip', [
             m 'sup', [m 'i.fa.fa-asterisk', style: 'font-size: 12px']
-            m '.tooltip-text', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            m '.tooltip-text', 'Restaurants that have 82%+ rating and >30 reviews are top rated'
           ]
         ]
       else
