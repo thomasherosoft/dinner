@@ -40,7 +40,7 @@
     &.active {
       background: #ffeefa;
       & ~ .suggestions {
-        display: initial;
+        display: block;
       }
     }
 
