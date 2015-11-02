@@ -12,13 +12,13 @@ valueOnly = (k,v) ->
 
 loadState = ->
   try
-    App.s.filters = JSON.parse localStorage.getItem('filters')
+    App.s.filters = JSON.parse jsCookies.get('filters')
   catch e
   App.s.filters ||= {}
 
 saveFilters = ->
   try
-    localStorage.setItem 'filters', JSON.stringify(App.s.filters)
+    jsCookies.set 'filters', JSON.stringify(App.s.filters)
   catch e
 
 saveState = (e) ->
