@@ -30,7 +30,7 @@ App.c.search =
   controller: ->
     self =
       activate: (e) ->
-        document.body.scrollTop = e.target.parentNode.parentNode.offsetTop - 4
+        document.body.scrollTop = e.target.parentNode.parentNode.offsetTop - 4 if e
         active = true
       deactivate: -> active = false
       choose: (value, type, e) ->
