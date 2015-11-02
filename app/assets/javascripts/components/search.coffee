@@ -77,7 +77,7 @@ App.c.search =
         m 'i.fa.fa-spin.fa-spinner'
 
         m 'ul.suggestions', [
-          m 'li.muted', 'Search for restaurant by name, address, location, cuisine ...'
+          m 'li.muted', 'Search by name, address, location, cuisine ...'
 
           m 'li.location.with-icon',
             onmousedown: ctrl.choose.bind(null, 'Current Location', 'location')

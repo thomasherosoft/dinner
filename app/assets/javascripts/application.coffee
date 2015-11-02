@@ -15,7 +15,7 @@ app =
         m.route '/'
 
     [
-      m '.upper-title', className: (if m.route() == '/' then '' else 'hidden'), 'Find new and exciting places to eat in < 3 mins'
+      m '.upper-title', className: (if m.route() == '/' then '' else 'hidden'), 'Find new and exciting places to eat in less than 3 minutes'
       m.component App.c.search
       m.component App.c.restaurants
 
