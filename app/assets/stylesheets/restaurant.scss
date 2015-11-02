@@ -60,18 +60,17 @@
   }
 }
 
-.show-more-wrapper {
-  margin: 10px 0;
+.show-more {
+  background: #3e1a58;
+  border-radius: 6px;
+  color: #fff;
+  display: block;
+  margin: .7em 0;
+  padding: 10px 20px;
   text-align: center;
 
-  > .show-more {
-    background: #3e1a58;
-    border-radius: 28px;
-    color: #fff;
-    padding: 10px 20px;
-
-    &:hover {
-      background: #ffa9e5;
-    }
+  &:hover {
+    background: #ffa9e5;
+    text-decoration: none;
   }
 }

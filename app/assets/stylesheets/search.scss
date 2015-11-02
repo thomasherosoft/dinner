@@ -3,7 +3,7 @@
 #search {
   display: flex;
   flex-flow: column nowrap;
-  padding: 10px 0;
+  padding: 0 0 10px;
 
   .search-wrap {
     display: flex;
@@ -57,8 +57,7 @@
     cursor: pointer;
     flex: 0 0;
     margin: 10px 0;
-    max-width: 150px;
-    padding: 8px 10px;
+    padding: 0.7em 1em;
 
     &:focus {
       outline: none;
@@ -93,7 +92,7 @@
       &.muted {
         color: #aaa;
         cursor: default;
-        font-size: 13px;
+        font-size: .65em;
         white-space: normal;
 
         &:hover {

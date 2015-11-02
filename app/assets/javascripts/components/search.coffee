@@ -29,7 +29,9 @@ debouncedLoad = App.x.debounce 150, loadSuggestions
 App.c.search =
   controller: ->
     self =
-      activate: -> active = true
+      activate: (e) ->
+        document.body.scrollTop = e.target.parentNode.parentNode.offsetTop - 4
+        active = true
       deactivate: -> active = false
       choose: (value, type, e) ->
         input value
@@ -61,7 +63,7 @@ App.c.search =
     state.push 'with-suggestions' if suggestions
     state.push 'in-progress' if loading
     state.push 'active' if active
-    [
+    m '#search', className: (if m.route() == '/' then '' else 'hidden'), [
       m '.search-wrap', [
         m 'input.search',
           autocorrect: off

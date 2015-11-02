@@ -22,7 +22,10 @@ unix2date = (stamp) ->
   ].join('/')
 
 
-infoDOM = (data) ->
+App.infoDOM = (data) ->
+  cut = !!data
+  data ||= App.selectedRestaurant
+
   michelin = if data.michelin_status == 'yes' then null else data.michelin_status
   if michelin
     michelin = [
@@ -106,7 +109,7 @@ infoDOM = (data) ->
     m '.reviews', className: (if reviews.length then '' else 'hidden'), [
       m 'h5', 'Google Reviews'
       reviews.map (review) ->
-        t = review.text.slice(0,70).trim().replace(/\s+\S+$/, '...')
+        t = if cut then review.text.slice(0,70).trim().replace(/\s+\S+$/, '...') else review.text
         m '.review', [
           m '.rating', ratingDOM(100 * review.rating / 5)
           "#{review.rating} by #{review.author_name}"
@@ -117,6 +120,9 @@ infoDOM = (data) ->
 
 
 pubsub.subscribe 'show-info', ({data, bind, permanent}) ->
-  div = document.createElement('div')
-  m.render div, infoDOM(data)
-  App.showInfo div, bind, permanent
+  if isMobile.phone
+    m.route '/i'
+  else
+    div = document.createElement('div')
+    m.render div, App.infoDOM(data)
+    App.showInfo div, bind, permanent

@@ -24,7 +24,7 @@ App.c.restaurant =
 
     marker: marker
     showInfo: ->
-      App.s.selectedRestaurantID = item.id
+      App.selectedRestaurant = item
       showInfo('center', true)
     onunload: ->
       marker.setMap(null)
@@ -40,7 +40,7 @@ App.c.restaurant =
       marker.addListener 'click', ->
         document.body.scrollTop = el.offsetTop - document.body.clientHeight/2 + el.clientHeight/2
         m.startComputation()
-        App.s.selectedRestaurantID = item.id
+        App.selectedRestaurant = item
         m.endComputation()
 
 
@@ -75,7 +75,7 @@ App.c.restaurant =
         null
 
     m 'figure.restaurant',
-      className: (if item.id == App.s.selectedRestaurantID then 'selected' else '')
+      className: (if item.id == App.selectedRestaurant?.id then 'selected' else '')
       config: App.c.restaurant.viewHandler.bind(null, item, ctrl.marker)
       [
         m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [

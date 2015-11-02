@@ -1,4 +1,4 @@
-.gm-style-iw {
+#mobile-info, .gm-style-iw {
   max-width: 220px;
   overflow: visible !important;
 
@@ -55,6 +55,7 @@
       font-weight: bold;
       position: relative;
       text-align: right;
+      white-space: nowrap;
       width: 90px;
     }
 
@@ -103,4 +104,31 @@
     z-index: 100;
   }
 
+}
+
+#mobile-info {
+  margin-top: 10px;
+  max-width: initial;
+
+  .header {
+    margin: 0;
+
+    & > .info, & > .name {
+      margin: 0;
+    }
+  }
+
+  dl {
+    dt {
+      width: 130px;
+    }
+
+    dd {
+      margin-left: 150px;
+    }
+  }
+
+  .reviews > .review {
+    margin: 0;
+  }
 }

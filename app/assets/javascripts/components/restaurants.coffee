@@ -51,14 +51,14 @@ App.c.restaurants =
     else
       null
 
-    [
+    m '#restaurants', className: (if m.route() == '/' then '' else 'hidden'), [
       m 'h3', config: mapAdjusts, head
       m 'h4', (if App.s.query && !App.s.type then App.s.query.toUpperCase() else '')
       m.component App.c.filters
       store.map (s) ->
         s.key = s.id + s.name
         m.component App.c.restaurant, s
-      m '.show-more-wrapper', [moreButton]
+      moreButton
     ]
 
 
