@@ -83,7 +83,7 @@ class RestaurantsController < ApplicationController
           @restaurants = Restaurant.search (query_words.join(' ').presence || '*'), search_params
           raise if @restaurants.total_count == 0
         rescue
-          if (idx = query_words.index('in') || query_words.index('around'))
+          if (idx = query_words.index('in') || query_words.index('near') || query_words.index('around'))
             query_words.delete_at idx
             retry
           elsif search_fields.present?
