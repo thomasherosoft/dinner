@@ -9,6 +9,7 @@ class Restaurant < ActiveRecord::Base
 
   searchkick highlight: [:name, :address, :area, :cuisines],
              locations: ['location'],
+             settings: {number_of_shards: 1},
              word_start: [:name, :address, :area]
 
   def self.find_or_create_from_zomato_record(data)
@@ -58,12 +59,13 @@ class Restaurant < ActiveRecord::Base
     filters << 'deliveroo' if deliveroo_status.present?
     {
       address: address,
-      area: area,
-      cuisines: cuisines.map(&:name).join(' ').downcase,
+      area: area.try(:downcase),
+      cuisines: cuisines.map(&:name).map(&:downcase),
       filter: filters,
       location: [latitude, longitude].map(&:to_f),
       name: name,
-      rating: rating
+      rating: rating,
+      newly_opened: newly_opened
     }
   end
 

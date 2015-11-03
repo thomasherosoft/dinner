@@ -52,6 +52,8 @@ App.c.search =
           return
         else if e.keyCode == 27
           return self.deactivate()
+        else
+          delete App.s.type
         suggestions = null unless e.target.value
         self.activate()
         debouncedLoad(e)

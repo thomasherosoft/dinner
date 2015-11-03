@@ -88,7 +88,7 @@ App.infoDOM = (data) ->
       m '.name', data.name
       m '.info', [
         m 'i.fa.fa-male'
-        " #{(data.miles || 0).toFixed(1)} miles"
+        (if data.miles then " #{(data.miles || 0).toFixed(1)} miles" else '')
         (if reviewsCount > 0 then " - #{reviewsCount} reviews" else '')
         (if data.rating > 0 then " - #{data.rating}%" else '')
       ]

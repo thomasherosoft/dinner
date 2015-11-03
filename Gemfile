@@ -61,3 +61,4 @@ end
 gem 'will_paginate'
 gem 'typhoeus'
 gem 'searchkick'
+gem 'dalli'

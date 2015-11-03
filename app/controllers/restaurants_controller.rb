@@ -4,84 +4,97 @@ class RestaurantsController < ApplicationController
   PER_PAGE = 7
 
   def index
-    search_opts = {
-      include: [:cuisines],
-      page: params[:page], per_page: PER_PAGE,
-      order: {rating: :desc}
-    }
-    where = {}
+    search_params[:fields] = case params[:type]
+                             when 'names' then [:name]
+                             when 'cities' then ['area^10', 'address']
+                             when 'addresses' then [:address]
+                             when 'cuisines' then [:cuisines]
+                             else []
+                             end
 
-    search_opts[:fields] = case params[:type]
-                           when 'names' then [:name]
-                           when 'cities' then ['area^10', 'address']
-                           when 'addresses' then [:address]
-                           when 'cuisines' then [:cuisines]
-                           end
-    search_opts[:order] = nil if search_opts[:fields].present?
-
-    if location.present?
-      search_opts[:boost_by_distance] = {
-        field: :location,
-        origin: location
-      }
-      search_opts[:order] = {
-        rating: :desc,
-        _geo_distance: {
-          location: {lat: location.first, lon: location.last},
-          order: 'asc',
-          unit: 'mi'
-        }
-      }
-    end
-
-    if Array === search_opts[:fields] && search_opts[:fields].flatten.include?(:name)
-      search_opts[:order] = {
-        _score: :desc,
-        _geo_distance: {
-          location: {lat: location.first, lon: location.last},
-          order: 'asc',
-          unit: 'mi'
-        }
-      }
-    end
-
-    if query == 'Current Location'
-      @query = '*'
+    if lower_query == 'current location'
+      query_words.clear
       if location.present?
-        where[:location] = {
-          near: location,
-          within: '0.5mi'
+        search_params[:boost_by_distance] = {
+          field: :location,
+          origin: location
         }
+      end
+    else
+      if (idx = query_words.index('near')) && query_words[idx+1] == 'me'
+        query_words.slice! idx, 2
+        search_params[:order] = {
+          _geo_distance: {
+            location: {lat: location.first, lon: location.last},
+            order: 'asc',
+            unit: 'mi'
+          },
+          rating: :desc
+        }
+      end
+
+      if idx = query_words.index('best')
+        query_words.delete_at idx
+        # search_order.delete :_score
+      end
+
+      areas = []
+      cuisines = []
+      query_words.delete_if do |w|
+        if areas_cached.include?(w)
+          areas << w
+        elsif cuisines_cached.include?(w)
+          cuisines << w
+        elsif cities_cached.include?(w)
+          true
+        end
+      end
+      search_where[:area] = areas unless areas.empty?
+      search_where[:cuisines] = cuisines unless cuisines.empty?
+
+      if (query_words.index('new') && lower_query['restaurant']) || (query_words.index('newly') && lower_query['open'])
+        query_words.clear
+        search_fields.clear
+        search_order.delete :_score
+        search_where[:newly_opened] = true
       end
     end
 
     if Hash === params[:filters]
       if (radius = params[:filters][:location].to_i) > 0
-        where[:location] = { near: location, within: "#{radius}mi" }
+        search_where[:location] = { near: location, within: "#{radius}mi" }
       end
 
       if (cuisine = params[:filters][:cuisine]).present? && cuisine != 'all'
-        where[:cuisines] = /#{cuisine.downcase}.*/
+        search_where[:cuisines] = [cuisine]
       end
 
       if (rating = params[:filters][:rating].to_i) > 0
-        where[:rating] = {gte: rating}
+        search_where[:rating] = {gte: rating}
       end
     end
+    if search_fields.empty?
+      search_params[:fields] = ['name^2']
+    end
 
-    search_opts[:where] = where if where.present?
+    logger.debug ">> query #{query_words.inspect} => #{(query_words.join(' ').presence || '*').inspect}"
+    logger.debug search_params.inspect
 
     respond_to do |format|
-      format.html do
-        if params[:search].present? || params[:filter].present?
-          redirect_to action: :index
-        else
-          @cuisines = Cuisine.order(:name).pluck(:name)
-          render layout: !request.xhr?
-        end
-      end
+      format.html
       format.json do
-        @restaurants = Restaurant.search query, search_opts
+        begin
+          @restaurants = Restaurant.search (query_words.join(' ').presence || '*'), search_params
+          raise if @restaurants.total_count == 0
+        rescue
+          if (idx = query_words.index('in') || query_words.index('around'))
+            query_words.delete_at idx
+            retry
+          elsif search_fields.present?
+            search_params.delete :fields
+            retry
+          end
+        end
         @restaurants.each_with_index do |r,i|
           r.distance = @restaurants.response['hits']['hits'][i]['sort'].try(:last)
         end
@@ -140,17 +153,6 @@ class RestaurantsController < ApplicationController
     Search.create log_line: params.except(:action, :controller)
   end
 
-  def apply_filter(relation=nil)
-    if %w( michelin zagat timeout foodtruck faisal deliveroo ).include?(params[:filter])
-      if relation
-        attr = "#{params[:filter]}_status".to_sym
-        relation.where.not(attr => nil)
-      else
-        {where: {filter: [params[:filter]]}}
-      end
-    end
-  end
-
   def parse_location(input)
     loc = input.to_s.split(',').map(&:to_f)
     loc.size == 2 && loc.reject(&:zero?).size == 2 ? loc : []
@@ -162,5 +164,62 @@ class RestaurantsController < ApplicationController
 
   def query
     @query ||= params[:q].presence || params[:query].presence || '*'
+  end
+
+  def lower_query
+    @lower_query ||= query.downcase
+  end
+
+  def query_words
+    @query_words ||= lower_query.split
+  end
+
+  def cuisines_cached
+    @cuisines ||= Rails.cache.fetch('cuisines', expires_in: 1.day) do
+      Cuisine.pluck(:name).map(&:downcase).uniq
+    end
+  end
+
+  def areas_cached
+    @areas ||= Rails.cache.fetch('areas', expires_in: 1.day) do
+      Restaurant.pluck(:area).reject(&:blank?).map(&:downcase).uniq
+    end
+  end
+
+  def cities_cached
+    @cities ||= Rails.cache.fetch('cities', expires_in: 1.day) do
+      Restaurant.pluck(:city).reject(&:blank?).map(&:downcase).uniq
+    end
+  end
+
+  def search_params
+    @search_params ||= {
+      include: [:cuisines],
+      fields: [],
+      operator: 'or',
+      where: {},
+      order: {
+        _score: :desc,
+        rating: :desc,
+        _geo_distance: {
+          location: {lat: location.first, lon: location.last},
+          order: 'asc',
+          unit: 'mi'
+        }
+      },
+      page: params[:page], per_page: PER_PAGE
+    }
+  end
+
+  def search_fields
+    search_params[:fields]
+  end
+
+  def search_where
+    search_params[:where]
+  end
+
+  def search_order
+    search_params[:order]
   end
 end
