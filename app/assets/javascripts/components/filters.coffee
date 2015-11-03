@@ -55,7 +55,7 @@ App.c.filters =
         App.s.filters.rating
         m 'i.fa.fa-times'
       ])
-    if App.s.filters.location
+    if App.s.filters.location && App.s.query == 'Current Location'
       filtersApplied.push m('.btn', onclick: ctrl.remove.bind(null, 'location'), [
         App.s.filters.location
         m 'i.fa.fa-times'
@@ -75,8 +75,8 @@ App.c.filters =
 
 
       m 'dl.filters-list', className: (if shown then '' else 'hidden'), [
-        m 'dt', 'Location'
-        m 'dd', [
+        m 'dt', className: (if App.s.query == 'Current Location' then '' else 'hidden'), 'Location'
+        m 'dd', className: (if App.s.query == 'Current Location' then '' else 'hidden'), [
           m 'select.location', value: (App.s.filters.location || 'anywhere'), [
             m 'option', 'anywhere'
             m 'option', '1 mile'

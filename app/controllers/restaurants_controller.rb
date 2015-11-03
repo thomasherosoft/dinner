@@ -15,10 +15,10 @@ class RestaurantsController < ApplicationController
     if lower_query == 'current location'
       query_words.clear
       if location.present?
-        search_params[:boost_by_distance] = {
-          field: :location,
-          origin: location
-        }
+        search_where[:location] = { near: location, within: '0.5mi' }
+        if Hash === params[:filters] && (radius = params[:filters][:location].to_i) > 0
+          search_where[:location] = { near: location, within: "#{radius}mi" }
+        end
       end
     else
       if (idx = query_words.index('near')) && query_words[idx+1] == 'me'
@@ -61,10 +61,6 @@ class RestaurantsController < ApplicationController
     end
 
     if Hash === params[:filters]
-      if (radius = params[:filters][:location].to_i) > 0
-        search_where[:location] = { near: location, within: "#{radius}mi" }
-      end
-
       if (cuisine = params[:filters][:cuisine]).present? && cuisine != 'all'
         search_where[:cuisines] = [cuisine]
       end
