@@ -73,8 +73,8 @@ class RestaurantsController < ApplicationController
       search_params[:fields] = ['name^2']
     end
 
-    logger.debug ">> query #{query_words.inspect} => #{(query_words.join(' ').presence || '*').inspect}"
-    logger.debug search_params.inspect
+    # logger.debug ">> query #{query_words.inspect} => #{(query_words.join(' ').presence || '*').inspect}"
+    # logger.debug search_params.inspect
 
     respond_to do |format|
       format.html
@@ -91,8 +91,10 @@ class RestaurantsController < ApplicationController
             retry
           end
         end
-        @restaurants.each_with_index do |r,i|
-          r.distance = @restaurants.response['hits']['hits'][i]['sort'].try(:last)
+        if distance_idx = search_params[:order].keys.index(:_geo_distance)
+          @restaurants.each_with_index do |r,i|
+            r.distance = @restaurants.response['hits']['hits'][i]['sort'].try(:[], distance_idx)
+          end
         end
       end
     end
