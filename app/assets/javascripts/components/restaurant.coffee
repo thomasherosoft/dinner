@@ -81,7 +81,7 @@ App.c.restaurant =
         m 'a', href: 'javascript:;', onclick: ctrl.showInfo, [
           m 'figcaption', [
             m 'img.item-image', src: (item.photo || '/assets/item-1.jpg'), onerror: App.imageFallback
-            m '.item-rating', (if item.rating > 1 then "#{Math.floor item.rating}%" else 'N/A')
+            m '.item-rating', (if item.rating > 5 then "#{Math.floor item.rating}%" else 'N/A')
             topRated
             newlyOpened
           ]
