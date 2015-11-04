@@ -21,9 +21,9 @@ class RestaurantsController < ApplicationController
         end
       end
     else
-      if location.present?
-        if (idx = query_words.index('near')) && query_words[idx+1] == 'me'
-          query_words.slice! idx, 2
+      if (idx = query_words.index('near')) && query_words[idx+1] == 'me'
+        query_words.slice! idx, 2
+        if location.present?
           search_params[:order] = {
             _geo_distance: {
               location: {lat: location.first, lon: location.last},
@@ -90,6 +90,14 @@ class RestaurantsController < ApplicationController
             retry
           elsif search_fields.present?
             search_params.delete :fields
+            retry
+          elsif search_where.present?
+            @query_words = nil
+            search_params[:operator] = 'and'
+            search_params.delete :where
+            retry
+          elsif search_params.operator == 'and'
+            search_params[:operator] = 'or'
             retry
           end
         end
