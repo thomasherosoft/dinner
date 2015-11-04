@@ -23,7 +23,7 @@ loadSuggestions = (e) ->
       m.startComputation()
       loading = false
       m.endComputation()
-debouncedLoad = App.x.debounce 150, loadSuggestions
+debouncedLoad = App.x.debounce 250, loadSuggestions
 
 
 App.c.search =
@@ -70,6 +70,7 @@ App.c.search =
         m 'input.search',
           autocorrect: off
           className: state.join(' ')
+          onblur: ctrl.deactivate
           onchange: m.withAttr('value', ctrl.input)
           onfocus: ctrl.activate
           onkeyup: ctrl.navigate
