@@ -13,7 +13,7 @@
     > .fa-search, > .fa-spinner, > .fa-times-circle {
       color: $red-dark;
       position: absolute;
-      top: 12px;
+      top: .7em;
     }
 
     > .fa-search {
@@ -28,6 +28,8 @@
     > .fa-times-circle {
       color: $red-light;
       cursor: pointer;
+      font-size: 1.7em;
+      top: .3em;
       right: 10px;
 
       &:hover {
