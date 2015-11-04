@@ -184,7 +184,7 @@ class RestaurantsController < ApplicationController
 
   def cuisines_cached
     @cuisines ||= Rails.cache.fetch('cuisines', expires_in: 1.day) do
-      Cuisine.pluck(:name).map(&:downcase).uniq
+      Cuisine.pluck(:name).map(&:downcase).uniq - ['drinks only', 'bubble tea', 'coffee and tea', 'juices', 'cafe']
     end
   end
 
