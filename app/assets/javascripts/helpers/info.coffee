@@ -115,7 +115,7 @@ App.infoDOM = (data) ->
       m 'dt', 'social'
       m 'dd', [
         m 'a',
-          href: "https://twitter.com/search?q=#{encodeURIComponent(data.name.toLowerCase() + ' restaurant')}&src=typd"
+          href: "https://twitter.com/search?q=#{encodeURIComponent(data.name.toLowerCase() + ' restaurant' + ' london')}&src=typd"
           target: '_blank'
           'Twitter Feed'
       ]
