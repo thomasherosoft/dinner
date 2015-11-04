@@ -96,7 +96,7 @@ class RestaurantsController < ApplicationController
             search_params[:operator] = 'and'
             search_params.delete :where
             retry
-          elsif search_params.operator == 'and'
+          elsif search_params[:operator] == 'and'
             search_params[:operator] = 'or'
             retry
           end

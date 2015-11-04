@@ -51,6 +51,12 @@ App.c.restaurants =
     else
       null
 
+    notFound =
+      if store.length == 0 && App.s.query
+        m '.not-found', 'No results found'
+      else
+        null
+
     m '#restaurants', className: (if m.route() == '/' then '' else 'hidden'), [
       m 'h3', config: mapAdjusts, head
       m 'h4', (if App.s.query && !App.s.type then App.s.query.toUpperCase() else '')
@@ -58,6 +64,7 @@ App.c.restaurants =
       store.map (s) ->
         s.key = s.id + s.name
         m.component App.c.restaurant, s
+      notFound
       moreButton
     ]
 
