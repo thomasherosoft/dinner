@@ -70,6 +70,9 @@ class Restaurant < ActiveRecord::Base
   end
 
   def should_index?
-    latitude.to_f != 0 && longitude.to_f != 0
+    yes = latitude.to_f != 0 && longitude.to_f != 0
+    yes &&= city == 'London'
+    yes &&= !['Oxford', 'Isle of Wight', 'South Oxfordshire', 'West Oxfordshire', 'Chiltern'].include?(area)
+    yes
   end
 end
