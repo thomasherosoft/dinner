@@ -38,6 +38,13 @@ App.c.search =
         document.querySelector('input.search').value = value
         suggestions = null
         self.search(type)
+      clear: ->
+        el = document.querySelector('input.search')
+        el.value = ''
+        input ''
+        App.s.query = ''
+        App.s.type = null
+        el.focus()
       input: input
       search: (type) ->
         self.deactivate()
@@ -78,6 +85,9 @@ App.c.search =
           spellcheck: off
         m 'i.fa.fa-search'
         m 'i.fa.fa-spin.fa-spinner'
+        m 'i.fa.fa-times-circle',
+          className: (if App.s.query then '' else 'hidden')
+          onclick: ctrl.clear
 
         m 'ul.suggestions', [
           m 'li.muted', 'Search by name, address, location, cuisine ...'

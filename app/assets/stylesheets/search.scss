@@ -10,7 +10,7 @@
     flex-flow: column nowrap;
     position: relative;
 
-    > .fa-search, > .fa-spinner {
+    > .fa-search, > .fa-spinner, > .fa-times-circle {
       color: $red-dark;
       position: absolute;
       top: 12px;
@@ -23,6 +23,16 @@
     > .fa-spinner {
       display: none;
       right: 10px;
+    }
+
+    > .fa-times-circle {
+      color: $red-light;
+      cursor: pointer;
+      right: 10px;
+
+      &:hover {
+        color: $red-dark;
+      }
     }
   }
 
