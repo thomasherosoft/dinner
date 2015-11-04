@@ -21,16 +21,18 @@ class RestaurantsController < ApplicationController
         end
       end
     else
-      if (idx = query_words.index('near')) && query_words[idx+1] == 'me'
-        query_words.slice! idx, 2
-        search_params[:order] = {
-          _geo_distance: {
-            location: {lat: location.first, lon: location.last},
-            order: 'asc',
-            unit: 'mi'
-          },
-          rating: :desc
-        }
+      if location.present?
+        if (idx = query_words.index('near')) && query_words[idx+1] == 'me'
+          query_words.slice! idx, 2
+          search_params[:order] = {
+            _geo_distance: {
+              location: {lat: location.first, lon: location.last},
+              order: 'asc',
+              unit: 'mi'
+            },
+            rating: :desc
+          }
+        end
       end
 
       if idx = query_words.index('best')
@@ -92,8 +94,8 @@ class RestaurantsController < ApplicationController
           end
         end
         if distance_idx = search_params[:order].keys.index(:_geo_distance)
-          @restaurants.each_with_index do |r,i|
-            r.distance = @restaurants.response['hits']['hits'][i]['sort'].try(:[], distance_idx)
+          @restaurants.each_with_hit do |r,h|
+            r.distance = h['sort'][distance_idx]
           end
         end
       end
@@ -199,14 +201,17 @@ class RestaurantsController < ApplicationController
       order: {
         _score: :desc,
         rating: :desc,
-        _geo_distance: {
+      },
+      page: params[:page], per_page: PER_PAGE
+    }.tap do |h|
+      if location.present?
+        h[:order][:_geo_distance] = {
           location: {lat: location.first, lon: location.last},
           order: 'asc',
           unit: 'mi'
         }
-      },
-      page: params[:page], per_page: PER_PAGE
-    }
+      end
+    end
   end
 
   def search_fields
