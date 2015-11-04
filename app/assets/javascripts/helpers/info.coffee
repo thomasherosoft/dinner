@@ -104,13 +104,20 @@ App.infoDOM = (data) ->
           target: '_blank'
           'Google Search Results'
       ]
-      m 'dt', className: (if data.telegraph_review_url then '' else 'hidden'), 'telegraph'
+      m 'dt', className: (if data.telegraph_review_url then '' else 'hidden'), 'news'
       m 'dd', className: (if data.telegraph_review_url then '' else 'hidden'), [
-        m 'a', href: data.telegraph_review_url, target: '_blank', 'Review Link'
+        m 'a', href: data.telegraph_review_url, target: '_blank', 'Telegraph Review'
       ]
       m 'dt', className: (if data.website then '' else 'hidden'), 'website'
       m 'dd', className: (if data.website then '' else 'hidden'), [
-        m 'a', href: data.website, target: '_blank', 'Link'
+        m 'a', href: data.website, target: '_blank', data.website
+      ]
+      m 'dt', 'social'
+      m 'dd', [
+        m 'a',
+          href: "https://twitter.com/search?q=#{encodeURIComponent(data.name.toLowerCase() + ' restaurant')}&src=typd"
+          target: '_blank'
+          'Twitter Feed'
       ]
       michelin
       accolades
