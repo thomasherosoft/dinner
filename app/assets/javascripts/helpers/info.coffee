@@ -74,25 +74,21 @@ App.infoDOM = (data) ->
           else
             null
 
-  newlyOpened =
-    if data.newly_opened
-      m '.newly-opened', 'Newly Opened'
-    else
-      null
-
   reviews = (data.reviews || []).slice(0, 2)
   reviewsCount = (data.reviews || []).length + data.reviews_count
 
   [
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
-      m '.name', data.name
+      m '.name', [
+        data.name
+        m 'sup', (if data.newly_opened then 'NEW!' else '')
+      ]
       m '.info', [
         m 'i.fa.fa-male'
         (if data.miles then " #{(data.miles || 0).toFixed(1)} miles" else '')
         (if reviewsCount > 0 then " - #{reviewsCount} reviews" else '')
         (if data.rating > 5 then " - #{data.rating}%" else '')
       ]
-      newlyOpened
     ]
 
     m 'dl.dl-horizontal', [

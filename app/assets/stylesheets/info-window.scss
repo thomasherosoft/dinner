@@ -23,12 +23,18 @@
 
     > .name {
       font-size: 2em;
+      margin: 0 .5em;
     }
   }
 
   .name, .info, .rating {
     position: relative;
     z-index: 100;
+  }
+
+  sup {
+    font-size: .5em;
+    margin-left: .3em;
   }
 
   .header{
