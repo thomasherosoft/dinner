@@ -1,6 +1,5 @@
 json.array!(@restaurants) do |restaurant|
-  json.extract! restaurant, :id, :name, :zagat_status, :michelin_status, :address, :city, :price_range, :price_range_currency, :rating, :phone, :google_place_id, :timeout_status, :area, :reviews_count, :newly_opened
-  json.url post_url(restaurant, format: :json)
+  json.extract! restaurant, :id, :name, :zagat_status, :michelin_status, :address, :city, :price_range, :price_range_currency, :rating, :phone, :google_place_id, :timeout_status, :area, :reviews_count, :newly_opened, :website
   json.latitude restaurant.latitude.to_f
   json.longitude restaurant.longitude.to_f
   json.photo restaurant.photo_url.presence || image_url('item-1.jpg')
@@ -20,9 +19,5 @@ json.array!(@restaurants) do |restaurant|
     end
   end
 
-  if @restaurants.respond_to?(:facets) && @restaurants.facets
-    json.facets @restaurants.facets['filter']['terms'] do |f|
-      json.set! f['term'], f['count']
-    end
-  end
+  json.telegraph_review_url restaurant.reviews.select{|r| r.source == 'TelegraphReview' }.first.try(:url)
 end

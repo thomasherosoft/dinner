@@ -1,7 +1,10 @@
 class Restaurant < ActiveRecord::Base
   has_and_belongs_to_many :cuisines
+  has_many :reviews
 
   scope :search_import, -> { includes(:cuisines) }
+
+  delegate :telegraph_reviews, to: :reviews
 
   attr_accessor :distance
 

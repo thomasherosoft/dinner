@@ -202,7 +202,7 @@ class RestaurantsController < ApplicationController
 
   def search_params
     @search_params ||= {
-      include: [:cuisines],
+      include: [:cuisines, :reviews],
       fields: [],
       operator: 'or',
       where: {},

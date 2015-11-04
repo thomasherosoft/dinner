@@ -97,6 +97,21 @@ App.infoDOM = (data) ->
       m 'dd', [citymapper]
       m 'dt', 'cuisines'
       m 'dd', data.cuisines.join(', ')
+      m 'dt', 'search'
+      m 'dd', [
+        m 'a',
+          href: "https://www.google.co.uk/#q=#{encodeURIComponent(data.name.toLowerCase() + ' restaurant')}"
+          target: '_blank'
+          'Google Search Results'
+      ]
+      m 'dt', className: (if data.telegraph_review_url then '' else 'hidden'), 'telegraph'
+      m 'dd', className: (if data.telegraph_review_url then '' else 'hidden'), [
+        m 'a', href: data.telegraph_review_url, target: '_blank', 'Review Link'
+      ]
+      m 'dt', className: (if data.website then '' else 'hidden'), 'website'
+      m 'dd', className: (if data.website then '' else 'hidden'), [
+        m 'a', href: data.website, target: '_blank', 'Link'
+      ]
       michelin
       accolades
       uberCost

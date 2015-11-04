@@ -1,0 +1,2 @@
+class TelegraphReview < Review
+end
