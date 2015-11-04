@@ -54,7 +54,7 @@ App.c.restaurant =
                ]
              ]
            else
-             null
+             m '.hidden'
 
     topRated =
       if item.rating >= 82 && ((item.reviews || []).length + item.reviews_count) >= 30
@@ -66,13 +66,13 @@ App.c.restaurant =
           ]
         ]
       else
-        null
+        m '.hidden'
 
     newlyOpened =
       if item.newly_opened
         m '.newly-opened', 'Newly Opened'
       else
-        null
+        m '.hidden'
 
     m 'figure.restaurant',
       className: (if item.id == App.selectedRestaurant?.id then 'selected' else '')

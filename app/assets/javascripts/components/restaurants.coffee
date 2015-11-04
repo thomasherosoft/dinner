@@ -49,21 +49,34 @@ App.c.restaurants =
         (if loading then 'Loading more... ' else 'Show more...')
         [ m 'i.fa.fa-spin.fa-spinner', className: (if loading then '' else 'hidden') ]
     else
-      null
+      m '.hidden'
 
     notFound =
       if store.length == 0 && App.s.query
         m '.not-found', 'No results found'
       else
-        null
+        m '.hidden'
 
     m '#restaurants', className: (if m.route() == '/' then '' else 'hidden'), [
       m 'h3', config: mapAdjusts, head
       m 'h4', (if App.s.query && !App.s.type then App.s.query.toUpperCase() else '')
+
       m.component App.c.filters
-      store.map (s) ->
-        s.key = s.id + s.name
-        m.component App.c.restaurant, s
+
+      m 'div', [
+        m 'h4.results-header', className: (if store.length then '' else 'hidden'), 'Recommended'
+        store.filter((_, i) -> i < 5).map (s) ->
+          s.key = s.id + s.name
+          m.component App.c.restaurant, s
+      ]
+
+      m 'div', [
+        m 'h4.results-header', className: (if store.length > 5 then '' else 'hidden'), 'More'
+        store.filter((_, i) -> i > 4).map (s) ->
+          s.key = s.id + s.name
+          m.component App.c.restaurant, s
+      ]
+
       notFound
       moreButton
     ]
