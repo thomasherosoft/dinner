@@ -118,14 +118,14 @@ samples = (ctrl) ->
   ]
 
 suggestionKeys =
+  cities:
+    name: 'Area'
+    icon: 'fa-map-o'
   names:
     name: 'Restaurant'
     icon: 'fa-cutlery'
   addresses:
     name: 'Address'
-    icon: 'fa-map-o'
-  cities:
-    name: 'City'
     icon: 'fa-map-o'
   cuisines:
     name: 'Cuisine'
