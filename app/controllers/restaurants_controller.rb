@@ -64,7 +64,7 @@ class RestaurantsController < ApplicationController
 
     if Hash === params[:filters]
       if (cuisine = params[:filters][:cuisine]).present? && cuisine != 'all'
-        search_where[:cuisines] = [cuisine]
+        search_where[:cuisines] = [cuisine.downcase]
       end
 
       if (rating = params[:filters][:rating].to_i) > 0
