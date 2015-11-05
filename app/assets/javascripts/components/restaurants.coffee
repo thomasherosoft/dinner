@@ -51,6 +51,14 @@ App.c.restaurants =
     else
       m '.hidden'
 
+    michelin = []
+    other = []
+    store.forEach (x) ->
+      if !!x.michelin_status && x.michelin_status != 'yes'
+        michelin.push x
+      else
+        other.push x
+
     notFound =
       if store.length == 0 && App.s.query
         m '.not-found', 'No results found'
@@ -64,15 +72,22 @@ App.c.restaurants =
       m.component App.c.filters
 
       m 'div', [
-        m 'h4.results-header', className: (if store.length then '' else 'hidden'), 'Recommended'
-        store.filter((_, i) -> i < 5).map (s) ->
+        m 'h4.results-header', className: (if other.length then '' else 'hidden'), 'Recommended'
+        other.filter((_, i) -> i < 5).map (s) ->
           s.key = s.id + s.name
           m.component App.c.restaurant, s
       ]
 
       m 'div', [
-        m 'h4.results-header', className: (if store.length > 5 then '' else 'hidden'), 'More'
-        store.filter((_, i) -> i > 4).map (s) ->
+        m 'h4.results-header', className: (if michelin.length then '' else 'hidden'), 'Michelin Starred'
+        michelin.map (s) ->
+          s.key = s.id + s.name
+          m.component App.c.restaurant, s
+      ]
+
+      m 'div', [
+        m 'h4.results-header', className: (if other.length > 5 then '' else 'hidden'), 'More'
+        other.filter((_, i) -> i > 4).map (s) ->
           s.key = s.id + s.name
           m.component App.c.restaurant, s
       ]
