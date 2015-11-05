@@ -21,11 +21,11 @@ body, input, button {
 
 @font-face {
   font-family: 'BoosterNextFY-Regular';
-  src: url('BoosterNextFY-Regular.eot');
-  src: url('BoosterNextFY-Regular.eot?#iefix') format('embedded-opentype'),
-  url('BoosterNextFY-Regular.woff') format('woff'),
-  url('BoosterNextFY-Regular.ttf') format('truetype'),
-  url('BoosterNextFY-Regular.svg#journalregular') format('svg');
+  src: font-url('BoosterNextFY-Regular.eot');
+  src: font-url('BoosterNextFY-Regular.eot?#iefix') format('embedded-opentype'),
+  font-url('BoosterNextFY-Regular.woff') format('woff'),
+  font-url('BoosterNextFY-Regular.ttf') format('truetype'),
+  font-url('BoosterNextFY-Regular.svg#journalregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }
