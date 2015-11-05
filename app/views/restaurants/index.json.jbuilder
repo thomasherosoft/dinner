@@ -2,7 +2,11 @@ json.array!(@restaurants) do |restaurant|
   json.extract! restaurant, :id, :name, :zagat_status, :michelin_status, :address, :city, :price_range, :price_range_currency, :rating, :phone, :google_place_id, :timeout_status, :area, :reviews_count, :newly_opened, :website
   json.latitude restaurant.latitude.to_f
   json.longitude restaurant.longitude.to_f
-  json.photo restaurant.photo_url.presence || image_url('item-1.jpg')
+  if restaurant.photoid.present?
+    json.photo "//restaurantmapper-photos.s3.amazonaws.com/#{restaurant.photoid}.jpg"
+  else
+    json.photo image_url('item-1.jpg')
+  end
   json.page @restaurants.current_page
   json.pages @restaurants.total_pages
   json.totals @restaurants.total_entries

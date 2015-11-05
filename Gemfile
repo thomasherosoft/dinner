@@ -6,6 +6,7 @@ gem 'rails', '4.2.4'
 gem 'pg'
 
 gem 'autoprefixer-rails'
+gem 'aws-sdk', '~> 2'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'dalli'
 gem 'font-awesome-rails'

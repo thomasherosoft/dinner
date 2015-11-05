@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104141053) do
+ActiveRecord::Schema.define(version: 20151105105031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,8 +40,6 @@ ActiveRecord::Schema.define(version: 20151104141053) do
     t.string   "zipcode"
     t.integer  "price_range"
     t.string   "price_range_currency"
-    t.string   "photo_url"
-    t.string   "thumb_url"
     t.integer  "rating"
     t.string   "zomato_id"
     t.datetime "zomato_fetched_at"
@@ -58,6 +56,7 @@ ActiveRecord::Schema.define(version: 20151104141053) do
     t.datetime "updated_at",                           null: false
     t.boolean  "newly_opened",         default: false, null: false
     t.string   "website"
+    t.string   "photoid"
   end
 
   create_table "reviews", force: :cascade do |t|
