@@ -17,7 +17,7 @@
         webkitRequestAnimationFrame || msRequestAnimationFrame;
       if (raf) {
         var fn = function() {
-          if (typeof top.initMap === 'function') initMap()
+          if (typeof top.initMap === 'function') raf(initMap)
           else raf(fn);
         }
         raf(fn);

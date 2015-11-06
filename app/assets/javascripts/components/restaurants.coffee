@@ -2,7 +2,9 @@ store = []
 loading = false
 
 pubsub.subscribe 'search', (args) ->
-  query = App.x.extend App.s, (args || {})
+  args ||= {}
+  args.mobile = isMobile.phone
+  query = App.x.extend App.s, args
 
   m.startComputation()
   loading = true
@@ -38,11 +40,13 @@ App.c.restaurants =
     head =
       if loading
          'Calculating...'
+      else if store.length && isMobile.phone
+        "#{store.length} restaurant#{if store.length > 1 then 's' else ''}"
       else if store.length
          "About #{round_to_nth(store[0].totals,  Math.pow(10, count_num_size(store[0].totals))  ) || store[0].totals} restaurants"
       else
          ''
-    moreButton = if store.length && store[store.length-1].page < store[store.length-1].pages
+    moreButton = if !isMobile.phone && store.length && store[store.length-1].page < store[store.length-1].pages
       m 'a.show-more',
         href: 'javascript:;'
         onclick: ctrl.loadMore

@@ -68,6 +68,8 @@
     dd {
       margin-bottom: 5px;
       margin-left: 110px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 

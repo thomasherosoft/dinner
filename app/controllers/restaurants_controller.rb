@@ -210,7 +210,8 @@ class RestaurantsController < ApplicationController
         _score: :desc,
         rating: :desc,
       },
-      page: params[:page], per_page: PER_PAGE
+      page: params[:page],
+      per_page: (params[:mobile] == 'true' ? 25 : PER_PAGE)
     }.tap do |h|
       if location.present?
         h[:order][:_geo_distance] = {
