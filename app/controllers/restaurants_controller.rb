@@ -12,7 +12,7 @@ class RestaurantsController < ApplicationController
                              else []
                              end
 
-    if lower_query == 'current location'
+    if lower_query == 'current location' || query == '*'
       query_words.clear
       if location.present?
         search_where[:location] = { near: location, within: '0.5mi' }
