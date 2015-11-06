@@ -76,7 +76,7 @@ class Restaurant < ActiveRecord::Base
     yes = latitude.to_f != 0 && longitude.to_f != 0
     yes &&= city == 'London'
     yes &&= !['Oxford', 'Isle of Wight', 'South Oxfordshire', 'West Oxfordshire', 'Chiltern'].include?(area)
-    yes &&= (cuisines.map(&:name) & ['Drinks Only', 'Bubble Tea', 'Coffee and Tea', 'Juices', 'Cafe']).size == 0
+    yes &&= (cuisines.map(&:name) & ['Ice Cream', 'Desserts', 'Drinks Only', 'Bubble Tea', 'Coffee and Tea', 'Juices', 'Cafe']).size == 0
     yes
   end
 end
