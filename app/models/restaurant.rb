@@ -4,7 +4,7 @@ class Restaurant < ActiveRecord::Base
 
   scope :search_import, -> { includes(:cuisines) }
 
-  delegate :telegraph_reviews, to: :reviews
+  delegate :telegraph_reviews, :zomato_reviews, to: :reviews
 
   attr_accessor :distance
 

@@ -146,5 +146,18 @@ namespace :import do
       misses.close
       puts "found #{found}/#{total}"
     end
+
+    task reviews: :environment do
+      count = 0
+      CSV.foreach(ENV['FILE'], col_sep: "\t", encoding: 'UTF-16:UTF-8', quote_char: "\b") do |row|
+        next unless restaurant = Restaurant.find_by(zomato_id: row.first)
+        review = restaurant.zomato_reviews.find_or_initialize_by(content: row.last)
+        review.created_at = Time.zone.parse(row[1])
+        review.score = row[-2].to_f
+        review.save
+        count += 1
+      end
+      puts count
+    end
   end
 end

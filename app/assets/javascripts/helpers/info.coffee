@@ -1,8 +1,9 @@
 ratingDOM = (percents) ->
   out = []
-  for i in [1..Math.floor(percents/20)]
-    out.push m 'i.fa.fa-star'
-  out.push m 'i.fa.fa-star-half-o' if percents % 20
+  if percents
+    for i in [1..Math.floor(percents/20)]
+      out.push m 'i.fa.fa-star'
+    out.push m 'i.fa.fa-star-half-o' if percents % 20
   if out.length < 5
     for i in [1..(5-out.length)]
       out.push m 'i.fa.fa-star-o'
@@ -74,8 +75,13 @@ App.infoDOM = (data) ->
           else
             null
 
-  reviews = (data.reviews || []).slice(0, 2)
-  reviewsCount = (data.reviews || []).length + data.reviews_count
+  greviews = data.greviews || []
+  greviews.sort (a,b) -> b.time - a.time
+  zreviews = data.zreviews || []
+  limit = if cut then 2 else 5
+  greviews = greviews.slice(0, limit)
+  zreviews = zreviews.slice(0, limit-greviews.length)
+  reviewsCount = greviews.length + zreviews.length + data.reviews_count
 
   [
     m '.header', style: {backgroundImage: "url(#{data.photo})"}, [
@@ -124,15 +130,27 @@ App.infoDOM = (data) ->
       uberCost
     ]
 
-    m '.reviews', className: (if reviews.length then '' else 'hidden'), [
-      m 'h5', 'Google Reviews'
-      reviews.map (review) ->
-        t = if cut then review.text.slice(0,70).trim().replace(/\s+\S+$/, '...') else review.text
-        m '.review', [
-          m '.rating', ratingDOM(100 * review.rating / 5)
-          "#{review.rating} by #{review.author_name}"
-          m 'p', unix2date(review.time) + ' ' + t
-        ]
+    m '.reviews', className: (if greviews.concat(zreviews).length then '' else 'hidden'), [
+      m 'div', className: (if greviews.length then '' else 'hidden'), [
+        m 'h5', 'Google Reviews'
+        greviews.map (review) ->
+          t = if cut then review.text.slice(0,70).trim().replace(/\s+\S+$/, '...') else review.text
+          m '.review', [
+            m '.rating', ratingDOM(100 * review.rating / 5)
+            "#{review.rating} by #{review.author_name}"
+            m 'p', unix2date(review.time) + ' ' + t
+          ]
+      ]
+
+      m 'div', className: (if zreviews.length then '' else 'hidden'), [
+        m 'h5', 'Zomato Reviews'
+        zreviews.map (review) ->
+          t = if cut then review.text.slice(0,70).trim().replace(/\s+\S+$/, '...') else review.text
+          m '.review', [
+            m '.rating', ratingDOM(100 * review.rating / 5)
+            m 'p', unix2date(review.time) + ' ' + t
+          ]
+      ]
     ]
   ]
 

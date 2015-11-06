@@ -116,6 +116,10 @@
   margin-top: 10px;
   max-width: initial;
 
+  > div > div {
+    margin: 0;
+  }
+
   .header {
     margin: 0;
 

@@ -1,0 +1,2 @@
+class ZomatoReview < Review
+end

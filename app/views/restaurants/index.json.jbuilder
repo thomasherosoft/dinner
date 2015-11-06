@@ -23,5 +23,15 @@ json.array!(@restaurants) do |restaurant|
     end
   end
 
+  json.zreviews restaurant.reviews.select{|r| r.source == 'ZomatoReview' }.
+    sort{|a,b| b.created_at - a.created_at }.
+    select{|r| r.score.to_f > 0 }.
+    map{|r|
+      {
+        rating: r.score,
+        time: r.created_at.to_i,
+        text: r.content
+      }
+    }.take(5)
   json.telegraph_review_url restaurant.reviews.select{|r| r.source == 'TelegraphReview' }.first.try(:url)
 end

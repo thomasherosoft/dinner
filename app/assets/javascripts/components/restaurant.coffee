@@ -11,11 +11,11 @@ App.c.restaurant =
         if center
           App.centerMap lat: item.latitude, lng: item.longitude
         pubsub.publish 'show-info', data: item, bind: marker, permanent: permanent
-      if !item.google_place_id || item.reviews
+      if !item.google_place_id || item.greviews
         fn()
       else
         App.getPlace(item.google_place_id).then (x) ->
-          item.reviews = x.reviews
+          item.greviews = x.reviews
           fn()
 
     marker.addListener 'mouseout', -> App.closeInfo()
