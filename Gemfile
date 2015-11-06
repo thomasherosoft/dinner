@@ -13,6 +13,7 @@ gem 'font-awesome-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'sass-rails', '~> 5.0'
 gem 'searchkick'
+gem 'slim'
 gem 'therubyracer', platforms: :ruby
 gem 'typhoeus'
 gem 'uglifier', '>= 1.3.0'
